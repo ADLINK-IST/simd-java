@@ -1,0 +1,3 @@
+simd-java is the sister project of simd-cxx
+(http://code.google.com/p/simd-cxx) and provides a simple API for
+writing Java-based DDS applications.
