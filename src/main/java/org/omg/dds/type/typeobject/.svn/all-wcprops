@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject
+END
+AnnotationUsage.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/AnnotationUsage.java
+END
+AnnotationMemberValue.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/typeobject/AnnotationMemberValue.java
+END
+MemberFlag.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/typeobject/MemberFlag.java
+END
+StructureType.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/StructureType.java
+END
+AnnotationMember.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/AnnotationMember.java
+END
+EnumeratedConstant.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/EnumeratedConstant.java
+END
+TypeLibrary.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/TypeLibrary.java
+END
+Member.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/Member.java
+END
+TypeObject.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/TypeObject.java
+END
+StringType.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/StringType.java
+END
+SequenceType.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/SequenceType.java
+END
+TypeFlag.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/typeobject/TypeFlag.java
+END
+MemberProperty.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/MemberProperty.java
+END
+AnnotationType.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/AnnotationType.java
+END
+Bit.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/Bit.java
+END
+MapType.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/MapType.java
+END
+ArrayType.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/ArrayType.java
+END
+TypeLibraryElement.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/TypeLibraryElement.java
+END
+UnionMember.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/UnionMember.java
+END
+Type.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/Type.java
+END
+Module.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/Module.java
+END
+TypeProperty.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/TypeProperty.java
+END
+AnnotationUsageMember.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/AnnotationUsageMember.java
+END
+EnumerationType.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/EnumerationType.java
+END
+UnionType.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/UnionType.java
+END
+AliasType.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/AliasType.java
+END
+BitSetType.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/BitSetType.java
+END
+CollectionType.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/typeobject/CollectionType.java
+END
+TypeId.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/82/trunk/srcJava/org/omg/dds/type/typeobject/TypeId.java
+END

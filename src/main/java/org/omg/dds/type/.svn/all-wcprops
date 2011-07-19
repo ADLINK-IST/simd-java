@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/108/trunk/srcJava/org/omg/dds/type
+END
+Shared.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/Shared.java
+END
+BitBound.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/BitBound.java
+END
+Verbatim.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/Verbatim.java
+END
+SerializeAs.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/96/trunk/srcJava/org/omg/dds/type/SerializeAs.java
+END
+Value.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/Value.java
+END
+TypeSupport.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/108/trunk/srcJava/org/omg/dds/type/TypeSupport.java
+END
+MustUnderstand.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/MustUnderstand.java
+END
+UnionMember.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/UnionMember.java
+END
+UnionDiscriminator.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/UnionDiscriminator.java
+END
+Nested.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/Nested.java
+END
+Optional.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/Optional.java
+END
+VerbatimGroup.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/VerbatimGroup.java
+END
+TypeKind.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/82/trunk/srcJava/org/omg/dds/type/TypeKind.java
+END
+Key.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/Key.java
+END
+BitSet.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/BitSet.java
+END
+ID.java
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/ID.java
+END
+Extensibility.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/Extensibility.java
+END

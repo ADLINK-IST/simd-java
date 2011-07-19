@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/builtin
+END
+KeyedBytesDataWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/88/trunk/srcJava/org/omg/dds/type/builtin/KeyedBytesDataWriter.java
+END
+KeyedStringDataWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/88/trunk/srcJava/org/omg/dds/type/builtin/KeyedStringDataWriter.java
+END
+BytesDataReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/82/trunk/srcJava/org/omg/dds/type/builtin/BytesDataReader.java
+END
+StringDataReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/82/trunk/srcJava/org/omg/dds/type/builtin/StringDataReader.java
+END
+KeyedStringDataReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/82/trunk/srcJava/org/omg/dds/type/builtin/KeyedStringDataReader.java
+END
+KeyedBytesDataReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/82/trunk/srcJava/org/omg/dds/type/builtin/KeyedBytesDataReader.java
+END
+KeyedBytes.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/builtin/KeyedBytes.java
+END
+KeyedString.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/builtin/KeyedString.java
+END
+BytesDataWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/82/trunk/srcJava/org/omg/dds/type/builtin/BytesDataWriter.java
+END
+StringDataWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/82/trunk/srcJava/org/omg/dds/type/builtin/StringDataWriter.java
+END

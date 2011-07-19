@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/dynamic
+END
+TypeDescriptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/89/trunk/srcJava/org/omg/dds/type/dynamic/TypeDescriptor.java
+END
+DynamicDataFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/86/trunk/srcJava/org/omg/dds/type/dynamic/DynamicDataFactory.java
+END
+DynamicType.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/82/trunk/srcJava/org/omg/dds/type/dynamic/DynamicType.java
+END
+MemberDescriptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/88/trunk/srcJava/org/omg/dds/type/dynamic/MemberDescriptor.java
+END
+AnnotationDescriptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/88/trunk/srcJava/org/omg/dds/type/dynamic/AnnotationDescriptor.java
+END
+DynamicData.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/91/trunk/srcJava/org/omg/dds/type/dynamic/DynamicData.java
+END
+DynamicTypeFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/86/trunk/srcJava/org/omg/dds/type/dynamic/DynamicTypeFactory.java
+END
+DynamicTypeMember.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/82/trunk/srcJava/org/omg/dds/type/dynamic/DynamicTypeMember.java
+END

@@ -1,0 +1,67 @@
+[Intro]
+  This file lists all the issues that I currently have raised with the dds-psm-java as
+  specified by the OMG and that have been addressed by simd-java.
+
+
+ [Modifiable Types]
+   The dds-psm-java introduces modifiable versions for conceptually immutable classes
+   as a way to safe a few object allocations. However this is done for QoS which
+   are not changed so often and that are overall very "thin" object.
+   The proposed resolution is to get rid of this objects and to ensure that
+   we only provide value types when needed.
+
+[Superfluous "QoSPolicy" Suffix]
+   The dds-psm-java uses a superfluous Policy suffix to name the DDS policies
+   which themselves are already included in a "policy" namespace. This
+   suffix should be removed.
+
+[Bootstrap]
+   The boostrap class is a pain for users which is in place only to allow
+   users to run 2 different DDS implementations on the same application.
+   As this is by no means a common use case, the bootstrap should be
+   removed and the resulting API should be simplified.
+
+
+[QoSPolicy]
+
+   - ID Class
+   Why is there an ID class on the QoSPolicy class? All we need to provide
+   is a pre-defined ID for the policy class!
+   All we need is a <getId> and <getName> method.
+
+
+  - Cloneable interface
+  No need to implement the interface once the mutable pkg is removed
+
+[Constants and Boostrap object]
+   Constant values such as the infinite duration, etc. should be defined
+   by the standard as opposed than the implementation.
+
+
+[Spurious import]
+   The dds-psm-java makes use of import as a way to take care of the
+   @link directive on Javadoc. This is not a good practice and it
+   is better to use the fully qualified type name on the @link javadoc
+   directive
+
+[QoS DSL}
+    The absence of a DSL for facilitating the correct creation of QoS in the
+    dds-psm-java introduces potential for errors. The DSL should be
+    added as in the dds-psm-cxx as well as on the simd-java.
+
+
+[Entity QoS]
+   This class does not seem very useful for the DDS user. It might be
+   more useful for the DDS implementor.... Suggestion is to remove it
+   from the public API
+
+[Entity]
+   This class provides some generic methods that seem of doubtful usefulness
+   but then on the other end open up a door for messing up with the invariant
+   of a type or at least raising runtime errors. For instance via the
+   Entity type I can add a non-applicable QoS policy to a DDS entity --
+   this seems weakening the API.
+
+[DomainEntity]
+   What is the value of having this class? It should be removed and
+   the getParent method should be migrated to the Entity class.
