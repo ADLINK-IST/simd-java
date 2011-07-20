@@ -1,0 +1,13 @@
+# .class files
+*.class
+
+# jars
+*.jar
+
+# IDE Files
+#   . IntelliJ Idea
+*.iml
+.idea
+
+# Maven target
+target
