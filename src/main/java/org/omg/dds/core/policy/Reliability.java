@@ -26,14 +26,14 @@ import org.omg.dds.core.Duration;
  * {@link org.omg.dds.pub.DataWriter}. These levels are
  * ordered, {@link Kind#BEST_EFFORT} being lower than {@link Kind#RELIABLE}.
  * A DataWriter offering a level is implicitly offering all levels below.
- * 
+ *
  * <b>Concerns:</b> {@link org.omg.dds.topic.Topic},
  * {@link org.omg.dds.sub.DataReader}, {@link org.omg.dds.pub.DataWriter}
- * 
+ *
  * <b>RxO:</b> Yes
- * 
+ *
  * <b>Changeable:</b> No
- * 
+ *
  * The setting of this policy has a dependency on the setting of the
  * {@link ResourceLimits}. In case the RELIABILITY kind is set to
  * RELIABLE the {@link org.omg.dds.pub.DataWriter#write(Object)} operation may block if the
@@ -41,7 +41,7 @@ import org.omg.dds.core.Duration;
  * specified in the RESOURCE_LIMITS to be exceeded. Under these circumstances,
  * the RELIABILITY maxBlockingTime configures the maximum duration the write
  * operation may block.
- * 
+ *
  * If the RELIABILITY kind is set to RELIABLE, data samples originating from
  * a single DataWriter cannot be made available to the DataReader if there
  * are previous data samples that have not been received yet due to a
@@ -49,27 +49,28 @@ import org.omg.dds.core.Duration;
  * retransmit data samples as needed in order to reconstruct a correct
  * snapshot of the DataWriter history before it is accessible by the
  * DataReader.
- * 
+ *
  * If the RELIABILITY kind is set to BEST_EFFORT, the service will not
  * retransmit missing data samples. However, for data samples originating
  * from any one DataWriter the service will ensure they are stored in the
  * DataReader history in the same order they originated in the DataWriter. In
  * other words, the DataReader may miss some data samples but it will never
  * see the value of a data object change from a newer value to an older value.
- * 
+ *
  * The value offered is considered compatible with the value requested if and
  * only if the inequality "offered kind &gt;= requested kind" evaluates to
  * true. For the purposes of this inequality, the values of RELIABILITY kind
  * are considered ordered such that BEST_EFFORT &lt; RELIABLE.
- * 
+ *
  * @see ResourceLimits
  */
-public class Reliability implements QosPolicy {
+public class Reliability implements QosPolicy, Comparable<Reliability>{
 
     // -- Constant Members
-    private final static int ID = 11;
+    public final static int ID = 11;
     private final static String NAME = "Reliability";
-
+    private static final Reliability RELIABLE = new Reliability(Kind.RELIABLE);
+    private static final Reliability BEST_EFFORT = new Reliability(Kind.BEST_EFFORT);
     // - Attributes
     private Kind kind;
     private Duration blockingTime;
@@ -126,15 +127,12 @@ public class Reliability implements QosPolicy {
     }
 
     public static Reliability Reliable() {
-        return new Reliability(Kind.RELIABLE);
+        return Reliability.RELIABLE;
     }
 
-    public static Reliability BestEffort(Duration blockingTime) {
-        return new Reliability(Kind.BEST_EFFORT, blockingTime);
-    }
 
     public static Reliability BestEffort() {
-        return new Reliability(Kind.BEST_EFFORT);
+        return Reliability.BEST_EFFORT;
     }
 
 
@@ -154,7 +152,11 @@ public class Reliability implements QosPolicy {
     }
 
 
+    public int compareTo(Reliability other) {
+        int c = this.getKind().ordinal() - other.getKind().ordinal();
+        return c;
 
+    }
     // -----------------------------------------------------------------------
     // Types
     // -----------------------------------------------------------------------

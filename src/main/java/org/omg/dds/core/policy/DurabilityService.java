@@ -45,7 +45,16 @@ import org.omg.dds.topic.Topic;
  * 
  * @see Durability
  */
-public interface DurabilityService extends QosPolicy {
+public class DurabilityService implements QosPolicy {
+    public static final int ID = 22;
+    private static final String NAME = "DurabilityService";
+
+    private History history;
+    private Duration cleanupDelay;
+    private int maxSamples;
+    private int maxInstances;
+    private int maxSamplesPerInstance;
+
     public Duration getServiceCleanupDelay();
 
     /**

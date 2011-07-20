@@ -29,6 +29,11 @@
    is a pre-defined ID for the policy class!
    All we need is a <getId> and <getName> method.
 
+   - Comparable
+   All RxO Policies have to implement the Comparable interface. This is
+   pretty logical as for this QoS Policies it has to be established
+   a total order.
+
 
   - Cloneable interface
   No need to implement the interface once the mutable pkg is removed
@@ -44,10 +49,26 @@
    is better to use the fully qualified type name on the @link javadoc
    directive
 
-[QoS DSL}
-    The absence of a DSL for facilitating the correct creation of QoS in the
+[QoS Classes (TopicQos, DataWriterQos, etc.]
+    - The absence of a DSL for facilitating the correct creation of QoS in the
     dds-psm-java introduces potential for errors. The DSL should be
     added as in the dds-psm-cxx as well as on the simd-java.
+    The DSL should look like:
+
+    TopicQos topicQos =
+        (new TopicQos())
+            .with(Reliability.Reliable(), Durability.Transient());
+
+
+    This is also legal:
+
+    TopicQos topicQos =
+        (new TopicQos())
+            .with(Reliability.Reliable())
+            .with(Durability.Transient());
+
+    - These class should implement the Comparable interface as they need to
+    provide a total order... Otherwise how can one do RxO?
 
 
 [Entity QoS]

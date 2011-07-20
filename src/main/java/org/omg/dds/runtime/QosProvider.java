@@ -1,11 +1,24 @@
 package org.omg.dds.runtime;
 
-/**
- * Created by IntelliJ IDEA.
- * User: corsaro
- * Date: 20.7.11
- * Time: 4:21 PM
- * To change this template use File | Settings | File Templates.
- */
-public class QosProvider {
+
+import org.omg.dds.domain.DomainParticipantFactoryQos;
+import org.omg.dds.domain.DomainParticipantQos;
+import org.omg.dds.pub.DataWriterQos;
+import org.omg.dds.pub.PublisherQos;
+import org.omg.dds.sub.DataReaderQos;
+import org.omg.dds.sub.SubscriberQos;
+import org.omg.dds.topic.TopicQos;
+
+public interface QosProvider {
+
+    public DomainParticipantFactoryQos getDomainParticipantFactoryQos();
+    public DomainParticipantQos getDomainParticipantQos();
+
+    public TopicQos getTopicQos();
+
+    public DataWriterQos getDataWriterQos();
+    public PublisherQos getPublisherQos();
+
+    public DataReaderQos getDataReaderQos();
+    public SubscriberQos getSubscriberQos();
 }

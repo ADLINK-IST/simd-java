@@ -1,11 +1,13 @@
 package org.omg.dds.runtime;
 
+import org.opensplice.psm.java.OSPLRuntime;
 /**
- * Created by IntelliJ IDEA.
- * User: corsaro
- * Date: 20.7.11
- * Time: 3:52 PM
- * To change this template use File | Settings | File Templates.
+ *  This class is provided as an example, but in general this
+ *  will be provided by the vendor JAR. The purpose of this class
+ *  is to bind the API with a specific DDS vendor implementation.
  */
 public class DDSBinder {
+    public static DDSRuntime bind() {
+        return new OSPLRuntime();
+    }
 }

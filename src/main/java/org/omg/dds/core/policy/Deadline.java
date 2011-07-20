@@ -18,8 +18,9 @@
 
 package org.omg.dds.core.policy;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.omg.dds.core.Duration;
-
+import org.omg.dds.core.StatusCondition;
 
 
 /**
@@ -64,7 +65,38 @@ import org.omg.dds.core.Duration;
  * consistent the settings must be such that "deadline period >=
  * minimum_separation."
  */
-public interface Deadline extends QosPolicy {
-    public Duration getPeriod();
+public class Deadline implements QosPolicy, Comparable<Deadline> {
+
+    public static final int ID = 4;
+    private static final String NAME = "Deadline";
+
+    private Duration period;
+
+    public Deadline(Duration period) {
+        this.period = period;
+    }
+
+    public Duration getPeriod() {
+        return this.period;
+    }
+
+    public int getPolicyId() {
+        return ID;
+    }
+    public String getPolicyName() {
+        return NAME;
+    }
+
+    public int compareTo(Deadline that) {
+        return this.getPeriod().compareTo(that.getPeriod());
+    }
+
+    public boolean equals(Object that) {
+        boolean same = false;
+
+        if (that instanceof Deadline)
+            same = (this.getPeriod().compareTo(((Deadline)that).getPeriod()) == 0);
+        return same;
+    }
 
 }

@@ -124,7 +124,13 @@ import org.omg.dds.topic.Topic;
  * @see DurabilityService
  * @see DurabilityService#getServiceCleanupDelay()
  */
-public class Durability implements QosPolicy {
+public class Durability implements QosPolicy, Comparable<Durability> {
+
+    public static final int ID = 2;
+    private static final Durability VOLATILE = new Durability(Kind.VOLATILE);
+    private static final Durability TRANSIENT_LOCAL = new Durability(Kind.TRANSIENT_LOCAL);
+    private static final Durability TRANSIENT = new Durability(Kind.TRANSIENT);
+    private static final Durability PERSISTENT = new Durability(Kind.PERSISTENT);
     // -----------------------------------------------------------------------
     // Types
     // -----------------------------------------------------------------------
@@ -179,19 +185,19 @@ public class Durability implements QosPolicy {
     }
 
     public static Durability Volatile() {
-        return new Durability(Kind.VOLATILE);
+        return Durability.VOLATILE;
     }
 
     public static Durability TransientLocal() {
-        return new Durability(Kind.TRANSIENT_LOCAL);
+        return Durability.TRANSIENT_LOCAL;
     }
 
     public static Durability Transient() {
-        return new Durability(Kind.TRANSIENT);
+        return Durability.TRANSIENT;
     }
 
     public static Durability Persistent() {
-        return new Durability(Kind.PERSISTENT);
+        return Durability.PERSISTENT;
     }
 
 
@@ -216,16 +222,14 @@ public class Durability implements QosPolicy {
         return "Durability";
     }
 
-    public boolean equals(Durability other) {
-        return (this.kind == other.kind);
+    public boolean equals(Object other) {
+        return (this == other);
+
     }
 
-    public boolean equals(Object other) {
-        boolean eq = false;
-        if (other instanceof Durability)
-            eq = (this.kind == ((Durability)other).kind);
-        return eq;
-
+    public int compareTo(Durability other) {
+        int c = this.getKind().ordinal() - other.getKind().ordinal();
+        return c;
     }
 
 }

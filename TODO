@@ -1,0 +1,22 @@
+[Qos Policy]
+
+   - Define constant objects for representing alternatives. This will
+   save memory and time.
+
+   - QoS policies should implement the Comparable interface.
+
+[Entities QoS]
+
+   - Define a method "with" for each accepted QoS Policy. Let this method
+   return a QoS so that they can be chained as follows:
+
+      TopicQos = (new TopicQos())
+        .with(Realiability.Reliable())
+        .with(Durability.Transient());
+
+
+   - Entites QoS should implement the comparable interface
+
+
+[Time & Duration]
+   - Have to implement Comparable!

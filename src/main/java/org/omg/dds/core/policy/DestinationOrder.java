@@ -18,6 +18,9 @@
 
 package org.omg.dds.core.policy;
 
+import com.sun.jmx.snmp.SnmpString;
+import com.sun.tools.javac.util.Name;
+import org.omg.CORBA.portable.IDLEntity;
 import org.omg.dds.pub.DataWriter;
 import org.omg.dds.pub.Publisher;
 import org.omg.dds.sub.DataReader;
@@ -61,19 +64,20 @@ import org.omg.dds.topic.Topic;
  * 
  * @see Ownership
  */
-public interface DestinationOrder extends QosPolicy {
-    // -----------------------------------------------------------------------
-    // Methods
-    // -----------------------------------------------------------------------
+public class DestinationOrder implements QosPolicy, Comparable<DestinationOrder> {
 
-    /**
-     * @return the kind
-     */
-    public Kind getKind();
+    public static final int ID = 12;
+    private static final String NAME = "DestinationOrder";
 
+    private static final DestinationOrder RECEPTION_TIMESTAMP =
+            new DestinationOrder(Kind.BY_RECEPTION_TIMESTAMP);
 
+    private static final DestinationOrder SOURCE_TIMESTAMP =
+            new DestinationOrder(Kind.BY_SOURCE_TIMESTAMP);
 
-    // -----------------------------------------------------------------------
+    private Kind kind;
+
+     // -----------------------------------------------------------------------
     // Types
     // -----------------------------------------------------------------------
 
@@ -95,5 +99,37 @@ public interface DestinationOrder extends QosPolicy {
          */
         BY_SOURCE_TIMESTAMP
     }
+
+    private DestinationOrder(Kind kind) {
+        this.kind = kind;
+    }
+    // -----------------------------------------------------------------------
+    // Methods
+    // -----------------------------------------------------------------------
+
+    /**
+     * @return the kind
+     */
+    public Kind getKind() {
+        return this.kind;
+    }
+
+    public static DestinationOrder ReceptionTimestamp() {
+        return RECEPTION_TIMESTAMP;
+    }
+
+    public static DestinationOrder SourceTimestamp() {
+        return SOURCE_TIMESTAMP;
+    }
+
+    public int getPolicyId() { return ID; }
+
+    public String getPolicyName() { return NAME; }
+
+    public int compareTo(DestinationOrder that) {
+        int c = this.kind.ordinal() - that.kind.ordinal();
+        return c;
+    }
+
 
 }

@@ -1,11 +1,34 @@
 package org.opensplice.psm.java;
 
-/**
- * Created by IntelliJ IDEA.
- * User: corsaro
- * Date: 20.7.11
- * Time: 3:55 PM
- * To change this template use File | Settings | File Templates.
- */
-public class OSPLRuntime {
+import org.omg.dds.runtime.*;
+import org.omg.dds.runtime.DDSRuntime;
+
+public class OSPLRuntime extends DDSRuntime {
+    // Default QoS Policy Provider
+    public TopicPolicyProvider getTopicPolicyProvider() {
+        return null;
+    }
+
+    public DataReaderPolicyProvider getDataReaderPolicyProvider() {
+        return null;
+    }
+    public SubscriberPolicyProvider getSubscriberPolicyProvider() {
+        return null;
+    }
+
+    public DataWriterPolicyProvider getDataWriterPolicyProvider() {
+        return null;
+    }
+    public PublisherPolicyProvider getPublisherPolicyProvider() {
+        return null;
+    }
+
+    public DomainParticipantPolicyProvider getDomainParticipantPolicyProvider() {
+        return null;
+    }
+
+    // Default QoS Provider
+    public QosProvider getQosProvider() {
+        return null;
+    }
 }

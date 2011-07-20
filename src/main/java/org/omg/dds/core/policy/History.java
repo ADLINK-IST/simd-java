@@ -18,6 +18,7 @@
 
 package org.omg.dds.core.policy;
 
+import com.sun.org.apache.xalan.internal.xsltc.dom.KeyIndex;
 import org.omg.dds.pub.DataWriter;
 import org.omg.dds.sub.DataReader;
 import org.omg.dds.topic.Topic;
@@ -76,26 +77,15 @@ import org.omg.dds.topic.Topic;
  * @see Reliability
  * @see ResourceLimits
  */
-public interface History extends QosPolicy {
-    // -----------------------------------------------------------------------
-    // Methods
-    // -----------------------------------------------------------------------
+public class History implements QosPolicy {
 
-    /**
-     * @return the kind
-     */
-    public Kind getKind();
+    public static final int ID = 13;
+    public static final String NAME = "History";
+    public static final History KEEP_LAST = new History(Kind.KEEP_LAST, 1);
+    public static final History KEEP_ALL = new History(Kind.KEEP_ALL);
 
-    /**
-     * @return the depth
-     */
-    public int getDepth();
-
-
-
-    // -----------------------------------------------------------------------
-    // Types
-    // -----------------------------------------------------------------------
+    private Kind kind;
+    private int depth;
 
     public enum Kind {
         /**
@@ -126,5 +116,57 @@ public interface History extends QosPolicy {
          */
         KEEP_ALL
     }
+
+    private History(Kind kind) {
+        this.kind = kind;
+    }
+
+    private History(Kind kind, int depth) {
+        this.kind = kind;
+        this.depth = depth;
+    }
+
+    // -----------------------------------------------------------------------
+    // Methods
+    // -----------------------------------------------------------------------
+
+    /**
+     * @return the kind
+     */
+    public Kind getKind() {
+        return this.kind;
+    }
+
+    /**
+     * @return the depth
+     */
+    public int getDepth() {
+        return this.depth;
+    }
+
+    public static History KeepLast() {
+        return History.KEEP_LAST;
+    }
+
+    public static History KeepLast(int depth) {
+        return new History(Kind.KEEP_LAST, depth);
+    }
+
+    public static History KeepAll() {
+        return History.KEEP_ALL;
+    }
+
+    public int getPolicyId() {
+        return ID;
+    }
+
+    public String getPolicyName() {
+        return NAME;
+    }
+
+    // -----------------------------------------------------------------------
+    // Types
+    // -----------------------------------------------------------------------
+
 
 }
