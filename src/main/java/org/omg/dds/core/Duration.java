@@ -29,8 +29,54 @@ import org.omg.dds.type.Nested;
  */
 @Extensibility(Extensibility.Kind.FINAL_EXTENSIBILITY)
 @Nested
-public abstract class Duration implements Value, Comparable<Duration>
+public class Duration implements Value, Comparable<Duration>
 {
+    private static final Duration INFINITE = new Duration(0x7fffffffffffffffL, 0x7fffffffffffffffL);
+    private static final Duration ZERO     = new Duration(0, 0);
+
+    private long sec;
+    private long nanoSec;
+
+    public Duration(long sec) {
+        this.sec = sec;
+        this.nanoSec = 0;
+    }
+    public Duration(long sec, long nanoSec) {
+        this.sec = sec;
+        this.nanoSec = nanoSec;
+    }
+
+    /**
+     * Compares two <code>Duration</code> instances.
+     *
+     * @param that the <code>Duration</code> instance that will be
+     *              compared with this <code>Duration</code>.
+     * @return (1) a negative value if (this < that),  (2) zero if (this == that),
+     *         and (3) a positive value if (this > that)
+     */
+    public int compareTo(Duration that) {
+        //TODO: Implement
+        // return value < 0 means (this < that)
+        // return value == 0 means (this == that)
+        // return value > 0 means (this > that)
+
+        return 0;
+    }
+
+
+    /**
+     *
+     * @param that
+     * @return
+     */
+    public Duration add(Duration that) {
+        //TODO: FixMe!!!
+        long sec = this.sec + that.sec;
+        long nanoSec = this.nanoSec + that.nanoSec;
+
+        return new Duration(sec, nanoSec);
+    }
+
     // -----------------------------------------------------------------------
     // Private Constants
     // -----------------------------------------------------------------------
@@ -49,7 +95,7 @@ public abstract class Duration implements Value, Comparable<Duration>
      * @return  An unmodifiable {@link Duration} of infinite length.
      */
     public static Duration infinite() {
-        return null;
+        return INFINITE;
     }
 
 
@@ -58,7 +104,7 @@ public abstract class Duration implements Value, Comparable<Duration>
      * @return  A {@link Duration} of zero length.
      */
     public static Duration zero() {
-        return null;
+        return ZERO;
     }
 
 
@@ -91,7 +137,9 @@ public abstract class Duration implements Value, Comparable<Duration>
      * @see     Long#MAX_VALUE
      * @see     TimeUnit
      */
-    public abstract long getDuration(TimeUnit inThisUnit);
+    public long getDuration(TimeUnit inThisUnit) {
+        return 0;
+    }
 
     /**
      * If getting the magnitude of this duration in the given
@@ -125,8 +173,9 @@ public abstract class Duration implements Value, Comparable<Duration>
      * @see     Long#MAX_VALUE
      * @see     TimeUnit
      */
-    public abstract long getRemainder(
-            TimeUnit primaryUnit, TimeUnit remainderUnit);
+    public long getRemainder(TimeUnit primaryUnit, TimeUnit remainderUnit) {
+        return 0;
+    }
 
 
     // --- Query: ------------------------------------------------------------
@@ -139,7 +188,9 @@ public abstract class Duration implements Value, Comparable<Duration>
      * 
      * @see     #getDuration(TimeUnit)
      */
-    public abstract boolean isZero();
+    public boolean isZero() {
+        return false;
+    }
 
     /**
      * Report whether this duration lasts forever.
@@ -149,13 +200,17 @@ public abstract class Duration implements Value, Comparable<Duration>
      * 
      * <code>this.equals(infiniteDuration(this.getBootstrap()))</code>
      * 
-     * @see     #infiniteDuration()
+     * @see     #infinite()
      */
-    public abstract boolean isInfinite();
+    public boolean isInfinite() {
+        return false;
+    }
 
 
     // --- From Object: ------------------------------------------------------
 
     @Override
-    public abstract Duration clone();
+    public Duration clone() {
+        return new Duration(this.sec, this.nanoSec);
+    }
 }

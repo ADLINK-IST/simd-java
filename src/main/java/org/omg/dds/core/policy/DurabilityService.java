@@ -55,31 +55,51 @@ public class DurabilityService implements QosPolicy {
     private int maxInstances;
     private int maxSamplesPerInstance;
 
-    public Duration getServiceCleanupDelay();
+    public Duration getServiceCleanupDelay() {
+        return this.cleanupDelay;
+    }
 
     /**
      * @return the historyKind
      */
-    public History.Kind getHistoryKind();
+    public History.Kind getHistoryKind() {
+        return this.history.getKind();
+    }
 
     /**
      * @return the historyDepth
      */
-    public int getHistoryDepth();
+    public int getHistoryDepth() {
+        return this.history.getDepth();
+    }
 
     /**
      * @return the maxSamples
      */
-    public int getMaxSamples();
+    public int getMaxSamples() {
+        return this.maxSamples;
+    }
 
     /**
      * @return the maxInstances
      */
-    public int getMaxInstances();
+    public int getMaxInstances() {
+        return this.maxInstances;
+    }
 
     /**
      * @return the maxSamplesPerInstance
      */
-    public int getMaxSamplesPerInstance();
+    public int getMaxSamplesPerInstance() {
+        return this.maxSamplesPerInstance;
+    }
+
+    public int getPolicyId() {
+        return ID;
+    }
+
+    public String getPolicyName() {
+        return NAME;
+    }
 
 }
