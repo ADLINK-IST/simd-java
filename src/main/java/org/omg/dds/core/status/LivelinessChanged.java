@@ -30,40 +30,14 @@ import org.omg.dds.topic.Topic;
  *
  * @param <TYPE>    The data type of the source {@link DataReader}.
  * 
- * @see LivelinessLostStatus
+ * @see LivelinessLost
  */
-public abstract class LivelinessChangedStatus<TYPE>
-extends Status<LivelinessChangedStatus<TYPE>, DataReader<TYPE>> {
+public abstract class LivelinessChanged extends Status<LivelinessChanged> {
     // -----------------------------------------------------------------------
     // Constants
     // -----------------------------------------------------------------------
 
     private static final long serialVersionUID = -6569834894650163848L;
-
-
-
-    // -----------------------------------------------------------------------
-    // Object Life Cycle
-    // -----------------------------------------------------------------------
-
-    /**
-     * @param bootstrap Identifies the Service instance to which the new
-     *                  object will belong.
-     */
-    /*
-    public static <TYPE> LivelinessChangedStatus<TYPE>
-    newLivelinessChangedStatus(Bootstrap bootstrap) {
-        return bootstrap.getSPI().newLivelinessChangedStatus();
-    }
-     */
-
-    // -----------------------------------------------------------------------
-
-    protected LivelinessChangedStatus(DataReader<TYPE> source) {
-        super(source);
-    }
-
-
 
     // -----------------------------------------------------------------------
     // Methods

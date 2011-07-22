@@ -18,9 +18,6 @@
 
 package org.omg.dds.core.policy;
 
-import com.sun.jmx.snmp.SnmpString;
-import com.sun.tools.javac.util.Name;
-import org.omg.CORBA.portable.IDLEntity;
 import org.omg.dds.pub.DataWriter;
 import org.omg.dds.pub.Publisher;
 import org.omg.dds.sub.DataReader;

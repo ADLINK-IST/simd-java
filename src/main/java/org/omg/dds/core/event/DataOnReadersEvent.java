@@ -1,3 +1,5 @@
+package org.omg.dds.core.event;
+
 /* Copyright 2010, Object Management Group, Inc.
  * Copyright 2010, PrismTech, Inc.
  * Copyright 2010, Real-Time Innovations, Inc.
@@ -16,34 +18,27 @@
  * limitations under the License.
  */
 
-package org.omg.dds.domain;
-
-import org.omg.dds.core.policy.EntityFactory;
-import org.omg.dds.core.policy.UserData;
+import org.omg.dds.sub.Subscriber;
 
 
-public class DomainParticipantQos {
+/**
+ * New information is available.
+ *
+ * @see org.omg.dds.core.event.DataAvailableEvent
+ */
+public abstract class DataOnReadersEvent
+extends Event<DataOnReadersEvent, Subscriber> {
+    // -----------------------------------------------------------------------
+    // Constants
+    // -----------------------------------------------------------------------
 
-    private UserData userData;
-    private EntityFactory entityFactory;
+    private static final long serialVersionUID = -770537656671131411L;
 
-    public DomainParticipantQos(UserData userData, EntityFactory entityFactory) {
-        this.userData = userData;
-        this.entityFactory = entityFactory;
+
+
+    // -----------------------------------------------------------------------
+
+    protected DataOnReadersEvent(Subscriber source) {
+        super(source);
     }
-
-    /**
-     * @return the userData
-     */
-    public UserData getUserData() {
-        return userData;
-    }
-
-    /**
-     * @return the entityFactory
-     */
-    public EntityFactory getEntityFactory() {
-        return entityFactory;
-    }
-
 }

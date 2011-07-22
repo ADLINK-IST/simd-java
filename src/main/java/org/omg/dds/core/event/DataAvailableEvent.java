@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.omg.dds.core.status;
+package org.omg.dds.core.event;
 
 import org.omg.dds.sub.DataReader;
 
@@ -26,10 +26,10 @@ import org.omg.dds.sub.DataReader;
  *
  * @param <TYPE>    The data type of the source {@link DataReader}.
  * 
- * @see DataOnReadersStatus
+ * @see org.omg.dds.core.status.DataOnReaders
  */
-public abstract class DataAvailableStatus<TYPE>
-extends Status<DataAvailableStatus<TYPE>, DataReader<TYPE>> {
+public abstract class DataAvailableEvent<TYPE>
+extends Event<DataAvailableEvent<TYPE>, DataReader<TYPE>> {
     // -----------------------------------------------------------------------
     // Constants
     // -----------------------------------------------------------------------
@@ -43,7 +43,7 @@ extends Status<DataAvailableStatus<TYPE>, DataReader<TYPE>> {
     // -----------------------------------------------------------------------
 
     /*
-    public static <TYPE> DataAvailableStatus<TYPE>
+    public static <TYPE> DataAvailableEvent<TYPE>
     newDataAvailableStatus(Bootstrap bootstrap) {
         return bootstrap.getSPI().newDataAvailableStatus();
     }
@@ -51,7 +51,7 @@ extends Status<DataAvailableStatus<TYPE>, DataReader<TYPE>> {
 
     // -----------------------------------------------------------------------
 
-    protected DataAvailableStatus(DataReader<TYPE> source) {
+    protected DataAvailableEvent(DataReader<TYPE> source) {
         super(source);
     }
 }

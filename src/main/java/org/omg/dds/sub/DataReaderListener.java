@@ -21,13 +21,7 @@ package org.omg.dds.sub;
 import java.util.EventListener;
 
 import org.omg.dds.core.Entity;
-import org.omg.dds.core.status.DataAvailableStatus;
-import org.omg.dds.core.status.LivelinessChangedStatus;
-import org.omg.dds.core.status.RequestedDeadlineMissedStatus;
-import org.omg.dds.core.status.RequestedIncompatibleQosStatus;
-import org.omg.dds.core.status.SampleLostStatus;
-import org.omg.dds.core.status.SampleRejectedStatus;
-import org.omg.dds.core.status.SubscriptionMatchedStatus;
+import org.omg.dds.core.event.*;
 import org.omg.dds.pub.DataWriter;
 
 
@@ -36,7 +30,7 @@ import org.omg.dds.pub.DataWriter;
  * to have an associated listener. In this case, the associated listener must
  * be of concrete type DataReaderListener.
  * 
- * The operation {@link #onSubscriptionMatched(SubscriptionMatchedStatus)} is
+ * The operation {@link #onSubscriptionMatched(org.omg.dds.core.status.SubscriptionMatched)} is
  * intended to inform the application of the discovery of {@link DataWriter}
  * entities that match the DataReader. Some implementations of the service
  * may not propagate this information. In that case the DDS specification
@@ -47,18 +41,18 @@ import org.omg.dds.pub.DataWriter;
  */
 public interface DataReaderListener<TYPE> extends EventListener {
     public void onRequestedDeadlineMissed(
-            RequestedDeadlineMissedStatus<TYPE> status);
+            RequestedDeadlineMissedEvent<TYPE> e);
 
     public void onRequestedIncompatibleQos(
-            RequestedIncompatibleQosStatus<TYPE> status);
+            RequestedIncompatibleQosEvent<TYPE> e);
 
-    public void onSampleRejected(SampleRejectedStatus<TYPE> status);
+    public void onSampleRejected(SampleRejectedEvent<TYPE> e);
 
-    public void onLivelinessChanged(LivelinessChangedStatus<TYPE> status);
+    public void onLivelinessChanged(LivelinessChangedEvent<TYPE> e);
 
-    public void onDataAvailable(DataAvailableStatus<TYPE> status);
+    public void onDataAvailable(DataAvailableEvent<TYPE> e);
 
-    public void onSubscriptionMatched(SubscriptionMatchedStatus<TYPE> status);
+    public void onSubscriptionMatched(SubscriptionMatchedEvent<TYPE> e);
 
-    public void onSampleLost(SampleLostStatus<TYPE> status);
+    public void onSampleLost(SampleLostEvent<TYPE> e);
 }

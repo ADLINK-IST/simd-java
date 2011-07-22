@@ -21,7 +21,6 @@ package org.omg.dds.core.policy;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.Entity;
 import org.omg.dds.core.WaitSet;
-import org.omg.dds.core.status.LivelinessChangedStatus;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.pub.DataWriter;
@@ -98,7 +97,7 @@ import org.omg.dds.topic.Topic;
  * 
  * Changes in LIVELINESS must be detected by the Service with a
  * time granularity greater or equal to the leaseDuration. This ensures that
- * the value of the {@link LivelinessChangedStatus} is updated at least once
+ * the value of the {@link org.omg.dds.core.status.LivelinessChanged} is updated at least once
  * during each leaseDuration and the related Listeners and {@link WaitSet}s
  * are notified within a leaseDuration from the time the LIVELINESS changed.
  */

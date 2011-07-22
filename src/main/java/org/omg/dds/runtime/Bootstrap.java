@@ -6,8 +6,8 @@ import org.opensplice.psm.java.OSPLRuntime;
  *  will be provided by the vendor JAR. The purpose of this class
  *  is to bind the API with a specific DDS vendor implementation.
  */
-public class DDSBinder {
-    public static DDSRuntime bind() {
+public class Bootstrap {
+    public static DDSRuntime runtime() {
         return new OSPLRuntime();
     }
 }

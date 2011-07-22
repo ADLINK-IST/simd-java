@@ -20,8 +20,6 @@ package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Condition;
 import org.omg.dds.core.WaitSet;
-import org.omg.dds.core.status.OfferedIncompatibleQosStatus;
-import org.omg.dds.core.status.RequestedIncompatibleQosStatus;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.pub.DataWriter;
 import org.omg.dds.sub.DataReader;
@@ -89,8 +87,8 @@ import org.omg.dds.topic.Topic;
  * 
  * Incompatibilities between local DataReader/DataWriter entities and the
  * corresponding fictitious "built-in transient/persistent entities" cause
- * the {@link RequestedIncompatibleQosStatus}/
- * {@link OfferedIncompatibleQosStatus} to change and the corresponding
+ * the {@link org.omg.dds.core.status.RequestedIncompatibleQos}/
+ * {@link org.omg.dds.core.status.OfferedIncompatibleQos} to change and the corresponding
  * Listener invocations and/or signaling of {@link Condition} and
  * {@link WaitSet} objects as they would with non-fictitious entities.
  * 

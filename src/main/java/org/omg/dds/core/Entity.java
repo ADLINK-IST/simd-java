@@ -122,8 +122,8 @@ public interface Entity<SELF extends Entity<SELF>>
      * @return  the argument as a convenience in order to facilitate call
      *          chaining. 
      */
-    public Collection<Class<? extends Status<?, ?>>> getStatusChanges(
-            Collection<Class<? extends Status<?, ?>>> statuses);
+    public Collection<Class<? extends Status<?>>> getStatusChanges(
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * @return  the {@link InstanceHandle} that represents the Entity.

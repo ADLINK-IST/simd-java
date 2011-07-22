@@ -21,8 +21,6 @@ package org.omg.dds.core.policy;
 import org.omg.dds.core.Condition;
 import org.omg.dds.core.Entity;
 import org.omg.dds.core.Value;
-import org.omg.dds.core.status.OfferedIncompatibleQosStatus;
-import org.omg.dds.core.status.RequestedIncompatibleQosStatus;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.pub.DataWriter;
 import org.omg.dds.pub.DataWriterListener;
@@ -85,8 +83,8 @@ import org.omg.dds.type.Nested;
  * compatible, then communication will be established. If the two policies
  * are not compatible, the Service will not establish communications between
  * the two {@link Entity} objects and will record this fact by means of the
- * {@link OfferedIncompatibleQosStatus} status on the publisher end and
- * {@link RequestedIncompatibleQosStatus} status on the subscriber end. The
+ * {@link org.omg.dds.core.status.OfferedIncompatibleQos} status on the publisher end and
+ * {@link org.omg.dds.core.status.RequestedIncompatibleQos} status on the subscriber end. The
  * application can detect this fact by means of a listener (e.g.
  * {@link DataReaderListener} or {@link DataWriterListener}) or
  * {@link Condition}s.

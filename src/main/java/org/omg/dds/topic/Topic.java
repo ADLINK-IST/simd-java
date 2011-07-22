@@ -21,8 +21,7 @@ package org.omg.dds.topic;
 import org.omg.dds.core.Entity;
 import org.omg.dds.core.NotEnabledException;
 import org.omg.dds.core.StatusCondition;
-import org.omg.dds.core.status.InconsistentTopicStatus;
-import org.omg.dds.domain.DomainParticipant;
+import org.omg.dds.core.status.InconsistentTopic;
 import org.omg.dds.pub.DataWriter;
 
 
@@ -49,7 +48,7 @@ import org.omg.dds.pub.DataWriter;
 public interface Topic<TYPE> extends TopicDescription<TYPE>, Entity<Topic<TYPE>> {
     /**
      * This method allows the application to retrieve the
-     * {@link InconsistentTopicStatus} of the Topic.
+     * {@link org.omg.dds.core.status.InconsistentTopic} of the Topic.
      * 
      * Each {@link Entity} has a set of relevant communication
      * statuses. A change of status causes the corresponding Listener to be
@@ -59,6 +58,5 @@ public interface Topic<TYPE> extends TopicDescription<TYPE>, Entity<Topic<TYPE>>
      * @see     TopicListener
      * @see     StatusCondition
      */
-    public InconsistentTopicStatus<TYPE> getInconsistentTopicStatus(
-            InconsistentTopicStatus<TYPE> status);
+    public InconsistentTopic getInconsistentTopicStatus();
 }

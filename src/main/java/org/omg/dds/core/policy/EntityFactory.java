@@ -63,10 +63,40 @@ import org.omg.dds.topic.Topic;
  * default, it is not necessary to explicitly call enable on newly created
  * entities.
  */
-public interface EntityFactory extends QosPolicy {
+public class EntityFactory implements QosPolicy {
+
+    public static final int ID = 15;
+    private static final String NAME = "EntityFactory";
+
+    private final static EntityFactory AUTO_ENABLE = new EntityFactory(true);
+    private final static EntityFactory EXPLICIT_ENABLE = new EntityFactory(false);
+    private boolean autoEnable;
+
+    private EntityFactory(boolean autoEnable) {
+        this.autoEnable = autoEnable;
+    }
+
+    public static final EntityFactory AutoEnable() {
+        return AUTO_ENABLE;
+    }
+
+    public static final EntityFactory ExplicitEnable() {
+        return EXPLICIT_ENABLE;
+    }
+
     /**
      * @return the autoEnableCreatedEntities
      */
-    public boolean isAutoEnableCreatedEntities();
+    public boolean isAutoEnable() {
+        return this.autoEnable;
+    }
 
+
+    public int getPolicyId() { return ID; }
+
+    public String getPolicyName() { return NAME; }
+
+    public boolean equals(Object that) {
+        return (this == that);
+    }
 }

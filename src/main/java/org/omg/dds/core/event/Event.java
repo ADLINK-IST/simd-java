@@ -1,3 +1,10 @@
+package org.omg.dds.core.event;
+
+import org.omg.dds.core.Entity;
+
+import java.util.EventObject;
+
+
 /* Copyright 2010, Object Management Group, Inc.
  * Copyright 2010, PrismTech, Inc.
  * Copyright 2010, Real-Time Innovations, Inc.
@@ -16,7 +23,6 @@
  * limitations under the License.
  */
 
-package org.omg.dds.core.status;
 
 import java.util.EventObject;
 import java.util.Set;
@@ -26,17 +32,19 @@ import org.omg.dds.core.StatusCondition;
 
 
 /**
- * Status is the abstract root class for all communication status objects.
- * All concrete kinds of Status classes extend this class.
- * 
- * Each concrete {@link Entity} is associated with a set of Status objects
+ * Event is the abstract root class for all communication event objects.
+ * All concrete kinds of Eventclasses extend this class.
+ *
+ * Each concrete {@link org.omg.dds.core.Entity} is associated with a set of Status objects
  * whose value represents the "communication status" of that entity. These
  * status values can be accessed with corresponding methods on the Entity.
  * The changes on these status values are the ones that both cause activation
- * of the corresponding {@link StatusCondition} objects and trigger invocation
- * of the proper Listener objects to asynchronously inform the application.
+ * of the corresponding {@link org.omg.dds.core.StatusCondition} objects and trigger invocation
+ * of the proper Listener objects to asynchronously inform the application. The changes
+ * are notified via concrete subclasses of the <code>Event</code> type.
  */
-public abstract class Status<SELF extends Status> {
+public abstract class Event<SELF extends Event<SELF, SOURCE>,
+                             SOURCE extends Entity<SOURCE>> extends EventObject {
     // -----------------------------------------------------------------------
     // Constants
     // -----------------------------------------------------------------------
@@ -45,15 +53,28 @@ public abstract class Status<SELF extends Status> {
 
 
 
+    // -----------------------------------------------------------------------
+
+    protected Event(SOURCE source) {
+        super(source);
+    }
+
 
 
     // -----------------------------------------------------------------------
     // Methods
     // -----------------------------------------------------------------------
 
+    // --- API: --------------------------------------------------------------
+
+    @Override
+    public abstract SOURCE getSource();
+    //{
+    //    return (SOURCE)super.getSource();
+    //}
+
 
     @Override
     public abstract SELF clone();
-
 
 }

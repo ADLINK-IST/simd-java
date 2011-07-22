@@ -28,37 +28,14 @@ import org.omg.dds.pub.DataWriter;
  *
  * @param <TYPE>    The data type of the source {@link DataWriter}.
  * 
- * @see RequestedDeadlineMissedStatus
+ * @see RequestedDeadlineMissed
  */
-public abstract class OfferedDeadlineMissedStatus<TYPE>
-extends Status<OfferedDeadlineMissedStatus<TYPE>, DataWriter<TYPE>> {
+public abstract class OfferedDeadlineMissed extends Status<OfferedDeadlineMissed> {
     // -----------------------------------------------------------------------
     // Constants
     // -----------------------------------------------------------------------
 
     private static final long serialVersionUID = 7958557115889148585L;
-
-
-
-    // -----------------------------------------------------------------------
-    // Object Life Cycle
-    // -----------------------------------------------------------------------
-
-
-    /*
-    public static <TYPE> OfferedDeadlineMissedStatus<TYPE>
-    newOfferedDeadlineMissedStatus(Bootstrap bootstrap) {
-        return bootstrap.getSPI().newOfferedDeadlineMissedStatus();
-    } */
-
-
-    // -----------------------------------------------------------------------
-
-    protected OfferedDeadlineMissedStatus(DataWriter<TYPE> source) {
-        super(source);
-    }
-
-
 
     // -----------------------------------------------------------------------
     // Methods

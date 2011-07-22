@@ -21,10 +21,13 @@ package org.omg.dds.pub;
 import java.util.EventListener;
 
 import org.omg.dds.core.Entity;
-import org.omg.dds.core.status.LivelinessLostStatus;
-import org.omg.dds.core.status.OfferedDeadlineMissedStatus;
-import org.omg.dds.core.status.OfferedIncompatibleQosStatus;
-import org.omg.dds.core.status.PublicationMatchedStatus;
+import org.omg.dds.core.event.LivelinessLostEvent;
+import org.omg.dds.core.event.OfferedDeadlineMissedEvent;
+import org.omg.dds.core.event.PublicationMatchedEvent;
+import org.omg.dds.core.status.LivelinessLost;
+import org.omg.dds.core.status.OfferedDeadlineMissed;
+import org.omg.dds.core.status.OfferedIncompatibleQos;
+import org.omg.dds.core.status.PublicationMatched;
 
 
 /**
@@ -35,13 +38,11 @@ import org.omg.dds.core.status.PublicationMatchedStatus;
  * @param <TYPE>    The concrete type of the data written by the DataWriter.
  */
 public interface DataWriterListener<TYPE> extends EventListener {
-    public void onOfferedDeadlineMissed(
-            OfferedDeadlineMissedStatus<TYPE> status);
+    public void onOfferedDeadlineMissed(OfferedDeadlineMissedEvent<TYPE> e);
 
-    public void onOfferedIncompatibleQos(
-            OfferedIncompatibleQosStatus<TYPE> status);
+    public void onOfferedIncompatibleQos(OfferedDeadlineMissedEvent<TYPE> e);
 
-    public void onLivelinessLost(LivelinessLostStatus<TYPE> status);
+    public void onLivelinessLost(LivelinessLostEvent<TYPE> e);
 
-    public void onPublicationMatched(PublicationMatchedStatus<TYPE> status);
+    public void onPublicationMatched(PublicationMatchedEvent<TYPE> e);
 }

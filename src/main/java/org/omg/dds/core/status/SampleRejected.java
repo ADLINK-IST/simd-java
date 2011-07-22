@@ -18,40 +18,20 @@
 
 package org.omg.dds.core.status;
 
-import org.omg.dds.topic.Topic;
+import org.omg.dds.sub.DataReader;
+import org.omg.dds.core.InstanceHandle;
 
 
 /**
- * Another topic exists with the same name but different characteristics.
- * 
- * @param <TYPE>    The data type of the source {@link Topic}
+ * A (received) sample has been rejected.
+ *
  */
-public abstract class InconsistentTopicStatus<TYPE>
-extends Status<InconsistentTopicStatus<TYPE>, Topic<TYPE>> {
+public abstract class SampleRejected extends Status<SampleRejected> {
     // -----------------------------------------------------------------------
     // Constants
     // -----------------------------------------------------------------------
 
-    private static final long serialVersionUID = 4436349983298916816L;
-
-
-
-    // -----------------------------------------------------------------------
-    // Object Life Cycle
-    // -----------------------------------------------------------------------
-
-    /*
-    public static <TYPE> InconsistentTopicStatus<TYPE>
-    newInconsistentTopicStatus(Bootstrap bootstrap) {
-        return bootstrap.getSPI().newInconsistentTopicStatus();
-    }
-      */
-
-    // -----------------------------------------------------------------------
-
-    protected InconsistentTopicStatus(Topic<TYPE> source) {
-        super(source);
-    }
+    private static final long serialVersionUID = -3473343064305797468L;
 
 
 
@@ -60,16 +40,39 @@ extends Status<InconsistentTopicStatus<TYPE>, Topic<TYPE>> {
     // -----------------------------------------------------------------------
 
     /**
-     * Total cumulative count of the {@link Topic}s discovered whose name
-     * matches the Topic to which this status is attached and whose type is
-     * inconsistent with the Topic.
+     * Total cumulative count of samples rejected by the {@link DataReader}.
      */
     public abstract int getTotalCount();
 
     /**
-     * The incremental number of inconsistent topics discovered since the
-     * last time the listener was called or the status was read.
+     * The incremental number of samples rejected since the last time the
+     * listener was called or the status was read.
      */
     public abstract int getTotalCountChange();
+
+    /**
+     * Reason for rejecting the last sample rejected. If no samples have been
+     * rejected, the reason is the special value {@link Kind#NOT_REJECTED}.
+     */
+    public abstract Kind getLastReason();
+
+    /**
+     * Handle to the instance being updated by the last sample that was
+     * rejected.
+     */
+    public abstract InstanceHandle getLastInstanceHandle();
+
+
+
+    // -----------------------------------------------------------------------
+    // Types
+    // -----------------------------------------------------------------------
+
+    public static enum Kind {
+        NOT_REJECTED,
+        REJECTED_BY_INSTANCES_LIMIT,
+        REJECTED_BY_SAMPLES_LIMIT,
+        REJECTED_BY_SAMPLES_PER_INSTANCE_LIMIT
+    }
 
 }

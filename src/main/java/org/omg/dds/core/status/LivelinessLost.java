@@ -27,12 +27,10 @@ import org.omg.dds.sub.DataReader;
  * {@link org.omg.dds.core.policy.Liveliness} was not respected; thus {@link DataReader}
  * entities will consider the DataWriter as no longer "active."
  *
- * @param <TYPE>    The data type of the source {@link DataWriter}.
  * 
- * @see SubscriptionMatchedStatus
+ * @see SubscriptionMatched
  */
-public abstract class LivelinessLostStatus<TYPE>
-extends Status<LivelinessLostStatus<TYPE>, DataWriter<TYPE>> {
+public abstract class LivelinessLost extends Status<LivelinessLost> {
     // -----------------------------------------------------------------------
     // Constants
     // -----------------------------------------------------------------------
@@ -40,23 +38,6 @@ extends Status<LivelinessLostStatus<TYPE>, DataWriter<TYPE>> {
     private static final long serialVersionUID = -3741038559289576020L;
 
 
-
-    // -----------------------------------------------------------------------
-    // Object Life Cycle
-    // -----------------------------------------------------------------------
-
-    /*
-    public static <TYPE> LivelinessLostStatus<TYPE>
-    newLivelinessLostStatus(Bootstrap bootstrap) {
-        return bootstrap.getSPI().newLivelinessLostStatus();
-    }
-      */
-
-    // -----------------------------------------------------------------------
-
-    protected LivelinessLostStatus(DataWriter<TYPE> source) {
-        super(source);
-    }
 
 
 

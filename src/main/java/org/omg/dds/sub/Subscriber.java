@@ -26,7 +26,6 @@ import org.omg.dds.core.Entity;
 import org.omg.dds.core.InconsistentPolicyException;
 import org.omg.dds.core.NotEnabledException;
 import org.omg.dds.core.PreconditionNotMetException;
-import org.omg.dds.core.status.DataAvailableStatus;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.topic.Topic;
@@ -122,7 +121,7 @@ public interface Subscriber extends Entity<Subscriber> {
             TopicDescription<TYPE> topic,
             DataReaderQos qos,
             DataReaderListener<TYPE> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * Create a new data reader.
@@ -138,7 +137,7 @@ public interface Subscriber extends Entity<Subscriber> {
             String qosLibraryName,
             String qosProfileName,
             DataReaderListener<TYPE> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create DataReader of built-in bytes type: -------------------------
@@ -164,7 +163,7 @@ public interface Subscriber extends Entity<Subscriber> {
             TopicDescription<byte[]> topic,
             DataReaderQos qos,
             DataReaderListener<byte[]> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * Create a new data reader for this built-in type.
@@ -180,7 +179,7 @@ public interface Subscriber extends Entity<Subscriber> {
             String qosLibraryName,
             String qosProfileName,
             DataReaderListener<byte[]> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create DataReader of built-in KeyedBytes type: --------------------
@@ -206,7 +205,7 @@ public interface Subscriber extends Entity<Subscriber> {
             TopicDescription<KeyedBytes> topic,
             DataReaderQos qos,
             DataReaderListener<KeyedBytes> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * Create a new data reader for this built-in type.
@@ -222,7 +221,7 @@ public interface Subscriber extends Entity<Subscriber> {
             String qosLibraryName,
             String qosProfileName,
             DataReaderListener<KeyedBytes> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create DataReader of built-in string type: ------------------------
@@ -248,7 +247,7 @@ public interface Subscriber extends Entity<Subscriber> {
             TopicDescription<String> topic,
             DataReaderQos qos,
             DataReaderListener<String> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * Create a new data reader for this built-in type.
@@ -264,7 +263,7 @@ public interface Subscriber extends Entity<Subscriber> {
             String qosLibraryName,
             String qosProfileName,
             DataReaderListener<String> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create DataReader of built-in KeyedString type: -------------------
@@ -290,7 +289,7 @@ public interface Subscriber extends Entity<Subscriber> {
             TopicDescription<KeyedString> topic,
             DataReaderQos qos,
             DataReaderListener<KeyedString> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * Create a new data reader for this built-in type.
@@ -306,7 +305,7 @@ public interface Subscriber extends Entity<Subscriber> {
             String qosLibraryName,
             String qosProfileName,
             DataReaderListener<KeyedString> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Lookup operations: ------------------------------------------------
@@ -510,13 +509,13 @@ public interface Subscriber extends Entity<Subscriber> {
 
     /**
      * This operation invokes the operation
-     * {@link DataReaderListener#onDataAvailable(org.omg.dds.core.status.DataAvailableStatus)}
+     * {@link DataReaderListener#onDataAvailable(org.omg.dds.core.event.DataAvailableStatus)}
      * on the DataReaderListener objects attached to contained DataReader
-     * entities with a {@link DataAvailableStatus} that is considered
+     * entities with a {@link org.omg.dds.core.event.DataAvailableStatus} that is considered
      * changed.
      * 
      * This operation is typically invoked from
-     * {@link SubscriberListener#onDataOnReaders(org.omg.dds.core.status.DataOnReadersStatus)}.
+     * {@link SubscriberListener#onDataOnReaders(org.omg.dds.core.status.DataOnReaders)}.
      * That way the SubscriberListener can delegate to the DataReaderListener
      * objects the handling of the data.
      */
@@ -603,12 +602,6 @@ public interface Subscriber extends Entity<Subscriber> {
      */
     public void setDefaultDataReaderQos(DataReaderQos qos);
 
-    /**
-     * @see     #setDefaultDataReaderQos(DataReaderQos)
-     */
-    public void setDefaultDataReaderQos(
-            String qosLibraryName,
-            String qosProfileName);
 
     /**
      * This operation copies the policies in the {@link TopicQos} to the

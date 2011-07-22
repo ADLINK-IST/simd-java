@@ -18,38 +18,36 @@
 
 package org.omg.dds.core.status;
 
-import org.omg.dds.sub.Subscriber;
+import org.omg.dds.sub.DataReader;
+import org.omg.dds.topic.Topic;
 
 
 /**
- * New information is available.
- * 
- * @see DataAvailableStatus
+ * A sample has been lost (never received).
+ *
  */
-public abstract class DataOnReadersStatus
-extends Status<DataOnReadersStatus, Subscriber> {
+public abstract class SampleLost extends Status<SampleLost> {
     // -----------------------------------------------------------------------
     // Constants
     // -----------------------------------------------------------------------
 
-    private static final long serialVersionUID = -770537656671131411L;
-
+    private static final long serialVersionUID = -520330521363610833L;
 
 
     // -----------------------------------------------------------------------
-    // Object Life Cycle
+    // Methods
     // -----------------------------------------------------------------------
 
-    /*
-    public static DataOnReadersStatus newDataOnReadersStatus(
-            Bootstrap bootstrap) {
-        return bootstrap.getSPI().newDataOnReadersStatus();
-    }
-      */
+    /**
+     * Total cumulative count of all samples lost across all instances of
+     * data published under the {@link Topic}.
+     */
+    public abstract int getTotalCount();
 
-    // -----------------------------------------------------------------------
+    /**
+     * The incremental number of samples lost since the last time the
+     * listener was called or the status was read.
+     */
+    public abstract int getTotalCountChange();
 
-    protected DataOnReadersStatus(Subscriber source) {
-        super(source);
-    }
 }

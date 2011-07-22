@@ -18,57 +18,34 @@
 
 package org.omg.dds.core.status;
 
-import org.omg.dds.sub.DataReader;
 import org.omg.dds.topic.Topic;
 
 
 /**
- * A sample has been lost (never received).
+ * Another topic exists with the same name but different characteristics.
  *
- * @param <TYPE>    The data type of the source {@link DataReader}.
  */
-public abstract class SampleLostStatus<TYPE>
-extends Status<SampleLostStatus<TYPE>, DataReader<TYPE>> {
+public abstract class InconsistentTopic extends Status<InconsistentTopic> {
     // -----------------------------------------------------------------------
     // Constants
     // -----------------------------------------------------------------------
 
-    private static final long serialVersionUID = -520330521363610833L;
-
-
-
-    // -----------------------------------------------------------------------
-    // Object Life Cycle
-    // -----------------------------------------------------------------------
-
-   /*
-    public static <TYPE> SampleLostStatus<TYPE>
-    newSampleLostStatus(Bootstrap bootstrap) {
-        return bootstrap.getSPI().newSampleLostStatus();
-    }
-     */
-
-    // -----------------------------------------------------------------------
-
-    protected SampleLostStatus(DataReader<TYPE> source) {
-        super(source);
-    }
-
-
+    private static final long serialVersionUID = 4436349983298916816L;
 
     // -----------------------------------------------------------------------
     // Methods
     // -----------------------------------------------------------------------
 
     /**
-     * Total cumulative count of all samples lost across all instances of
-     * data published under the {@link Topic}.
+     * Total cumulative count of the {@link Topic}s discovered whose name
+     * matches the Topic to which this status is attached and whose type is
+     * inconsistent with the Topic.
      */
     public abstract int getTotalCount();
 
     /**
-     * The incremental number of samples lost since the last time the
-     * listener was called or the status was read.
+     * The incremental number of inconsistent topics discovered since the
+     * last time the listener was called or the status was read.
      */
     public abstract int getTotalCountChange();
 

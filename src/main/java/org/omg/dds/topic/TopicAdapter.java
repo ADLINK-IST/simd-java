@@ -18,12 +18,12 @@
 
 package org.omg.dds.topic;
 
-import org.omg.dds.core.status.InconsistentTopicStatus;
+import org.omg.dds.core.event.InconsistentTopicEvent;
+import org.omg.dds.core.status.InconsistentTopic;
 
 
 public class TopicAdapter<TYPE> implements TopicListener<TYPE> {
-    public void onInconsistentTopic(
-            InconsistentTopicStatus<TYPE> status)
+    public void onInconsistentTopic(InconsistentTopicEvent<TYPE> status)
     {
         // empty
     }

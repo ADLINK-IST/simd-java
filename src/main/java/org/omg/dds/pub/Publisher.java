@@ -123,23 +123,7 @@ public interface Publisher extends Entity<Publisher> {
             Topic<TYPE> topic,
             DataWriterQos qos,
             DataWriterListener<TYPE> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
-
-    /**
-     * Create a new data writer.
-     * 
-     * @param statuses  Of which status changes the listener should be
-     *                  notified. A null collection signifies all status
-     *                  changes.
-     *
-     * @see     #createDataWriter(Topic, DataWriterQos, DataWriterListener, Collection)
-     */
-    public <TYPE> DataWriter<TYPE> createDataWriter(
-            Topic<TYPE> topic,
-            String qosLibraryName,
-            String qosProfileName,
-            DataWriterListener<TYPE> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create DataWriter for built-in bytes type: ------------------------
@@ -165,23 +149,7 @@ public interface Publisher extends Entity<Publisher> {
             Topic<byte[]> topic,
             DataWriterQos qos,
             DataWriterListener<byte[]> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
-
-    /**
-     * Create a new data writer for this built-in type.
-     * 
-     * @param statuses  Of which status changes the listener should be
-     *                  notified. A null collection signifies all status
-     *                  changes.
-     * 
-     * @see     #createDataWriter(Topic, DataWriterQos, DataWriterListener, Collection)
-     */
-    public BytesDataWriter createBytesDataWriter(
-            Topic<byte[]> topic,
-            String qosLibraryName,
-            String qosProfileName,
-            DataWriterListener<byte[]> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create DataWriter for built-in KeyedBytes type: -------------------
@@ -207,23 +175,9 @@ public interface Publisher extends Entity<Publisher> {
             Topic<KeyedBytes> topic,
             DataWriterQos qos,
             DataWriterListener<KeyedBytes> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
-    /**
-     * Create a new data writer for this built-in type.
-     * 
-     * @param statuses  Of which status changes the listener should be
-     *                  notified. A null collection signifies all status
-     *                  changes.
-     * 
-     * @see     #createDataWriter(Topic, DataWriterQos, DataWriterListener, Collection)
-     */
-    public KeyedBytesDataWriter createKeyedBytesDataWriter(
-            Topic<KeyedBytes> topic,
-            String qosLibraryName,
-            String qosProfileName,
-            DataWriterListener<KeyedBytes> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+
 
 
     // --- Create DataWriter for built-in string type: -----------------------
@@ -249,23 +203,7 @@ public interface Publisher extends Entity<Publisher> {
             Topic<String> topic,
             DataWriterQos qos,
             DataWriterListener<String> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
-
-    /**
-     * Create a new data writer for this built-in type.
-     * 
-     * @param statuses  Of which status changes the listener should be
-     *                  notified. A null collection signifies all status
-     *                  changes.
-     * 
-     * @see     #createDataWriter(Topic, DataWriterQos, DataWriterListener, Collection)
-     */
-    public StringDataWriter createStringDataWriter(
-            Topic<String> topic,
-            String qosLibraryName,
-            String qosProfileName,
-            DataWriterListener<String> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create DataWriter for built-in KeyedString type: ------------------
@@ -291,7 +229,7 @@ public interface Publisher extends Entity<Publisher> {
             Topic<KeyedString> topic,
             DataWriterQos qos,
             DataWriterListener<KeyedString> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * Create a new data writer for this built-in type.
@@ -307,7 +245,7 @@ public interface Publisher extends Entity<Publisher> {
             String qosLibraryName,
             String qosProfileName,
             DataWriterListener<KeyedString> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Lookup operations: ------------------------------------------------

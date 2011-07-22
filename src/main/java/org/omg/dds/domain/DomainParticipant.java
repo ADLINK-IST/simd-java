@@ -76,8 +76,7 @@ import org.omg.dds.type.TypeSupport;
  *     ({@link #ignoreTopic(InstanceHandle)}).</li>
  * </ul>
  */
-public interface DomainParticipant
-extends Entity<DomainParticipant> {
+public interface DomainParticipant extends Entity<DomainParticipant> {
     // --- Create Publisher: -------------------------------------------------
 
     /**
@@ -110,7 +109,7 @@ extends Entity<DomainParticipant> {
     public Publisher createPublisher(
             PublisherQos qos,
             PublisherListener listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * This operation creates a Publisher.
@@ -129,7 +128,7 @@ extends Entity<DomainParticipant> {
             String qosLibraryName,
             String qosProfileName,
             PublisherListener listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     // --- Create Subscriber: ------------------------------------------------
 
@@ -163,7 +162,7 @@ extends Entity<DomainParticipant> {
     public Subscriber createSubscriber(
             SubscriberQos qos,
             SubscriberListener listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * This operation creates a Subscriber.
@@ -182,7 +181,7 @@ extends Entity<DomainParticipant> {
             String qosLibraryName,
             String qosProfileName,
             SubscriberListener listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * This operation allows access to the built-in Subscriber. Each
@@ -241,7 +240,7 @@ extends Entity<DomainParticipant> {
             Class<TYPE> type,
             TopicQos qos,
             TopicListener<TYPE> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * This operation creates a Topic with the desired QoS policies and
@@ -265,7 +264,7 @@ extends Entity<DomainParticipant> {
             String qosLibraryName,
             String qosProfileName,
             TopicListener<TYPE> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create Topic with explicit TypeSupport: ---------------------------
@@ -310,30 +309,8 @@ extends Entity<DomainParticipant> {
             TypeSupport<TYPE> type,
             TopicQos qos,
             TopicListener<TYPE> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status<?>>> statuses);
 
-    /**
-     * This operation creates a Topic with the desired QoS policies and
-     * attaches to it the specified TopicListener.
-     * 
-     * The created Topic belongs to the DomainParticipant that is its
-     * factory.
-     * 
-     * @param   topicName   The name of the new Topic.
-     * @param   type        A {@link TypeSupport} representing the type of
-     *                      all samples to be published and subscribed over
-     *                      the new Topic.
-     * @param statuses  Of which status changes the listener should be
-     *                  notified. A null collection signifies all status
-     *                  changes.
-     */
-    public <TYPE> Topic<TYPE> createTopic(
-            String topicName,
-            TypeSupport<TYPE> type,
-            String qosLibraryName,
-            String qosProfileName,
-            TopicListener<TYPE> listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
 
 
     // --- Other operations: -------------------------------------------------

@@ -51,7 +51,16 @@ import org.omg.dds.sub.DataReader;
  * policies. The use of this QoS is not limited to security, rather it offers
  * a simple, yet flexible extensibility mechanism.
  */
-public interface UserData extends QosPolicy {
+public class UserData implements QosPolicy {
+    public static final int ID = 1;
+    private static final String NAME = "UserData";
+
+    private final byte value[];
+
+
+    public UserData(byte value[]) {
+        this.value = value;
+    }
     /**
      * Copy the data into the given array, starting at the index at the given
      * offset.
@@ -61,10 +70,19 @@ public interface UserData extends QosPolicy {
      *          determine if the output array is long enough or, if it is
      *          long enough, what range within it contains valid data.
      */
-    public int getValue(byte[] value, int offset);
+    public byte[] getValue() {
+        return this.value;
+    }
 
     /**
      * @return  the length of the <code>value</code> property.
      */
-    public int getLength();
+    public int getLength() {
+        return this.value.length;
+    }
+
+    public int getPolicyId() { return ID; }
+
+    public String getPolicyName() { return  NAME; }
+
 }

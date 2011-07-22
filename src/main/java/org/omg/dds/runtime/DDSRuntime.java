@@ -1,10 +1,12 @@
 package org.omg.dds.runtime;
 
 
+import org.omg.dds.domain.DomainParticipantFactory;
+
 public abstract class DDSRuntime {
 
     public static DDSRuntime getInstance() {
-        return DDSBinder.bind();
+        return Bootstrap.runtime();
     }
 
     // Default QoS Policy Provider
@@ -20,5 +22,8 @@ public abstract class DDSRuntime {
 
     // Default QoS Provider
     public abstract QosProvider getQosProvider();
+
+    // DomainParticipant Factory
+    public abstract DomainParticipantFactory getParticipantFactory();
 
 }

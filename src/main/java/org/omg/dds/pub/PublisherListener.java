@@ -21,10 +21,14 @@ package org.omg.dds.pub;
 import java.util.EventListener;
 
 import org.omg.dds.core.Entity;
-import org.omg.dds.core.status.LivelinessLostStatus;
-import org.omg.dds.core.status.OfferedDeadlineMissedStatus;
-import org.omg.dds.core.status.OfferedIncompatibleQosStatus;
-import org.omg.dds.core.status.PublicationMatchedStatus;
+import org.omg.dds.core.event.LivelinessLostEvent;
+import org.omg.dds.core.event.OfferedDeadlineMissedEvent;
+import org.omg.dds.core.event.OfferedIncompatibleQosEvent;
+import org.omg.dds.core.event.PublicationMatchedEvent;
+import org.omg.dds.core.status.LivelinessLost;
+import org.omg.dds.core.status.OfferedDeadlineMissed;
+import org.omg.dds.core.status.OfferedIncompatibleQos;
+import org.omg.dds.core.status.PublicationMatched;
 
 
 /**
@@ -34,12 +38,12 @@ import org.omg.dds.core.status.PublicationMatchedStatus;
  */
 public interface PublisherListener extends EventListener {
     public void onOfferedDeadlineMissed(
-            OfferedDeadlineMissedStatus<?> status);
+            OfferedDeadlineMissedEvent<?> e);
 
     public void onOfferedIncompatibleQos(
-            OfferedIncompatibleQosStatus<?> status);
+            OfferedIncompatibleQosEvent<?> e);
 
-    public void onLivelinessLost(LivelinessLostStatus<?> status);
+    public void onLivelinessLost(LivelinessLostEvent<?> e);
 
-    public void onPublicationMatched(PublicationMatchedStatus<?> status);
+    public void onPublicationMatched(PublicationMatchedEvent<?> e);
 }

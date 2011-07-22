@@ -21,11 +21,18 @@ package org.omg.dds.domain;
 import org.omg.dds.core.policy.EntityFactory;
 
 
-public interface DomainParticipantFactoryQos
-{
+public class DomainParticipantFactoryQos {
+
+    private EntityFactory entityFactory;
+
+    public DomainParticipantFactoryQos(EntityFactory entityFactory) {
+        this.entityFactory = entityFactory;
+    }
     /**
      * @return the entityFactory
      */
-    public EntityFactory getEntityFactory();
+    public EntityFactory getEntityFactory() {
+        return entityFactory;
+    }
 
 }

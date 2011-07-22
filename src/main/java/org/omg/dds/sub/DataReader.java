@@ -27,12 +27,8 @@ import org.omg.dds.core.Duration;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.NotEnabledException;
 import org.omg.dds.core.PreconditionNotMetException;
-import org.omg.dds.core.status.LivelinessChangedStatus;
-import org.omg.dds.core.status.RequestedDeadlineMissedStatus;
-import org.omg.dds.core.status.RequestedIncompatibleQosStatus;
-import org.omg.dds.core.status.SampleLostStatus;
-import org.omg.dds.core.status.SampleRejectedStatus;
-import org.omg.dds.core.status.SubscriptionMatchedStatus;
+import org.omg.dds.core.status.*;
+import org.omg.dds.core.status.SampleRejected;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.topic.ContentFilteredTopic;
 import org.omg.dds.topic.MultiTopic;
@@ -181,26 +177,22 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
     /**
      * This operation allows access to the SAMPLE_REJECTED communication
      * status.
-     * 
-     * @param   status  a container, into which this method places it result.
+     *
      * @return  the input status, as a convenience to facilitate chaining.
      * 
      * @see     org.omg.dds.core.status
      */
-    public SampleRejectedStatus<TYPE> getSampleRejectedStatus(
-            SampleRejectedStatus<TYPE> status);
+    public SampleRejected getSampleRejectedStatus();
 
     /**
      * This operation allows access to the LIVELINESS_CHANGED communication
      * status.
-     * 
-     * @param   status  a container, into which this method places it result.
+     *
      * @return  the input status, as a convenience to facilitate chaining.
      * 
      * @see     org.omg.dds.core.status
      */
-    public LivelinessChangedStatus<TYPE> getLivelinessChangedStatus(
-            LivelinessChangedStatus<TYPE> status);
+    public LivelinessChanged getLivelinessChangedStatus();
 
     /**
      * This operation allows access to the REQUESTED_DEADLINE_MISSED
@@ -211,9 +203,8 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      * 
      * @see     org.omg.dds.core.status
      */
-    public RequestedDeadlineMissedStatus<TYPE>
-    getRequestedDeadlineMissedStatus(
-            RequestedDeadlineMissedStatus<TYPE> status);
+    public RequestedDeadlineMissed
+    getRequestedDeadlineMissedStatus();
 
     /**
      * This operation allows access to the REQUESTED_INCOMPATIBLE_QOS
@@ -224,33 +215,28 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      * 
      * @see     org.omg.dds.core.status
      */
-    public RequestedIncompatibleQosStatus<TYPE>
-    getRequestedIncompatibleQosStatus(
-            RequestedIncompatibleQosStatus<TYPE> status);
+    public RequestedIncompatibleQos
+    getRequestedIncompatibleQosStatus();
 
     /**
      * This operation allows access to the SUBSCRIPTION_MATCHED communication
      * status. 
-     * 
-     * @param   status  a container, into which this method places it result.
+     *
      * @return  the input status, as a convenience to facilitate chaining.
      * 
      * @see     org.omg.dds.core.status
      */
-    public SubscriptionMatchedStatus<TYPE> getSubscriptionMatchedStatus(
-            SubscriptionMatchedStatus<TYPE> status);
+    public SubscriptionMatched getSubscriptionMatchedStatus();
 
     /**
      * This operation allows access to the SAMPLE_LOST communication status.
-     * 
-     * @param   status  a container, into which this method places its
+     *
      *          result.
      * @return  the input status, as a convenience to facilitate chaining.
      * 
      * @see     org.omg.dds.core.status
      */
-    public SampleLostStatus<TYPE> getSampleLostStatus(
-            SampleLostStatus<TYPE> status);
+    public SampleLost getSampleLostStatus();
 
     /**
      * This operation is intended only for DataReader entities for which

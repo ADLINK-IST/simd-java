@@ -25,41 +25,20 @@ import org.omg.dds.topic.Topic;
 
 
 /**
- * The {@link DataWriter} has found a {@link DataReader} that matches the
+ * The {@link DataReader} has found a {@link DataWriter} that matches the
  * {@link Topic} and has compatible QoS, or has ceased to be matched with a
- * DataReader that was previously considered to be matched.
+ * DataWriter that was previously considered to be matched.
  *
- * @param <TYPE>    The data type of the source {@link DataWriter}.
+ * @param <TYPE>    The data type of the source {@link DataReader}.
  * 
- * @see SubscriptionMatchedStatus
+ * @see PublicationMatched
  */
-public abstract class PublicationMatchedStatus<TYPE>
-extends Status<PublicationMatchedStatus<TYPE>, DataWriter<TYPE>> {
+public abstract class SubscriptionMatched extends Status<SubscriptionMatched> {
     // -----------------------------------------------------------------------
     // Constants
     // -----------------------------------------------------------------------
 
-    private static final long serialVersionUID = -2133794660702966974L;
-
-
-
-    // -----------------------------------------------------------------------
-    // Object Life Cycle
-    // -----------------------------------------------------------------------
-
-  /*
-    public static <TYPE> PublicationMatchedStatus<TYPE>
-    newPublicationMatchedStatus(Bootstrap bootstrap) {
-        return bootstrap.getSPI().newPublicationMatchedStatus();
-    }
-    */
-
-    // -----------------------------------------------------------------------
-
-    protected PublicationMatchedStatus(DataWriter<TYPE> source) {
-        super(source);
-    }
-
+    private static final long serialVersionUID = -8311789136391541797L;
 
 
     // -----------------------------------------------------------------------
@@ -67,22 +46,22 @@ extends Status<PublicationMatchedStatus<TYPE>, DataWriter<TYPE>> {
     // -----------------------------------------------------------------------
 
     /**
-     * Total cumulative count the concerned {@link DataWriter} discovered a
-     * "match" with a {@link DataReader}. That is, it found a DataReader for
+     * Total cumulative count the concerned {@link DataReader} discovered a
+     * "match" with a {@link DataWriter}. That is, it found a DataWriter for
      * the same {@link Topic} with a requested QoS that is compatible with
-     * that offered by the DataWriter.
+     * that offered by the DataReader.
      */
     public abstract int getTotalCount();
 
     /**
-     * The change in totalCcount since the last time the listener was called
+     * The change in totalCount since the last time the listener was called
      * or the status was read.
      */
     public abstract int getTotalCountChange();
 
     /**
-     * The number of {@link DataReader}s currently matched to the concerned
-     * {@link DataWriter}.
+     * The number of {@link DataWriter}s currently matched to the concerned
+     * {@link DataReader}.
      */
     public abstract int getCurrentCount();
 
@@ -93,9 +72,9 @@ extends Status<PublicationMatchedStatus<TYPE>, DataWriter<TYPE>> {
     public abstract int getCurrentCountChange();
 
     /**
-     * Handle to the last {@link DataReader} that matched the
-     * {@link DataWriter}, causing the status to change.
+     * Handle to the last {@link DataWriter} that matched the
+     * {@link DataReader}, causing the status to change.
      */
-    public abstract InstanceHandle getLastSubscriptionHandle();
+    public abstract InstanceHandle getLastPublicationHandle();
 
 }

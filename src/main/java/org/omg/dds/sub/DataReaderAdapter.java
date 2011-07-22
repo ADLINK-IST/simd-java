@@ -18,50 +18,46 @@
 
 package org.omg.dds.sub;
 
-import org.omg.dds.core.status.DataAvailableStatus;
-import org.omg.dds.core.status.LivelinessChangedStatus;
-import org.omg.dds.core.status.RequestedDeadlineMissedStatus;
-import org.omg.dds.core.status.RequestedIncompatibleQosStatus;
-import org.omg.dds.core.status.SampleLostStatus;
-import org.omg.dds.core.status.SampleRejectedStatus;
-import org.omg.dds.core.status.SubscriptionMatchedStatus;
+import org.omg.dds.core.event.*;
+import org.omg.dds.core.status.*;
+import org.omg.dds.core.status.SampleRejected;
 
 
 public class DataReaderAdapter<TYPE> implements DataReaderListener<TYPE>
 {
-    public void onDataAvailable(DataAvailableStatus<TYPE> status)
+    public void onDataAvailable(DataAvailableEvent<TYPE> e)
     {
         // empty
     }
 
-    public void onLivelinessChanged(LivelinessChangedStatus<TYPE> status)
+    public void onLivelinessChanged(LivelinessChangedEvent<TYPE> e)
     {
         // empty
     }
 
     public void onRequestedDeadlineMissed(
-            RequestedDeadlineMissedStatus<TYPE> status)
+            RequestedDeadlineMissedEvent<TYPE> e)
     {
         // empty
     }
 
     public void onRequestedIncompatibleQos(
-            RequestedIncompatibleQosStatus<TYPE> status)
+            RequestedIncompatibleQosEvent<TYPE> e)
     {
         // empty
     }
 
-    public void onSampleLost(SampleLostStatus<TYPE> status)
+    public void onSampleLost(SampleLostEvent<TYPE> e)
     {
         // empty
     }
 
-    public void onSampleRejected(SampleRejectedStatus<TYPE> status)
+    public void onSampleRejected(SampleRejectedEvent<TYPE> e)
     {
         // empty
     }
 
-    public void onSubscriptionMatched(SubscriptionMatchedStatus<TYPE> status)
+    public void onSubscriptionMatched(SubscriptionMatchedEvent<TYPE> e)
     {
         // empty
     }

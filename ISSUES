@@ -86,3 +86,61 @@
 [DomainEntity]
    What is the value of having this class? It should be removed and
    the getParent method should be migrated to the Entity class.
+
+[DataReader]
+   The read API currently seems a bit too complicated. In some in some instances
+   it provides part of the results as a return value and the rest by means of arguments.
+   This does not feel right.
+
+   The API does not provide a way of deciding if one wants to read/take only valid
+   data. This is a remark true in general for DDS which needs to be fixed for all PSM
+   as well as for the PIM!
+
+[Status]
+   The org.omg.dds.core.status.Status class currently extends the java.util.EventObject.
+   The issue I have with this is that a status and an event are to different concepts.
+   A status represents a continuous value or set of values which are always defined,
+   while an event represents and happening. For instance an event could be used to notify
+   the change of status but not the status itself.
+
+   That said the refactoring suggested is to re-organize the current status types
+   so to clearly distinguish what is are statuses and what are the events. As such,
+   all the status currently defined should remove reference to the source. Why?
+   Because the statuses are retrieved from the source thus it is kind of silly to
+   add back the source on the communication status.
+
+   Let me give you an example ("dr" below is a DataReader):
+
+   RequestedDeadlineMissedStatus s = dr.getRequestedDeadlineMissedStatus();
+
+    // this give back the reader we already know, thus it is not real useful
+    // information which should simply be removed.
+    s.source())
+
+    BTW the status types as well as the relative accessor methods should
+    drop the trailing "Status" as it is not so informative.
+
+    That said, we should add an event type associated to each status defined like this:
+
+    class RequestedDeadlineMissedEvent {
+        private RequestedDeadlineMissed status;
+        private DataReader source;
+
+        //... useful methods
+    }
+
+
+    The event type is the one that should be used as a parameter of the listener methods.
+
+    Finally, it is worth noticing that the suggested refactoring will fix the
+    DataAvailableStatus anomaly. This type currently defined as a status is actually
+    an event and as such should be treated. So where is the anomaly, for this status
+    there are no methods on the data reader and there is really no status information
+    such as saying... Yes there are 15 new samples or something like this.
+
+
+[DataWriter]
+   The methods that access the communication statuses should simply return
+   an object as opposed to also require it as an argument. As the Status
+   is immutable there is no risk in the client code changing it, thus no copies
+   required!

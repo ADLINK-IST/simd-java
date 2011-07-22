@@ -23,11 +23,12 @@ import java.util.Collection;
 import org.omg.dds.core.Entity;
 import org.omg.dds.core.InconsistentPolicyException;
 import org.omg.dds.core.status.Status;
+import org.omg.dds.runtime.DDSRuntime;
 
 
 /**
  * The sole purpose of this class is to allow the creation and destruction of
- * {@link DomainParticipant} objects. DomainParticipantFactory itself has no
+ * {@link DomainParticipant} objects. OSPLDomainParticipantFactory itself has no
  * factory.
  */
 public abstract class DomainParticipantFactory
@@ -37,21 +38,17 @@ public abstract class DomainParticipantFactory
     // -----------------------------------------------------------------------
 
     /**
-     * This operation returns the per-Bootstrap DomainParticipantFactory
+     * This operation returns the  OSPLDomainParticipantFactory
      * singleton. The operation is idempotent, that is, it can be called
      * multiple times without side effects, and each time it will return a
-     * DomainParticipantFactory instance that is equal to the previous
+     * OSPLDomainParticipantFactory instance that is equal to the previous
      * results.
-     * 
      *
-
-     * @see     Object#equals(Object)
+     *
      */
-    /*
-    public static DomainParticipantFactory getInstance(Bootstrap bootstrap) {
-        return bootstrap.getSPI().getParticipantFactory();
+    public static DomainParticipantFactory getInstance() {
+        return DDSRuntime.getInstance().getParticipantFactory();
     }
-      */
 
 
     // -----------------------------------------------------------------------
@@ -61,7 +58,7 @@ public abstract class DomainParticipantFactory
     /**
      * Create a new participant in the domain with ID 0 having default QoS
      * and no listener.
-     * 
+     *
      * @see     #createParticipant(int)
      * @see     #createParticipant(int, DomainParticipantQos, DomainParticipantListener, Collection)
      */
@@ -71,19 +68,18 @@ public abstract class DomainParticipantFactory
      * This operation creates a new DomainParticipant object. The
      * DomainParticipant signifies that the calling application intends to
      * join the domain identified by the domainId argument.
-     * 
+     *
      * @see     #createParticipant()
      * @see     #createParticipant(int, DomainParticipantQos, DomainParticipantListener, Collection)
      */
-    public abstract DomainParticipant createParticipant(
-            int domainId);
+    public abstract DomainParticipant createParticipant(int domainId);
 
     /**
      * This operation creates a new DomainParticipant object having default
      * QoS and no listener. The DomainParticipant signifies that the calling
      * application intends to join the domain identified by the domainId
      * argument.
-     * 
+     *
      * @param statuses  Of which status changes the listener should be
      *                  notified. A null collection signifies all status
      *                  changes.
@@ -94,33 +90,31 @@ public abstract class DomainParticipantFactory
      * @see     #createParticipant()
      * @see     #createParticipant(int)
      */
-    public abstract DomainParticipant createParticipant(
-            int domainId,
-            DomainParticipantQos qos,
-            DomainParticipantListener listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+    public abstract DomainParticipant createParticipant(int domainId,
+                                                        DomainParticipantQos qos,
+                                                        DomainParticipantListener listener,
+                                                        Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * Create a new domain participant.
-     * 
+     *
      * @param statuses  Of which status changes the listener should be
      *                  notified. A null collection signifies all status
      *                  changes.
      *
      * @see     #createParticipant(int, DomainParticipantQos, DomainParticipantListener, Collection)
      */
-    public abstract DomainParticipant createParticipant(
-            int domainId,
-            String qosLibraryName,
-            String qosProfileName,
-            DomainParticipantListener listener,
-            Collection<Class<? extends Status<?, ?>>> statuses);
+    public abstract DomainParticipant createParticipant(int domainId,
+                                                        String qosLibraryName,
+                                                        String qosProfileName,
+                                                        DomainParticipantListener listener,
+                                                        Collection<Class<? extends Status<?>>> statuses);
 
     /**
      * This operation retrieves a previously created DomainParticipant
      * belonging to specified domain ID. If no such DomainParticipant exists,
      * the operation will return null.
-     * 
+     *
      * If multiple DomainParticipant entities belonging to that domain ID
      * exist, then the operation will return one of them. It is not specified
      * which one.
@@ -128,21 +122,21 @@ public abstract class DomainParticipantFactory
     public abstract DomainParticipant lookupParticipant(int domainId);
 
     /**
-     * This operation returns the value of the DomainParticipantFactory QoS
+     * This operation returns the value of the OSPLDomainParticipantFactory QoS
      * policies.
-     * 
+     *
      * @see     #setQos(DomainParticipantFactoryQos)
      */
     public abstract DomainParticipantFactoryQos getQos();
 
     /**
-     * This operation sets the value of the DomainParticipantFactory QoS
+     * This operation sets the value of the OSPLDomainParticipantFactory QoS
      * policies. These policies control the behavior of the object, a factory
      * for entities.
-     * 
-     * Note that despite having QoS, the DomainParticipantFactory is not an
+     *
+     * Note that despite having QoS, the OSPLDomainParticipantFactory is not an
      * {@link Entity}.
-     * 
+     *
      * @throws  InconsistentPolicyException     if the resulting policies are
      *          not self consistent; in that case, the operation will have no
      *          effect.
@@ -156,13 +150,13 @@ public abstract class DomainParticipantFactory
      * QoS, that is, the QoS policies which will be used for newly created
      * {@link DomainParticipant} entities in the case where the QoS policies
      * are defaulted in the {@link #createParticipant()} operation.
-     * 
+     *
      * The values retrieved will match the set of values specified on the
      * last successful call to
      * {@link #setDefaultParticipantQos(DomainParticipantQos)}, or else, if
      * the call was never made, the default values identified by the DDS
      * specification.
-     * 
+     *
      * @see     #setDefaultParticipantQos(DomainParticipantQos)
      */
     public abstract DomainParticipantQos getDefaultParticipantQos();
@@ -172,7 +166,7 @@ public abstract class DomainParticipantFactory
      * policies which will be used for newly created
      * {@link DomainParticipant} entities in the case where the QoS policies
      * are defaulted in the {@link #createParticipant()} operation.
-     * 
+     *
      * @throws  InconsistentPolicyException     if the resulting policies are
      *          not self consistent; in that case, the operation will have no
      *          effect.
@@ -180,12 +174,5 @@ public abstract class DomainParticipantFactory
      * @see     #getDefaultParticipantQos()
      */
     public abstract void setDefaultParticipantQos(DomainParticipantQos qos);
-
-    /**
-     * @see     #setDefaultParticipantQos(DomainParticipantQos)
-     */
-    public abstract void setDefaultParticipantQos(
-            String qosLibraryName,
-            String qosProfileName);
 
 }
