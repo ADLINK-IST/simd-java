@@ -95,63 +95,63 @@ public class OSPLDataReaderQos implements DataReaderQos {
         return new OSPLDataReaderQos(newqos);
     }
 
-    @Override
+    
     public Durability getDurability() {
         return OSPL.convert(qos.durability);
     }
 
-    @Override
+    
     public Deadline getDeadline() {
         return new Deadline(OSPL.convert(
                 qos.deadline.period));
     }
 
-    @Override
+    
     public LatencyBudget getLatencyBudget() {
         return new LatencyBudget(OSPL.convert(
                 qos.latency_budget.duration));
     }
 
-    @Override
+    
     public Liveliness getLiveliness() {
         return OSPL.convert(qos.liveliness);
     }
 
-    @Override
+    
     public DestinationOrder getDestinationOrder() {
         return OSPL.convert(qos.destination_order);
     }
 
-    @Override
+    
     public History getHistory() {
         return OSPL.convert(qos.history);
     }
 
-    @Override
+    
     public ResourceLimits getResourceLimits() {
         // return OSPL.convert(qos.resource_limits);
         return null;
     }
 
-    @Override
+    
     public UserData getUserData() {
         // return OSPL.convert(qos.user_data);
         return null;
     }
 
-    @Override
+    
     public Ownership getOwnership() {
         return OSPL.convert(qos.ownership);
     }
 
-    @Override
+    
     public DataRepresentation getRepresentation() {
         // TODO Auto-generated method stub
         // return OSPL.convert(qos.);
         return null;
     }
 
-    @Override
+    
     public TypeConsistencyEnforcement getTypeConsistency() {
         // TODO Check that this is the currently only supported version
         return TypeConsistencyEnforcement.ExactType();
@@ -161,13 +161,13 @@ public class OSPLDataReaderQos implements DataReaderQos {
         return new OSPLDataReaderQos(qos);
     }
 
-    @Override
+    
     public TimeBasedFilter getTimeBasedFilter() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public ReaderDataLifecycle getReaderDataLifecycle() {
         // TODO Auto-generated method stub
         return null;

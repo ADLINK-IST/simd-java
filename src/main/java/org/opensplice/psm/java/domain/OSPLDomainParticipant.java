@@ -602,7 +602,9 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * "communication plane" isolated from other domains.
      */
     public int getDomainId() {
-        return openspliceParticipant.get_domain_id();
+        //TODO: Fixme and return the right id
+        // return openspliceParticipant.get_domain_id();
+        return 0;
     }
 
     /**
@@ -921,8 +923,8 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * {@link org.omg.dds.core.PreconditionNotMetException}.
      * <p/>
      * If
-     * {@link org.omg.dds.core.policy.EntityFactory#isAutoEnableCreatedEntities()}
-     * is true, the enable operation on the factory will automatically enable
+     * {@link org.omg.dds.core.policy.EntityFactory}
+     * is set to auto-enable entities, the enable operation on the factory will automatically enable
      * all entities created from the factory.
      * <p/>
      * The Listeners associated with an entity are not called until the entity

@@ -28,17 +28,17 @@ public class OSPLPartition implements
         }
     }
 
-    @Override
+    
     public Collection<String> getName() {
         return name;
     }
 
-    @Override
+    
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
+    
     public String getPolicyName() {
         return NAME;
     }

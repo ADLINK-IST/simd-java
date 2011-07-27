@@ -14,23 +14,23 @@ public class OSPLGroupData implements GroupData {
         policy = thepolicy;
     }
 
-    @Override
+
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
+
     public String getPolicyName() {
         return NAME;
     }
 
-    @Override
+
     public int getValue(byte[] value, int offset) {
         // TODO what should be done here???
         return 0;
     }
 
-    @Override
+
     public int getLength() {
         return policy.value.length;
     }

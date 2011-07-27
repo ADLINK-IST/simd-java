@@ -51,22 +51,22 @@ public class OSPLPublisherQos implements PublisherQos {
         return new OSPLPublisherQos(newqos);
     }
 
-    @Override
+
     public Presentation getPresentation() {
         return OSPL.convert(qos.presentation);
     }
 
-    @Override
+
     public Partition getPartition() {
         return new OSPLPartition(qos.partition.name);
     }
 
-    @Override
+
     public GroupData getGroupData() {
         return new OSPLGroupData(qos.group_data);
     }
 
-    @Override
+
     public EntityFactory getEntityFactory() {
         if (qos.entity_factory.autoenable_created_entities) {
             return EntityFactory.AutoEnable();

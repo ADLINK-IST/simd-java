@@ -123,7 +123,7 @@ public class OSPLDataWriterQos implements DataWriterQos {
         return new OSPLDataWriterQos(newqos);
     }
 
-    @Override
+
     public DurabilityService getDurabilityService() {
         return new DurabilityService(OSPL.convert(qos.history),
                 Duration.infinite(),
@@ -132,83 +132,83 @@ public class OSPLDataWriterQos implements DataWriterQos {
                 qos.resource_limits.max_samples_per_instance);
     }
 
-    @Override
+
     public Deadline getDeadline() {
         return new Deadline(OSPL.convert(qos.deadline.period));
     }
 
-    @Override
+
     public LatencyBudget getLatencyBudget() {
         return new LatencyBudget(OSPL.convert(
                 qos.latency_budget.duration));
     }
 
-    @Override
+
     public Liveliness getLiveliness() {
         return OSPL.convert(qos.liveliness);
     }
 
-    @Override
+
     public Reliability getReliability() {
         return OSPL.convert(qos.reliability);
     }
 
-    @Override
+
     public DestinationOrder getDestinationOrder() {
         return OSPL.convert(qos.destination_order);
     }
 
-    @Override
+
     public History getHistory() {
         return OSPL.convert(qos.history);
     }
 
-    @Override
+
     public ResourceLimits getResourceLimits() {
         return new OSPLResourceLimits(qos.resource_limits);
     }
 
-    @Override
+
     public TransportPriority getTransportPriority() {
         return new TransportPriority(qos.transport_priority.value);
     }
 
-    @Override
+
     public Lifespan getLifespan() {
         return new Lifespan(OSPL.convert(qos.lifespan.duration));
     }
 
-    @Override
+
     public UserData getUserData() {
         return new UserData(qos.user_data.value);
     }
 
-    @Override
+
     public Ownership getOwnership() {
         return OSPL.convert(qos.ownership);
     }
 
-    @Override
+
     public OwnershipStrength getOwnershipStrength() {
         return new OwnershipStrength(qos.ownership_strength.value);
     }
 
-    @Override
+
     public Durability getDurability() {
         return OSPL.convert(qos.durability);
     }
 
-    @Override
+
     public WriterDataLifecycle getWriterDataLifecycle() {
         return OSPL.convert(qos.writer_data_lifecycle);
     }
 
-    @Override
+
     public DataRepresentation getRepresentation() {
         return new DataRepresentation(null);
     }
 
-    @Override
+
     public TypeConsistencyEnforcement getTypeConsistency() {
         // TODO Check that this is the currently only supported version
         return TypeConsistencyEnforcement.ExactType();

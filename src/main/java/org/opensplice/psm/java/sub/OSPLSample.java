@@ -23,12 +23,12 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
         
     }
 
-     @Override
+     
     public TYPE getData() {
         return value;
     }
 
-    @Override
+    
     public SampleState getSampleState() {
         SampleState sampleState;
         if (sampleInfo.sample_state == READ_SAMPLE_STATE.value) {
@@ -39,7 +39,7 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
         return sampleState;
     }
 
-    @Override
+    
     public ViewState getViewState() {
         ViewState viewState;
         if (sampleInfo.view_state == NEW_VIEW_STATE.value) {
@@ -50,7 +50,7 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
         return viewState;
     }
 
-    @Override
+    
     public InstanceState getInstanceState() {
         InstanceState instanceState;
         switch (sampleInfo.instance_state) {
@@ -70,42 +70,42 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
         return instanceState;
     }
 
-    @Override
+    
     public Time getSourceTimestamp() {
         return OSPL.convert(sampleInfo.source_timestamp);
     }
 
-    @Override
+    
     public InstanceHandle getInstanceHandle() {
         return new OSPLInstanceHandle(sampleInfo.instance_handle);
     }
 
-    @Override
+    
     public InstanceHandle getPublicationHandle() {
         return new OSPLInstanceHandle(sampleInfo.publication_handle);
     }
 
-    @Override
+    
     public int getDisposedGenerationCount() {
         return sampleInfo.disposed_generation_count;
     }
 
-    @Override
+    
     public int getNoWritersGenerationCount() {
         return sampleInfo.no_writers_generation_count;
     }
 
-    @Override
+    
     public int getSampleRank() {
         return sampleInfo.sample_rank;
     }
 
-    @Override
+    
     public int getGenerationRank() {
         return sampleInfo.generation_rank;
     }
 
-    @Override
+    
     public int getAbsoluteGenerationRank() {
         return sampleInfo.absolute_generation_rank;
     }
@@ -132,17 +132,17 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
             sampleInfoList = theSampleInfoList;
         }
 
-        @Override
+        
         public boolean hasNext() {
             return list.length > index;
         }
 
-        @Override
+        
         public boolean hasPrevious() {
             return index > 0;
         }
 
-        @Override
+        
         public Sample<TYPE> next() {
             Sample<TYPE> sample = new OSPLSample<TYPE>(
                     sampleInfoList.value[index], list[index]);
@@ -150,12 +150,12 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
             return sample;
         }
 
-        @Override
+        
         public int nextIndex() {
             return ++index;
         }
 
-        @Override
+        
         public Sample<TYPE> previous() {
             index--;
             Sample<TYPE> sample = new OSPLSample<TYPE>(
@@ -163,27 +163,27 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
             return sample;
         }
 
-        @Override
+        
         public int previousIndex() {
             return --index;
         }
 
-        @Override
+        
         public void returnLoan() {
             reader.returnLoan(sampleDataList, sampleInfoList);
         }
 
-        @Override
+        
         public void remove() {
             throw new RuntimeException("remove sample not supported");
         }
 
-        @Override
+        
         public void set(Sample<TYPE> o) {
             throw new RuntimeException("Set sample not supported");
         }
 
-        @Override
+        
         public void add(Sample<TYPE> o) {
             throw new RuntimeException("Add sample not supported");
         }

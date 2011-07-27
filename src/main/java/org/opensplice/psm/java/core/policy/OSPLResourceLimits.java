@@ -15,27 +15,27 @@ public class OSPLResourceLimits implements ResourceLimits {
         this.policy = policy;
     }
 
-    @Override
+    
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
+    
     public String getPolicyName() {
         return NAME;
     }
 
-    @Override
+    
     public int getMaxSamples() {
         return policy.max_samples;
     }
 
-    @Override
+    
     public int getMaxInstances() {
         return policy.max_instances;
     }
 
-    @Override
+    
     public int getMaxSamplesPerInstance() {
         return policy.max_samples_per_instance;
     }

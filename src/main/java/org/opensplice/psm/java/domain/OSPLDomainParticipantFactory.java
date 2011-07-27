@@ -8,12 +8,13 @@ import org.omg.dds.domain.DomainParticipantFactoryQos;
 import org.omg.dds.domain.DomainParticipantListener;
 import org.omg.dds.domain.DomainParticipantQos;
 
-import DDS.DOMAIN_ID_DEFAULT;
+
 
 public class OSPLDomainParticipantFactory extends
         org.omg.dds.domain.DomainParticipantFactory {
 
-    private static int myDomain = DOMAIN_ID_DEFAULT.value;
+    // Note: The DOMAIN_ID_DEFAULT does not exist anymore on OpenSplice >= v5.7
+    private static int myDomain = 0;
 
     /**
      * Create a new participant in the domain with ID 0 having default QoS and
@@ -43,9 +44,10 @@ public class OSPLDomainParticipantFactory extends
         DDS.DomainParticipantFactory.get_instance()
                 .get_default_participant_qos(dqos);
 
+        // TODO: Fix the following by passing the right string
         DDS.DomainParticipant participant = DDS.DomainParticipantFactory
                 .get_instance()
-                .create_participant(domainId, dqos.value, null,
+                .create_participant("", dqos.value, null,
                         DDS.STATUS_MASK_NONE.value);
         return new OSPLDomainParticipant(participant);
     }

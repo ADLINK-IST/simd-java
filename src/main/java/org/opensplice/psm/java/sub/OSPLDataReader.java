@@ -74,14 +74,14 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
             drsource = source;
         }
 
-        @Override
+        
         public DataReader<TYPE> getSource() {
             return drsource;
         }
 
-		@Override
+		
 		public DataAvailableEvent<TYPE> clone() {
-			OSPLDataAvailableEvent theclone = new OSPLDataAvailableEvent(drsource);
+			DataAvailableEvent<TYPE> theclone = new OSPLDataAvailableEvent<TYPE>(drsource);
 			return theclone;
 		}
     }
@@ -98,7 +98,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
             status = thestatus;
         }
 
-//        @Override
+//        
         public DataReader<TYPE> getSource() {
             return drsource;
         }
@@ -115,14 +115,14 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
             listener = thelistener;
         }
 
-        @Override
+        
         public void on_data_available(DDS.DataReader arg0) {
             DataAvailableEvent<TYPE> event =
                     new OSPLDataAvailableEvent<TYPE>(reader);
             listener.onDataAvailable(event);
         }
 
-        @Override
+        
         public void on_liveliness_changed(DDS.DataReader arg0,
                 DDS.LivelinessChangedStatus arg1) {
             LivelinessChangedEvent<TYPE> event =
@@ -130,35 +130,35 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
             listener.onLivelinessChanged(event);
         }
 
-        @Override
+        
         public void on_requested_deadline_missed(DDS.DataReader arg0,
                 DDS.RequestedDeadlineMissedStatus arg1) {
             // TODO implement status
             listener.onRequestedDeadlineMissed(null);
         }
 
-        @Override
+        
         public void on_requested_incompatible_qos(DDS.DataReader arg0,
                 DDS.RequestedIncompatibleQosStatus arg1) {
             // TODO implement status
             listener.onRequestedIncompatibleQos(null);
         }
 
-        @Override
+        
         public void on_sample_lost(DDS.DataReader arg0,
                 DDS.SampleLostStatus arg1) {
             // TODO implement status
             listener.onSampleLost(null);
         }
 
-        @Override
+        
         public void on_sample_rejected(DDS.DataReader arg0,
                 DDS.SampleRejectedStatus arg1) {
             // TODO implement status
             listener.onSampleRejected(null);
         }
 
-        @Override
+        
         public void on_subscription_matched(DDS.DataReader arg0,
                 DDS.SubscriptionMatchedStatus arg1) {
             // TODO implement status
@@ -234,7 +234,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-//    @Override
+//    
 //    public void setListener(DataReaderListener<TYPE> thelistener) {
 //        listener = thelistener;
 //        if (thelistener == null) {
@@ -246,50 +246,51 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 //        }
 //    }
 
-    @Override
+    
     public void enable() {
     	if (dataReader != null) {
     		dataReader.enable();
     	}
     }
 
-    @Override
+    
     public StatusCondition<DataReader<TYPE>> getStatusCondition() {
         return null;
     }
 
-    @Override
+    
     public InstanceHandle getInstanceHandle() {
         return new OSPLInstanceHandle(dataReader.get_instance_handle());
     }
 
-    @Override
+    
     public void close() {
     }
 
-    @Override
+    
     public void retain() {
         // TODO Auto-generated method stub
     }
 
-    @Override
+    
     public Class<TYPE> getType() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    @SuppressWarnings({"unchecked"})
     public <OTHER> DataReader<OTHER> cast() {
+
         return (DataReader<OTHER>)this;
     }
 
-    @Override
+    
     public ReadCondition<TYPE> createReadCondition() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public ReadCondition<TYPE> createReadCondition(
             Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
@@ -298,14 +299,14 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;
     }
 
-    @Override
+    
     public QueryCondition<TYPE> createQueryCondition(String queryExpression,
             List<String> queryParameters) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public QueryCondition<TYPE> createQueryCondition(
             Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
@@ -315,38 +316,38 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;
     }
 
-    @Override
+    
     public void closeContainedEntities() {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public TopicDescription<TYPE> getTopicDescription() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public void waitForHistoricalData(Duration maxWait) throws TimeoutException {
     	dataReader.wait_for_historical_data(OSPL.convert(maxWait));
     }
 
-    @Override
+    
     public void waitForHistoricalData(long maxWait, TimeUnit unit)
             throws TimeoutException {
     	Duration wait = new Duration(unit.convert(maxWait, TimeUnit.SECONDS));
     	waitForHistoricalData(wait);
     }
 
-    @Override
+    
     public Collection<InstanceHandle> getMatchedPublications(
             Collection<InstanceHandle> publicationHandles) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public PublicationBuiltinTopicData getMatchedPublicationData(
             PublicationBuiltinTopicData publicationData,
             InstanceHandle publicationHandle) {
@@ -354,20 +355,20 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;
     }
 
-    @Override
+    
     public Sample<TYPE> createSample() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public Iterator<TYPE> read() {
 
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public Iterator<TYPE> read(Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
             Collection<InstanceState> instanceStates) {
@@ -375,13 +376,13 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;
     }
 
-    @Override
+    
     public void read(List<Sample<TYPE>> samples) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public void read(List<Sample<TYPE>> samples, int maxSamples,
             Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
@@ -390,7 +391,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-    @Override
+    @SuppressWarnings({"unchecked"})
     public Iterator<TYPE> take() {
         Object data;
         try {
@@ -407,7 +408,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;
     }
 
-    @Override
+    
     public Iterator<TYPE> take(Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
             Collection<InstanceState> instanceStates) {
@@ -415,14 +416,14 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;
     }
 
-    @Override
+    
     public void take(List<Sample<TYPE>> samples) {
 
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public void take(List<Sample<TYPE>> samples, int maxSamples,
             Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
@@ -431,63 +432,63 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-    @Override
+    
     public Iterator<TYPE> read(ReadCondition<TYPE> condition) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public void read(List<Sample<TYPE>> samples, ReadCondition<TYPE> condition) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public void read(List<Sample<TYPE>> samples, int maxSamples,
             ReadCondition<TYPE> condition) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public Iterator<TYPE> take(ReadCondition<TYPE> condition) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public void take(List<Sample<TYPE>> samples, ReadCondition<TYPE> condition) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public void take(List<Sample<TYPE>> samples, int maxSamples,
             ReadCondition<TYPE> condition) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public boolean readNext(Sample<TYPE> sample) {
         // TODO Auto-generated method stub
         return false;
     }
 
-    @Override
+    
     public boolean takeNext(Sample<TYPE> sample) {
         // TODO Auto-generated method stub
         return false;
     }
 
-    @Override
+    
     public Iterator<TYPE> read(InstanceHandle handle) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public Iterator<TYPE> read(InstanceHandle handle,
             Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
@@ -496,13 +497,13 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;
     }
 
-    @Override
+    
     public void read(List<Sample<TYPE>> samples, InstanceHandle handle) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public void read(List<Sample<TYPE>> samples, InstanceHandle handle,
             int maxSamples, Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
@@ -511,12 +512,12 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-    @Override
+    
     public Iterator<TYPE> take(InstanceHandle handle) {
         return null;
     }
 
-    @Override
+    
     public Iterator<TYPE> take(InstanceHandle handle,
             Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
@@ -525,13 +526,13 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;
     }
 
-    @Override
+    
     public void take(List<Sample<TYPE>> samples, InstanceHandle handle) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public void take(List<Sample<TYPE>> samples, InstanceHandle handle,
             int maxSamples, Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
@@ -540,13 +541,13 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-    @Override
+    
     public Iterator<TYPE> readNext(InstanceHandle previousHandle) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public Iterator<TYPE> readNext(InstanceHandle previousHandle,
             Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
@@ -555,14 +556,14 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;
     }
 
-    @Override
+    
     public void readNext(List<Sample<TYPE>> samples,
             InstanceHandle previousHandle) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public void readNext(List<Sample<TYPE>> samples,
             InstanceHandle previousHandle, int maxSamples,
             Collection<SampleState> sampleStates,
@@ -572,13 +573,13 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-    @Override
+    
     public Iterator<TYPE> takeNext(InstanceHandle previousHandle) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public Iterator<TYPE> takeNext(InstanceHandle previousHandle,
             Collection<SampleState> sampleStates,
             Collection<ViewState> viewStates,
@@ -587,14 +588,14 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;
     }
 
-    @Override
+    
     public void takeNext(List<Sample<TYPE>> samples,
             InstanceHandle previousHandle) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public void takeNext(List<Sample<TYPE>> samples,
             InstanceHandle previousHandle, int maxSamples,
             Collection<SampleState> sampleStates,
@@ -604,21 +605,21 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-    @Override
+    
     public Iterator<TYPE> readNext(InstanceHandle previousHandle,
             ReadCondition<TYPE> condition) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public void readNext(List<Sample<TYPE>> samples,
             InstanceHandle previousHandle, ReadCondition<TYPE> condition) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public void readNext(List<Sample<TYPE>> samples,
             InstanceHandle previousHandle, int maxSamples,
             ReadCondition<TYPE> condition) {
@@ -626,21 +627,21 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-    @Override
+    
     public Iterator<TYPE> takeNext(InstanceHandle previousHandle,
             ReadCondition<TYPE> condition) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public void takeNext(List<Sample<TYPE>> samples,
             InstanceHandle previousHandle, ReadCondition<TYPE> condition) {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public void takeNext(List<Sample<TYPE>> samples,
             InstanceHandle previousHandle, int maxSamples,
             ReadCondition<TYPE> condition) {
@@ -648,7 +649,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-    @Override
+    
     public TYPE getKeyValue(TYPE keyHolder, InstanceHandle handle) {
         // TODO Auto-generated method stub
         return null;
@@ -667,6 +668,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         }
     }
 
+    @SuppressWarnings({"unchecked"})
     private void private_take(List<TYPE> list, int count) {
         try {
             takeParameters[2] = Integer.valueOf(count);
@@ -698,50 +700,50 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         }
     }
 
-	@Override
+	
 	public Collection<Class<? extends Status<?>>> getStatusChanges(
 			Collection<Class<? extends Status<?>>> statuses) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public SampleRejected getSampleRejectedStatus() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public LivelinessChanged getLivelinessChangedStatus() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public RequestedDeadlineMissed getRequestedDeadlineMissedStatus() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public RequestedIncompatibleQos getRequestedIncompatibleQosStatus() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public SubscriptionMatched getSubscriptionMatchedStatus() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public SampleLost getSampleLostStatus() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public InstanceHandle lookupInstance(InstanceHandle handle, TYPE keyHolder) {
 		// TODO Auto-generated method stub
 		return null;

@@ -75,6 +75,9 @@ public class OSPLTopic<TYPE> implements Topic<TYPE> {
         DurabilityQosPolicyKind durabilityKind = DurabilityQosPolicyKind.VOLATILE_DURABILITY_QOS;
         ReliabilityQosPolicyKind reliabilityKind = ReliabilityQosPolicyKind.BEST_EFFORT_RELIABILITY_QOS;
 
+        //TODO: Frans, I think it would be better from a code duplication perspective
+        // to have a bunch of conversion classes that would transform a new QoS type
+        // into a legacy QoS type.
         if (qos != null) {
             if (qos.getDurability().getKind()
                     .equals(Durability.Kind.PERSISTENT)) {
@@ -94,6 +97,7 @@ public class OSPLTopic<TYPE> implements Topic<TYPE> {
 
         }
 
+        // TODO: Frans, why are you setting the LatencyBudget to this arbitrary constant?
         // Latency_Budget
         double latencyBudget = 0.04;
         if (reliabilityKind == ReliabilityQosPolicyKind.BEST_EFFORT_RELIABILITY_QOS) {
@@ -143,65 +147,65 @@ public class OSPLTopic<TYPE> implements Topic<TYPE> {
         }
     }
 
-    @Override
+    
     public Class<TYPE> getType() {
         return type;
     }
 
-    @Override
+    
     public <OTHER> TopicDescription<OTHER> cast() {
         return (TopicDescription<OTHER>) this;
     }
 
-    @Override
+    
     public String getTypeName() {
         return type.getName();
     }
 
-    @Override
+    
     public String getName() {
         return topicName;
     }
 
-    @Override
+    
     public DomainParticipant getParent() {
         return participant;
     }
 
-    @Override
+    
     public void close() {
     }
 
-    @Override
+    
     public void enable() {
         topic.enable();
     }
 
-    @Override
+    
     public StatusCondition<Topic<TYPE>> getStatusCondition() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public InstanceHandle getInstanceHandle() {
         return new OSPLInstanceHandle(topic.get_instance_handle());
     }
 
-    @Override
+    
     public void retain() {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    
     public Collection<Class<? extends Status<?>>> getStatusChanges(
             Collection<Class<? extends Status<?>>> statuses) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    
     public InconsistentTopic getInconsistentTopicStatus() {
         // TODO Auto-generated method stub
         return null;
