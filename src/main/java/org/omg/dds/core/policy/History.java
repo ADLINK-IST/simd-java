@@ -18,24 +18,22 @@
 
 package org.omg.dds.core.policy;
 
-import com.sun.org.apache.xalan.internal.xsltc.dom.KeyIndex;
 import org.omg.dds.pub.DataWriter;
 import org.omg.dds.sub.DataReader;
 import org.omg.dds.topic.Topic;
 
-
 /**
- * Specifies the behavior of the Service in the case where the value of a
- * sample changes (one or more times) before it can be successfully
- * communicated to one or more existing subscribers. This QoS policy controls
- * whether the Service should deliver only the most recent value, attempt to
- * deliver all intermediate values, or do something in between. On the
- * publishing side this policy controls the samples that should be maintained
- * by the DataWriter on behalf of existing DataReader entities. The behavior
- * with regards to a DataReader entities discovered after a sample is written
- * is controlled by the {@link Durability}. On the subscribing side
- * it controls the samples that should be maintained until the application
- * "takes" them from the Service via {@link DataReader#take()}.
+ * Specifies the behavior of the Service in the case where the value of a sample
+ * changes (one or more times) before it can be successfully communicated to one
+ * or more existing subscribers. This QoS policy controls whether the Service
+ * should deliver only the most recent value, attempt to deliver all
+ * intermediate values, or do something in between. On the publishing side this
+ * policy controls the samples that should be maintained by the DataWriter on
+ * behalf of existing DataReader entities. The behavior with regards to a
+ * DataReader entities discovered after a sample is written is controlled by the
+ * {@link Durability}. On the subscribing side it controls the samples that
+ * should be maintained until the application "takes" them from the Service via
+ * {@link DataReader#take()}.
  * 
  * <b>Concerns:</b> {@link Topic}, {@link DataReader}, {@link DataWriter}
  * 
@@ -44,35 +42,32 @@ import org.omg.dds.topic.Topic;
  * <b>Changeable:</b> No
  * 
  * <ol>
- *     <li>This policy controls the behavior of the Service when the value of
- *         an instance changes before it is finally communicated to some of
- *         its existing DataReader entities.</li>
+ * <li>This policy controls the behavior of the Service when the value of an
+ * instance changes before it is finally communicated to some of its existing
+ * DataReader entities.</li>
  * 
- *     <li>If the kind is set to {@link Kind#KEEP_LAST}, then the Service
- *         will only attempt to keep the latest values of the instance and
- *         discard the older ones. In this case, the value of depth regulates
- *         the maximum number of values (up to and including the most current
- *         one) the Service will maintain and deliver. The default (and most
- *         common setting) for depth is one, indicating that only the most
- *         recent value should be delivered.</li>
+ * <li>If the kind is set to {@link Kind#KEEP_LAST}, then the Service will only
+ * attempt to keep the latest values of the instance and discard the older ones.
+ * In this case, the value of depth regulates the maximum number of values (up
+ * to and including the most current one) the Service will maintain and deliver.
+ * The default (and most common setting) for depth is one, indicating that only
+ * the most recent value should be delivered.</li>
  * 
- *     <li>If the kind is set to {@link Kind#KEEP_ALL}, then the Service will
- *         attempt to maintain and deliver all the values of the instance to
- *         existing subscribers. The resources that the Service can use to
- *         keep this history are limited by the settings of the
- *         {@link ResourceLimits}. If the limit is reached, then the
- *         behavior of the Service will depend on the
- *         {@link Reliability}. If the reliability kind is
- *         {@link Reliability.Kind#BEST_EFFORT}, then the old values
- *         will be discarded. If reliability is
- *         {@link Reliability.Kind#RELIABLE}, then the Service will
- *         block the DataWriter until it can deliver the necessary old values
- *         to all subscribers.</li>
+ * <li>If the kind is set to {@link Kind#KEEP_ALL}, then the Service will
+ * attempt to maintain and deliver all the values of the instance to existing
+ * subscribers. The resources that the Service can use to keep this history are
+ * limited by the settings of the {@link ResourceLimits}. If the limit is
+ * reached, then the behavior of the Service will depend on the
+ * {@link Reliability}. If the reliability kind is
+ * {@link Reliability.Kind#BEST_EFFORT}, then the old values will be discarded.
+ * If reliability is {@link Reliability.Kind#RELIABLE}, then the Service will
+ * block the DataWriter until it can deliver the necessary old values to all
+ * subscribers.</li>
  * </ol>
  * 
  * The setting of HISTORY depth must be consistent with the RESOURCE_LIMITS
- * maxSamplesPerInstance. For these two QoS to be consistent, they must
- * verify that depth &lt;= maxSamplesPerInstance.
+ * maxSamplesPerInstance. For these two QoS to be consistent, they must verify
+ * that depth &lt;= maxSamplesPerInstance.
  * 
  * @see Reliability
  * @see ResourceLimits
@@ -84,41 +79,40 @@ public class History implements QosPolicy {
     public static final History KEEP_LAST = new History(Kind.KEEP_LAST, 1);
     public static final History KEEP_ALL = new History(Kind.KEEP_ALL);
 
-    private Kind kind;
-    private int depth;
+    final private Kind kind;
+    final private int depth;
 
     public enum Kind {
         /**
          * On the publishing side, the Service will only attempt to keep the
-         * most recent "depth" samples ({@link History#getDepth()})
-         * of each instance of data (identified by its key) managed by the
-         * {@link DataWriter}. On the subscribing side, the DataReader will
-         * only attempt to keep the most recent "depth" samples received for
-         * each instance (identified by its key) until the application
-         * "takes" them via {@link DataReader#take()}. KEEP_LAST is the
-         * default kind. The default value of depth is 1. If a value other
-         * than 1 is specified, it must be consistent with the settings of
-         * the {@link ResourceLimits}.
+         * most recent "depth" samples ({@link History#getDepth()}) of each
+         * instance of data (identified by its key) managed by the
+         * {@link DataWriter}. On the subscribing side, the DataReader will only
+         * attempt to keep the most recent "depth" samples received for each
+         * instance (identified by its key) until the application "takes" them
+         * via {@link DataReader#take()}. KEEP_LAST is the default kind. The
+         * default value of depth is 1. If a value other than 1 is specified, it
+         * must be consistent with the settings of the {@link ResourceLimits}.
          */
         KEEP_LAST,
 
         /**
-         * On the publishing side, the Service will attempt to keep all
-         * samples (representing each value written) of each instance of data
-         * (identified by its key) managed by the {@link DataWriter} until
-         * they can be delivered to all subscribers. On the subscribing side,
-         * the Service will attempt to keep all samples of each instance of
-         * data (identified by its key) managed by the {@link DataReader}.
-         * These samples are kept until the application "takes" them from the
-         * Service via {@link DataReader#take()}. The setting of depth has no
-         * effect. Its implied value is
-         * {@link ResourceLimits#LENGTH_UNLIMITED}.
+         * On the publishing side, the Service will attempt to keep all samples
+         * (representing each value written) of each instance of data
+         * (identified by its key) managed by the {@link DataWriter} until they
+         * can be delivered to all subscribers. On the subscribing side, the
+         * Service will attempt to keep all samples of each instance of data
+         * (identified by its key) managed by the {@link DataReader}. These
+         * samples are kept until the application "takes" them from the Service
+         * via {@link DataReader#take()}. The setting of depth has no effect.
+         * Its implied value is {@link ResourceLimits#LENGTH_UNLIMITED}.
          */
         KEEP_ALL
     }
 
     private History(Kind kind) {
         this.kind = kind;
+        this.depth = 1;
     }
 
     private History(Kind kind, int depth) {
@@ -167,6 +161,5 @@ public class History implements QosPolicy {
     // -----------------------------------------------------------------------
     // Types
     // -----------------------------------------------------------------------
-
 
 }

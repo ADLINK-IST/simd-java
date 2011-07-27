@@ -48,6 +48,7 @@ import org.omg.dds.sub.Subscriber;
  * except the decision can be made based on an application-defined policy.
  */
 public interface GroupData extends QosPolicy {
+	public static int ID = 20;
     /**
      * Copy the data into the given array, starting at the index at the given
      * offset.

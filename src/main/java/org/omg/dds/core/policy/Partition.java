@@ -88,6 +88,7 @@ import org.omg.dds.sub.Subscriber;
  * or requested (subscribed) on one or more partitions.
  */
 public interface Partition extends QosPolicy {
+	public static int ID = 21;
     /**
      * @return  an unmodifiable collection of partition names.
      */

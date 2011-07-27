@@ -22,7 +22,6 @@ import org.omg.dds.pub.DataWriter;
 import org.omg.dds.sub.DataReader;
 import org.omg.dds.topic.Topic;
 
-
 /**
  * [optional] Specifies whether it is allowed for multiple {@link DataWriter}s
  * to write the same instance of the data and if so, how these modifications
@@ -36,7 +35,17 @@ import org.omg.dds.topic.Topic;
  * 
  * @see OwnershipStrength
  */
-public interface Ownership extends QosPolicy {
+public class Ownership implements QosPolicy {
+    /** The default serialVersionUID. */
+    private static final long serialVersionUID = 1L;
+    // -- Constant Members
+    public final static int ID = 9;
+    private final static String NAME = "Ownership";
+    private static final Ownership SHARED = new Ownership(Kind.SHARED);
+    private static final Ownership EXCLUSIVE = new Ownership(Kind.EXCLUSIVE);
+    // - Attributes
+    private Kind kind;
+
     // -----------------------------------------------------------------------
     // Methods
     // -----------------------------------------------------------------------
@@ -44,9 +53,9 @@ public interface Ownership extends QosPolicy {
     /**
      * @return the kind
      */
-    public Kind getKind();
-
-
+    public Kind getKind() {
+        return kind;
+    }
 
     // -----------------------------------------------------------------------
     // Types
@@ -62,15 +71,36 @@ public interface Ownership extends QosPolicy {
         SHARED,
 
         /**
-         * Indicates each instance can only be owned by one
-         * {@link DataWriter}, but the owner of an instance can change
-         * dynamically. The selection of the owner is controlled by the
-         * setting of the {@link OwnershipStrength}. The owner is
-         * always set to be the highest-strength DataWriter object among the
-         * ones currently "active" (as determined by the
-         * {@link Liveliness}).
+         * Indicates each instance can only be owned by one {@link DataWriter},
+         * but the owner of an instance can change dynamically. The selection of
+         * the owner is controlled by the setting of the
+         * {@link OwnershipStrength}. The owner is always set to be the
+         * highest-strength DataWriter object among the ones currently "active"
+         * (as determined by the {@link Liveliness}).
          */
         EXCLUSIVE
+    }
+
+    // -- Ctors
+    private Ownership(Kind kind) {
+        this.kind = kind;
+    }
+
+    // -- Methods from QosPolicy
+    public final int getPolicyId() {
+        return ID;
+    }
+
+    public final String getPolicyName() {
+        return NAME;
+    }
+
+    public static Ownership Shared() {
+        return Ownership.SHARED;
+    }
+
+    public static Ownership Exclusive() {
+        return Ownership.EXCLUSIVE;
     }
 
 }

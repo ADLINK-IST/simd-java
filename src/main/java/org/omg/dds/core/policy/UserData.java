@@ -23,13 +23,12 @@ import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.pub.DataWriter;
 import org.omg.dds.sub.DataReader;
 
-
 /**
- * User data not known by the middleware, but distributed by means of
- * built-in topics. The default value is an empty (zero-sized) sequence.
+ * User data not known by the middleware, but distributed by means of built-in
+ * topics. The default value is an empty (zero-sized) sequence.
  * 
  * <b>Concerns:</b> {@link DomainParticipant}, {@link DataReader},
- *                 {@link DataWriter}
+ * {@link DataWriter}
  * 
  * <b>RxO:</b> No
  * 
@@ -37,19 +36,18 @@ import org.omg.dds.sub.DataReader;
  * 
  * The purpose of this QoS is to allow the application to attach additional
  * information to the created {@link Entity} objects such that when a remote
- * application discovers their existence it can access that information and
- * use it for its own purposes. One possible use of this QoS is to attach
- * security credentials or some other information that can be used by the
- * remote application to authenticate the source. In combination with
- * operations such as
+ * application discovers their existence it can access that information and use
+ * it for its own purposes. One possible use of this QoS is to attach security
+ * credentials or some other information that can be used by the remote
+ * application to authenticate the source. In combination with operations such
+ * as
  * {@link DomainParticipant#ignoreParticipant(org.omg.dds.core.InstanceHandle)},
  * {@link DomainParticipant#ignorePublication(org.omg.dds.core.InstanceHandle)},
- * {@link DomainParticipant#ignoreSubscription(org.omg.dds.core.InstanceHandle)},
- * and
- * {@link DomainParticipant#ignoreTopic(org.omg.dds.core.InstanceHandle)}
+ * {@link DomainParticipant#ignoreSubscription(org.omg.dds.core.InstanceHandle)}
+ * , and {@link DomainParticipant#ignoreTopic(org.omg.dds.core.InstanceHandle)}
  * these QoS can assist an application to define and enforce its own security
- * policies. The use of this QoS is not limited to security, rather it offers
- * a simple, yet flexible extensibility mechanism.
+ * policies. The use of this QoS is not limited to security, rather it offers a
+ * simple, yet flexible extensibility mechanism.
  */
 public class UserData implements QosPolicy {
     public static final int ID = 1;
@@ -57,32 +55,36 @@ public class UserData implements QosPolicy {
 
     private final byte value[];
 
-
     public UserData(byte value[]) {
         this.value = value;
     }
+
     /**
      * Copy the data into the given array, starting at the index at the given
      * offset.
      * 
-     * @return  The total number of bytes in the data, independent of the
-     *          number of bytes copied. Callers can use this result to
-     *          determine if the output array is long enough or, if it is
-     *          long enough, what range within it contains valid data.
+     * @return The total number of bytes in the data, independent of the number
+     *         of bytes copied. Callers can use this result to determine if the
+     *         output array is long enough or, if it is long enough, what range
+     *         within it contains valid data.
      */
     public byte[] getValue() {
-        return this.value;
+        return value.clone();
     }
 
     /**
-     * @return  the length of the <code>value</code> property.
+     * @return the length of the <code>value</code> property.
      */
     public int getLength() {
         return this.value.length;
     }
 
-    public int getPolicyId() { return ID; }
+    public int getPolicyId() {
+        return ID;
+    }
 
-    public String getPolicyName() { return  NAME; }
+    public String getPolicyName() {
+        return NAME;
+    }
 
 }

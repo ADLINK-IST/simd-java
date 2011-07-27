@@ -26,14 +26,19 @@ import org.omg.dds.core.policy.History;
 import org.omg.dds.core.policy.LatencyBudget;
 import org.omg.dds.core.policy.Liveliness;
 import org.omg.dds.core.policy.Ownership;
+import org.omg.dds.core.policy.QosPolicy;
 import org.omg.dds.core.policy.ReaderDataLifecycle;
 import org.omg.dds.core.policy.ResourceLimits;
 import org.omg.dds.core.policy.TimeBasedFilter;
 import org.omg.dds.core.policy.TypeConsistencyEnforcement;
 import org.omg.dds.core.policy.UserData;
+import org.omg.dds.pub.DataWriterQos;
 
 
 public interface DataReaderQos {
+	
+	public DataReaderQos with(QosPolicy... policies);
+
     /**
      * @return the durability
      */

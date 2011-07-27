@@ -30,7 +30,7 @@ import org.omg.dds.type.Nested;
  */
 @Extensibility(Extensibility.Kind.FINAL_EXTENSIBILITY)
 @Nested
-public abstract class Time implements Value, Comparable<Time>
+public class Time implements Value, Comparable<Time>
 {
     // -----------------------------------------------------------------------
     // Private Constants
@@ -38,6 +38,17 @@ public abstract class Time implements Value, Comparable<Time>
 
     private static final long serialVersionUID = -132361141453190372L;
 
+    private static final Time INVALID = new Time(0x7fffffffffffffffL,
+            0x7fffffffffffffffL);
+    private static long NANOSECONDSPERSECOND = 1000000000L;
+
+    /**
+     * TODO verify that this should be two longs, as opposed to two int's. A
+     * java long is 64 bit whereas a c/c++ long is likely 32 bit on a 32 bit
+     * machine
+     */
+    private long sec;
+    private long nanoSec;
 
 
     // -----------------------------------------------------------------------
@@ -65,17 +76,28 @@ public abstract class Time implements Value, Comparable<Time>
       */
 
     /**
-     * @param bootstrap Identifies the Service instance to which the
-     *                  object will belong.
-     *                  
      * @return      An unmodifiable {@link Time} that is not valid.
      */
-    /*
-    public static Time invalidTime(Bootstrap bootstrap) {
-        return bootstrap.getSPI().invalidTime();
+    public static Time invalidTime() {
+        return INVALID;
     }
-    */
 
+
+    public Time(long sec) {
+        this.sec = sec;
+        this.nanoSec = 0;
+    }
+
+    public Time(long time, TimeUnit unit) {
+    	long timeInNanoSec = unit.convert(time, TimeUnit.NANOSECONDS);
+    	this.sec = timeInNanoSec / NANOSECONDSPERSECOND;
+        this.nanoSec = timeInNanoSec % NANOSECONDSPERSECOND;
+    }
+
+    public Time(long sec, long nanoSec) {
+        this.sec = sec;
+        this.nanoSec = nanoSec;
+    }
 
 
     // -----------------------------------------------------------------------
@@ -107,7 +129,13 @@ public abstract class Time implements Value, Comparable<Time>
      * @see     Long#MAX_VALUE
      * @see     TimeUnit
      */
-    public abstract long getTime(TimeUnit inThisUnit);
+    public long getTime(TimeUnit inThisUnit) {
+        if (inThisUnit.equals(TimeUnit.SECONDS)) {
+            return sec;
+        }
+        return inThisUnit.convert(nanoSec, TimeUnit.NANOSECONDS) +
+                inThisUnit.convert(sec, TimeUnit.SECONDS);
+    }
 
     /**
      * If getting the magnitude of this time in the given
@@ -139,8 +167,18 @@ public abstract class Time implements Value, Comparable<Time>
      * @see     Long#MAX_VALUE
      * @see     TimeUnit
      */
-    public abstract long getRemainder(
-            TimeUnit primaryUnit, TimeUnit remainderUnit);
+    public long getRemainder(
+            TimeUnit primaryUnit, TimeUnit remainderUnit) {
+        // TODO This will require some unit testing to confirm
+        long valueInRemainderUnit =
+                remainderUnit.convert(sec, TimeUnit.SECONDS) +
+                        remainderUnit.convert(nanoSec, TimeUnit.NANOSECONDS);
+        long valueInPrimaryUnit = primaryUnit.convert(valueInRemainderUnit,
+                remainderUnit);
+        long truncatedValueInRemainderUnit =
+                remainderUnit.convert(valueInPrimaryUnit, primaryUnit);
+        return valueInRemainderUnit - truncatedValueInRemainderUnit;
+    }
 
 
     // --- Query: ------------------------------------------------------------
@@ -148,11 +186,26 @@ public abstract class Time implements Value, Comparable<Time>
     /**
      * @return  whether this time represents a meaningful instant in time.
      */
-    public abstract boolean isValid();
+    public boolean isValid() {
+    	return sec >= 0 && nanoSec >= 0 && !INVALID.equals(this);
+    }
 
 
     // --- From Object: ------------------------------------------------------
 
     @Override
-    public abstract Time clone();
+    public Time clone() {
+    	return new Time(sec, nanoSec);
+    }
+
+	@Override
+	public int compareTo(Time that) {
+        if (sec != that.sec) {
+            return sec < that.sec ? -1 : 1;
+        }
+        if (nanoSec == that.nanoSec) {
+            return 0;
+        }
+        return nanoSec < that.nanoSec ? -1 : 1;
+	}
 }

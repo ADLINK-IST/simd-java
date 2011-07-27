@@ -23,12 +23,10 @@ import org.omg.dds.pub.DataWriter;
 import org.omg.dds.sub.DataReader;
 import org.omg.dds.topic.Topic;
 
-
 /**
- * Specifies the configuration of the durability service. That is, the
- * service that implements the {@link Durability.Kind} of
- * {@link Durability.Kind#TRANSIENT} and
- * {@link Durability.Kind#PERSISTENT}.
+ * Specifies the configuration of the durability service. That is, the service
+ * that implements the {@link Durability.Kind} of
+ * {@link Durability.Kind#TRANSIENT} and {@link Durability.Kind#PERSISTENT}.
  * 
  * <b>Concerns:</b> {@link Topic}, {@link DataWriter}
  * 
@@ -37,11 +35,10 @@ import org.omg.dds.topic.Topic;
  * <b>Changeable:</b> No
  * 
  * This policy is used to configure the {@link History} and the
- * {@link ResourceLimits} used by the fictitious {@link DataReader}
- * and {@link DataWriter} used by the "persistence service." The "persistence
+ * {@link ResourceLimits} used by the fictitious {@link DataReader} and
+ * {@link DataWriter} used by the "persistence service." The "persistence
  * service" is the one responsible for implementing
- * {@link Durability.Kind#TRANSIENT} and
- * {@link Durability.Kind#PERSISTENT}.
+ * {@link Durability.Kind#TRANSIENT} and {@link Durability.Kind#PERSISTENT}.
  * 
  * @see Durability
  */
@@ -49,11 +46,21 @@ public class DurabilityService implements QosPolicy {
     public static final int ID = 22;
     private static final String NAME = "DurabilityService";
 
-    private History history;
-    private Duration cleanupDelay;
-    private int maxSamples;
-    private int maxInstances;
-    private int maxSamplesPerInstance;
+    final private History history;
+    final private Duration cleanupDelay;
+    final private int maxSamples;
+    final private int maxInstances;
+    final private int maxSamplesPerInstance;
+
+    /** TODO create some more constructors with defaults. */
+    public DurabilityService(History history, Duration cleanupDelay,
+            int maxSamples, int maxInstances, int maxSamplesPerInstance) {
+        this.history = history;
+        this.cleanupDelay = cleanupDelay;
+        this.maxSamples = maxSamples;
+        this.maxInstances = maxInstances;
+        this.maxSamplesPerInstance = maxSamplesPerInstance;
+    }
 
     public Duration getServiceCleanupDelay() {
         return this.cleanupDelay;

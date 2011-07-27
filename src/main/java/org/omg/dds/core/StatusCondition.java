@@ -22,46 +22,43 @@ import java.util.Collection;
 
 import org.omg.dds.core.status.Status;
 
-
 /**
- * A StatusCondition object is a specific Condition that is associated with
- * each {@link Entity}. The triggerValue of the StatusCondition depends on
- * the communication status of that entity (e.g., arrival of data, loss of
+ * A StatusCondition object is a specific Condition that is associated with each
+ * {@link Entity}. The triggerValue of the StatusCondition depends on the
+ * communication status of that entity (e.g., arrival of data, loss of
  * information, etc.), "filtered" by the set of enabledStatuses on the
  * StatusCondition.
  * 
  * The triggerValue of a StatusCondition is the Boolean OR of the
- * ChangedStatusFlag of all the communication statuses to which it is
- * sensitive. That is, triggerValue == false only if all the values of the
+ * ChangedStatusFlag of all the communication statuses to which it is sensitive.
+ * That is, triggerValue == false only if all the values of the
  * ChangedStatusFlags are false.
  * 
- * The sensitivity of the StatusCondition to a particular communication
- * status is controlled by the list of enabledStatuses set on the condition
- * by means of {@link #setEnabledStatuses(Collection)}.
+ * The sensitivity of the StatusCondition to a particular communication status
+ * is controlled by the list of enabledStatuses set on the condition by means of
+ * {@link #setEnabledStatuses(Collection)}.
  * 
- * @param <ENTITY>      The type of the entity with which this condition is
- *                      associated.
+ * @param <ENTITY>
+ *            The type of the entity with which this condition is associated.
  */
 public interface StatusCondition<ENTITY extends Entity<ENTITY>>
-extends Condition {
+        extends Condition {
     /**
      * This operation retrieves the list of communication statuses that are
-     * taken into account to determine the triggerValue of the
-     * StatusCondition. This operation returns the statuses that were
-     * explicitly set on the last call to
-     * {@link #setEnabledStatuses(Collection)} or, if it was never called,
-     * the default list.
+     * taken into account to determine the triggerValue of the StatusCondition.
+     * This operation returns the statuses that were explicitly set on the last
+     * call to {@link #setEnabledStatuses(Collection)} or, if it was never
+     * called, the default list.
      * 
-     * @see     #setEnabledStatuses(Collection)
+     * @see #setEnabledStatuses(Collection)
      */
-    public Collection<Class<? extends Status<?, ?>>> getEnabledStatuses(
-            Collection<Class<? extends Status<?, ?>>> statuses);
+    public Collection<Class<? extends Status>> getEnabledStatuses(
+            Collection<Class<? extends Status>> statuses);
 
     /**
-     * This operation defines the list of communication statuses that are
-     * taken into account to determine the triggerValue of the
-     * StatusCondition. This operation may change the triggerValue of the
-     * StatusCondition.
+     * This operation defines the list of communication statuses that are taken
+     * into account to determine the triggerValue of the StatusCondition. This
+     * operation may change the triggerValue of the StatusCondition.
      * 
      * {@link WaitSet} objects behavior depend on the changes of the
      * triggerValue of their attached conditions. Therefore, any WaitSet to
@@ -70,19 +67,19 @@ extends Condition {
      * 
      * If this function is not invoked, the default list of enabled statuses
      * includes all the statuses.
-     *
-     * @param statuses  For which status changes the condition should trigger.
-     *                  A null collection signifies all status changes.
      * 
-     * @see     #getEnabledStatuses(Collection)
+     * @param statuses
+     *            For which status changes the condition should trigger. A null
+     *            collection signifies all status changes.
+     * 
+     * @see #getEnabledStatuses(Collection)
      */
     public void setEnabledStatuses(
-            Collection<Class<? extends Status<?, ?>>> statuses);
+            Collection<Class<? extends Status>> statuses);
 
     /**
-     * @return  the Entity associated with the StatusCondition. Note that
-     *          there is exactly one Entity associated with each
-     *          StatusCondition.
+     * @return the Entity associated with the StatusCondition. Note that there
+     *         is exactly one Entity associated with each StatusCondition.
      */
     public ENTITY getEntity();
 }

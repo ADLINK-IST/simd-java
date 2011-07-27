@@ -18,25 +18,47 @@
 
 package org.omg.dds.core.policy;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public interface DataRepresentation extends QosPolicy
-{
+public class DataRepresentation implements QosPolicy {
+    private static final long serialVersionUID = 1L;
+    public static final int ID = 19;
+    private static final String NAME = "DataRepresentation";
+    private final List<Short> value;
+
     // -----------------------------------------------------------------------
     // Properties
     // -----------------------------------------------------------------------
 
-    public List<Short> getValue();
+    public List<Short> getValue() {
+        return null;
+    }
 
-
+    public DataRepresentation(List<Short> value) {
+        this.value = new ArrayList<Short>();
+        if (value != null) {
+            Collections.copy(value, this.value);
+        }
+    }
 
     // -----------------------------------------------------------------------
     // Types
     // -----------------------------------------------------------------------
 
-    public static final class Id
-    {
+    public static final class Id {
         public static final short XCDR_DATA_REPRESENTATION = 0;
         public static final short XML_DATA_REPRESENTATION = 1;
+    }
+
+    @Override
+    public int getPolicyId() {
+        return ID;
+    }
+
+    @Override
+    public String getPolicyName() {
+        return NAME;
     }
 }

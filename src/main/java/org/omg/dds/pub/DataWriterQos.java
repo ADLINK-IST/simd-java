@@ -29,6 +29,7 @@ import org.omg.dds.core.policy.Lifespan;
 import org.omg.dds.core.policy.Liveliness;
 import org.omg.dds.core.policy.Ownership;
 import org.omg.dds.core.policy.OwnershipStrength;
+import org.omg.dds.core.policy.QosPolicy;
 import org.omg.dds.core.policy.Reliability;
 import org.omg.dds.core.policy.ResourceLimits;
 import org.omg.dds.core.policy.TransportPriority;
@@ -38,6 +39,9 @@ import org.omg.dds.core.policy.WriterDataLifecycle;
 
 
 public interface DataWriterQos  {
+	
+	public DataWriterQos with(QosPolicy... policies);
+	
     /**
      * @return the durability
      */
