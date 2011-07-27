@@ -11,3 +11,7 @@
 
 # Maven target
 target
+
+# Generated Files
+src/main/gen
+src/main/gen/*
