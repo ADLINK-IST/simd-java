@@ -100,10 +100,11 @@ public class JavaShapesMainWindow extends JFrame implements ActionListener {
         pub = dp.createPublisher();
         rdrqos = sub.getDefaultDataReaderQos().with(
                 DestinationOrder.SourceTimestamp(),
-                new LatencyBudget(new Duration(300, TimeUnit.MICROSECONDS)));
+                new LatencyBudget(new Duration(0, 300000)));
+        // new Duration(300, TimeUnit.MICROSECONDS)));
         wtrqos = pub.getDefaultDataWriterQos().with(
                 DestinationOrder.SourceTimestamp(),
-                new LatencyBudget(new Duration(300, TimeUnit.MICROSECONDS)));
+                new LatencyBudget(new Duration(0, 300000)));
 
         topicCircle = dp.createTopic("Circle", ShapeType.class);
         topicTriangle = dp.createTopic("Triangle", ShapeType.class);

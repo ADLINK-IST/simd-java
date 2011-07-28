@@ -20,12 +20,10 @@ package org.omg.dds.core;
 
 import java.util.concurrent.TimeUnit;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.omg.dds.core.AbstractTime;
 import org.omg.dds.type.Extensibility;
 import org.omg.dds.type.Nested;
 
-import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -52,7 +50,7 @@ public  class Time extends AbstractTime
 
     public Time(long sec, long nanoSec){
 
-        assertTrue("Invalid arguments ", nanoSec >= 0 && sec >= 0  && Math.pow(10,9)> nanoSec );
+        assert ( sec >= 0  && Math.pow(10,9)> nanoSec );
         this.sec = sec;
         this.nanoSec = nanoSec;
 

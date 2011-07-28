@@ -5,7 +5,6 @@ import org.omg.dds.core.Value;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertTrue;
 
 public  class AbstractTime implements Value, Comparable<AbstractTime>
 {
@@ -18,12 +17,12 @@ public  class AbstractTime implements Value, Comparable<AbstractTime>
 
 
     public AbstractTime(long sec) {
-        assertTrue("Invalid arguments ", sec >= 0 );
+        assert (sec >= 0 );
         this.sec = sec;
         this.nanoSec = 0;
     }
     public AbstractTime(long sec, long nanoSec) {
-        assertTrue("Invalid arguments ", nanoSec >= 0 && sec >= 0 &&  (nanoSec <(long)Math.pow(10,9)));
+        assert (nanoSec >= 0 && sec >= 0 &&  (nanoSec <(long)Math.pow(10,9)));
         this.sec = sec;
         this.nanoSec = nanoSec;
     }
@@ -136,7 +135,7 @@ public  class AbstractTime implements Value, Comparable<AbstractTime>
      */
     public AbstractTime subtract(AbstractTime that) {
 
-        assertTrue("cannot subtract a duration from a smaller duration" ,this.compareTo(that) >= 0 );
+        assert (this.compareTo(that) >= 0 );
 
         AbstractTime result = ZERO ;
 

@@ -3,6 +3,8 @@ package org.opensplice.psm.java.core.policy;
 import java.util.concurrent.TimeUnit;
 
 
+import DDS.TIMESTAMP_INVALID;
+import DDS.Time_t;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.Time;
 import org.omg.dds.core.policy.DestinationOrder;
@@ -33,12 +35,10 @@ public class OSPL {
         }
         return new Duration(ddsduration.sec, ddsduration.nanosec);
     }
-    
-    public static Time convert(DDS.Time_t ddstime) {
-    	if (DDS.TIMESTAMP_INVALID.value.equals(ddstime)) {
-    		return Time.invalidTime();
-    	}
-    	return new Time(ddstime.sec, ddstime.nanosec);
+
+    public static Time convert(Time_t time) {
+        // TODO: Fix extreme cases.
+        return new Time(time.sec, time.nanosec);
     }
 
     public static Durability convert(DDS.DurabilityQosPolicy durability) {

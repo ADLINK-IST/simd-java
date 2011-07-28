@@ -18,20 +18,10 @@
 
 package org.omg.dds.core;
 
-import java.lang.management.ThreadInfo;
-import java.nio.channels.OverlappingFileLockException;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.*;
-import com.sun.corba.se.spi.ior.IdentifiableFactory;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
-import org.hamcrest.Factory;
 import org.omg.dds.core.AbstractTime;
 import org.omg.dds.core.OverflowException;
 import org.omg.dds.type.Extensibility;
 import org.omg.dds.type.Nested;
-
-import javax.xml.transform.Result;
 
 
 /**
@@ -88,7 +78,7 @@ public class Duration extends AbstractTime
 
     public Duration multiply (long c) throws OverflowException {
 
-        assertTrue(" cannot multiply a duration by a negative constant ",c >= 0);
+        assert (c >= 0);
 
         Duration result =  ZERO;
         double multiplication = (this.sec * Math.pow(10, 9) * c) + (double) (this.nanoSec * c);
@@ -124,7 +114,7 @@ public class Duration extends AbstractTime
      * @return new duration as result of the division
      */
     public Duration divide (long c) {
-        assertTrue ("cannot divide a duration by a non-positive constant ", c > 0);
+       assert ( c > 0);
 
         Duration result = (Duration) ZERO;
 
