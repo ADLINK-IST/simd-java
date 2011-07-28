@@ -15,3 +15,6 @@ target
 # Generated Files
 src/main/gen
 src/main/gen/*
+
+# Emacs Temp Files
+*~

@@ -1,0 +1,7 @@
+pushd $PWD &>/dev/null
+cd src/main/gen
+
+idlpp -S -l java ../idl/ping.idl
+idlpp -S -l java ../idl/ishape.idl
+
+popd &>/dev/null
