@@ -18,8 +18,10 @@
 
 package org.omg.dds.core.policy;
 
-import java.util.Collection;
+import java.util.*;
 
+import DDS.PartitionQosPolicy;
+import org.omg.dds.core.DDSException;
 import org.omg.dds.core.Entity;
 import org.omg.dds.pub.DataWriter;
 import org.omg.dds.pub.Publisher;
@@ -32,41 +34,41 @@ import org.omg.dds.sub.Subscriber;
  * the "physical" partition induced by a domain. It consists of a set of
  * strings that introduces a logical partition among the topics
  * visible by the {@link Publisher} and {@link Subscriber}.
- * 
+ *
  * <b>Concerns:</b> {@link Publisher}, {@link Subscriber}
- * 
+ *
  * <b>RxO:</b> No
- * 
+ *
  * <b>Changeable:</b> Yes
- * 
+ *
  * A {@link DataWriter} within a Publisher only communicates with a
  * {@link DataReader} in a Subscriber if (in addition to matching the Topic
  * and having compatible QoS) the Publisher and Subscriber have a common
  * partition name string. Each string in the list that defines this QoS
  * policy defines a partition name. A partition name may contain wild cards.
  * Sharing a common partition means that one of the partition names matches.
- * 
+ *
  * Failure to match partitions is not considered an "incompatible" QoS and
  * does not trigger any listeners nor conditions.
- * 
+ *
  * This policy is changeable. A change of this policy can potentially modify
  * the "match" of existing DataReader and DataWriter entities. It may
  * establish new "matches" that did not exist before, or break existing
  * matches.
- * 
+ *
  * The empty string ("") is considered a valid partition that is matched with
  * other partition names using the same rules of string matching and
  * regular expression matching used for any other partition name.
- * 
+ *
  * The default value for is a zero-length sequence. The
  * zero-length sequence is treated as a special value equivalent to a
  * sequence containing a single element consisting of the empty string.
- * 
+ *
  * This policy is changeable. A change of this policy can potentially modify
  * the "match" of existing DataReader and DataWriter entities. It may
  * establish new "matches" that did not exist before, or break existing
  * matches.
- * 
+ *
  * PARTITION names can be regular expressions and include wild cards as
  * defined by the POSIX fnmatch API (1003.2-1992 section B.6). Either
  * {@link Publisher} or {@link Subscriber} may include regular expressions in
@@ -74,7 +76,7 @@ import org.omg.dds.sub.Subscriber;
  * be considered to match. This means that although regular expressions may
  * be used both at publisher as well as subscriber side, the service will not
  * try to match two regular expressions (between publishers and subscribers).
- * 
+ *
  * Partitions are different from creating {@link Entity} objects in different
  * domains in several ways. First, entities belonging to different domains
  * are completely isolated from each other; there is no traffic, meta-traffic
@@ -87,10 +89,78 @@ import org.omg.dds.sub.Subscriber;
  * the other hand, the same data instance can be made available (published)
  * or requested (subscribed) on one or more partitions.
  */
-public interface Partition extends QosPolicy {
-	public static int ID = 21;
+public class Partition implements QosPolicy {
+
+    // -----------------------------------------------------------------------
+    //  Constants & attributes
+    // -----------------------------------------------------------------------
+
+    public static final int ID = 10;
+    public static final String NAME = "Partition";
+
+
+    private ArrayList<String> names = new ArrayList<String>();
+    private int length = 0 ;
+
+    // -----------------------------------------------------------------------
+    // factory methods
+    // -----------------------------------------------------------------------
+
+    public Partition(){
+        this.names.add("");
+    }
+
+    public Partition(String name){
+        this.names.add(name);
+    }
+
+    public Partition(Collection<String> names){
+        this.names.addAll(names) ;
+    }
+
+    // -----------------------------------------------------------------------
+    // Proper methods
+    // -----------------------------------------------------------------------
+
+      public void clear() {
+          names.removeAll(this.names);
+          names.add("");
+    }
+
+     public void add(Collection<String> names)  {
+        this.names.addAll(names) ;
+    }
+
+    public void add(String partitionName) {
+
+    }
+
+    public void add(Partition partition) {
+
+    }
+
+    public boolean equals(Partition that) {
+        // TODO: Implement this
+        return false;
+    }
+
+
+    // etc ...
+
+
     /**
-     * @return  an unmodifiable collection of partition names.
+     * @return an unmodifiable collection of partition names.
      */
-    public Collection<String> getName();
+    public Collection<String> getName() {
+        return this.names ;
+    }
+
+
+    public int getPolicyId() {
+        return ID;
+    }
+
+    public String getPolicyName() {
+        return NAME;
+    }
 }

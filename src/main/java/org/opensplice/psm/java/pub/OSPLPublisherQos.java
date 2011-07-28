@@ -5,11 +5,9 @@ import org.omg.dds.core.policy.GroupData;
 import org.omg.dds.core.policy.Partition;
 import org.omg.dds.core.policy.Presentation;
 import org.omg.dds.core.policy.QosPolicy;
-import org.omg.dds.pub.DataWriterQos;
 import org.omg.dds.pub.PublisherQos;
 import org.opensplice.psm.java.core.policy.OSPL;
 import org.opensplice.psm.java.core.policy.OSPLGroupData;
-import org.opensplice.psm.java.core.policy.OSPLPartition;
 
 public class OSPLPublisherQos implements PublisherQos {
 
@@ -58,7 +56,8 @@ public class OSPLPublisherQos implements PublisherQos {
 
 
     public Partition getPartition() {
-        return new OSPLPartition(qos.partition.name);
+        //TODO: FixMe
+        return null;
     }
 
 

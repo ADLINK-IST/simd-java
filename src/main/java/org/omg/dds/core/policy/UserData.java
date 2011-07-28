@@ -50,6 +50,7 @@ import org.omg.dds.sub.DataReader;
  * simple, yet flexible extensibility mechanism.
  */
 public class UserData implements QosPolicy {
+    static final long serialVersionUID = 4791687692148780088L;
     public static final int ID = 1;
     private static final String NAME = "UserData";
 
