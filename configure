@@ -1,4 +1,5 @@
 pushd $PWD &>/dev/null
+mkdir src/main/gen
 cd src/main/gen
 
 idlpp -S -l java ../idl/ping.idl
