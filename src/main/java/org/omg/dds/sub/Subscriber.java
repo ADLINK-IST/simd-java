@@ -123,21 +123,6 @@ public interface Subscriber extends Entity<Subscriber> {
             DataReaderListener<TYPE> listener,
             Collection<Class<? extends Status<?>>> statuses);
 
-    /**
-     * Create a new data reader.
-     * 
-     * @param statuses  Of which status changes the listener should be
-     *                  notified. A null collection signifies all status
-     *                  changes.
-     *
-     * @see     #createDataReader(TopicDescription, DataReaderQos, DataReaderListener, Collection)
-     */
-    public <TYPE> DataReader<TYPE> createDataReader(
-            TopicDescription<TYPE> topic,
-            String qosLibraryName,
-            String qosProfileName,
-            DataReaderListener<TYPE> listener,
-            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create DataReader of built-in bytes type: -------------------------
@@ -165,21 +150,6 @@ public interface Subscriber extends Entity<Subscriber> {
             DataReaderListener<byte[]> listener,
             Collection<Class<? extends Status<?>>> statuses);
 
-    /**
-     * Create a new data reader for this built-in type.
-     * 
-     * @param statuses  Of which status changes the listener should be
-     *                  notified. A null collection signifies all status
-     *                  changes.
-     * 
-     * @see     #createDataReader(TopicDescription, DataReaderQos, DataReaderListener, Collection)
-     */
-    public BytesDataReader createBytesDataReader(
-            TopicDescription<byte[]> topic,
-            String qosLibraryName,
-            String qosProfileName,
-            DataReaderListener<byte[]> listener,
-            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create DataReader of built-in KeyedBytes type: --------------------
@@ -204,22 +174,6 @@ public interface Subscriber extends Entity<Subscriber> {
     public KeyedBytesDataReader createKeyedBytesDataReader(
             TopicDescription<KeyedBytes> topic,
             DataReaderQos qos,
-            DataReaderListener<KeyedBytes> listener,
-            Collection<Class<? extends Status<?>>> statuses);
-
-    /**
-     * Create a new data reader for this built-in type.
-     * 
-     * @param statuses  Of which status changes the listener should be
-     *                  notified. A null collection signifies all status
-     *                  changes.
-     * 
-     * @see     #createDataReader(TopicDescription, DataReaderQos, DataReaderListener, Collection)
-     */
-    public KeyedBytesDataReader createKeyedBytesDataReader(
-            TopicDescription<KeyedBytes> topic,
-            String qosLibraryName,
-            String qosProfileName,
             DataReaderListener<KeyedBytes> listener,
             Collection<Class<? extends Status<?>>> statuses);
 
@@ -249,21 +203,6 @@ public interface Subscriber extends Entity<Subscriber> {
             DataReaderListener<String> listener,
             Collection<Class<? extends Status<?>>> statuses);
 
-    /**
-     * Create a new data reader for this built-in type.
-     * 
-     * @param statuses  Of which status changes the listener should be
-     *                  notified. A null collection signifies all status
-     *                  changes.
-     * 
-     * @see     #createDataReader(TopicDescription, DataReaderQos, DataReaderListener, Collection)
-     */
-    public StringDataReader createStringDataReader(
-            TopicDescription<String> topic,
-            String qosLibraryName,
-            String qosProfileName,
-            DataReaderListener<String> listener,
-            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Create DataReader of built-in KeyedString type: -------------------
@@ -291,21 +230,6 @@ public interface Subscriber extends Entity<Subscriber> {
             DataReaderListener<KeyedString> listener,
             Collection<Class<? extends Status<?>>> statuses);
 
-    /**
-     * Create a new data reader for this built-in type.
-     * 
-     * @param statuses  Of which status changes the listener should be
-     *                  notified. A null collection signifies all status
-     *                  changes.
-     * 
-     * @see     #createDataReader(TopicDescription, DataReaderQos, DataReaderListener, Collection)
-     */
-    public KeyedStringDataReader createKeyedStringDataReader(
-            TopicDescription<KeyedString> topic,
-            String qosLibraryName,
-            String qosProfileName,
-            DataReaderListener<KeyedString> listener,
-            Collection<Class<? extends Status<?>>> statuses);
 
 
     // --- Lookup operations: ------------------------------------------------
@@ -624,4 +548,10 @@ public interface Subscriber extends Entity<Subscriber> {
      * @param   src     the source for the new policies to be copied.
      */
     public void copyFromTopicQos(DataReaderQos dst, TopicQos src);
+
+    // -- Listeners
+
+    public void setListener(SubscriberListener listener);
+
+    public SubscriberListener getListener();
 }

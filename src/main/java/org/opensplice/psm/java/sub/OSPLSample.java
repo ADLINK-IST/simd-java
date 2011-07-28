@@ -17,7 +17,7 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
     private final TYPE value;
     private final DDS.SampleInfo sampleInfo;
 
-    public OSPLSample(DDS.SampleInfo sampleInfo, TYPE theValue) {
+    public OSPLSample(TYPE theValue, DDS.SampleInfo sampleInfo) {
         value = theValue;
         this.sampleInfo = sampleInfo;
         
@@ -111,8 +111,7 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
     }
 
     public OSPLSample<TYPE> clone() {
-        return new OSPLSample<TYPE>(
-        		sampleInfo, value);
+        return new OSPLSample<TYPE>(value, sampleInfo);
     }
 
     public static class SampleIterator<TYPE> implements Iterator<TYPE> {
@@ -144,8 +143,8 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
 
         
         public Sample<TYPE> next() {
-            Sample<TYPE> sample = new OSPLSample<TYPE>(
-                    sampleInfoList.value[index], list[index]);
+            Sample<TYPE> sample = new OSPLSample<TYPE>(list[index],
+                                                       sampleInfoList.value[index]);
             index++;
             return sample;
         }
@@ -158,8 +157,8 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
         
         public Sample<TYPE> previous() {
             index--;
-            Sample<TYPE> sample = new OSPLSample<TYPE>(
-                    sampleInfoList.value[index], list[index]);
+            Sample<TYPE> sample = new OSPLSample<TYPE>(list[index],
+                                                       sampleInfoList.value[index]);
             return sample;
         }
 

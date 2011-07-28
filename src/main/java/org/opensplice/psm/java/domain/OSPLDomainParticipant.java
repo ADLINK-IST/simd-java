@@ -37,16 +37,17 @@ import DDS.Time_tHolder;
 
 public class OSPLDomainParticipant implements DomainParticipant {
 
-    final private DDS.DomainParticipant openspliceParticipant;
+    final private DDS.DomainParticipant peer;
+
     private DomainParticipantListener dlistener = null;
 
     public OSPLDomainParticipant(
             DDS.DomainParticipant participant) {
-        openspliceParticipant = participant;
+        peer = participant;
     }
 
-    public DDS.DomainParticipant getOpenspliceParticipant() {
-        return openspliceParticipant;
+    public DDS.DomainParticipant getPeer() {
+        return peer;
     }
 
     /**
@@ -55,14 +56,14 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * <p/>
      * The created Publisher belongs to the DomainParticipant that is its
      * factory.
-     * 
+     *
      * @see #createPublisher(org.omg.dds.pub.PublisherQos,
      *      org.omg.dds.pub.PublisherListener, java.util.Collection)
      */
     public Publisher createPublisher() {
         DDS.PublisherQosHolder holder = new DDS.PublisherQosHolder();
-        openspliceParticipant.get_default_publisher_qos(holder);
-        DDS.Publisher publisher = openspliceParticipant.create_publisher(
+        peer.get_default_publisher_qos(holder);
+        DDS.Publisher publisher = peer.create_publisher(
                 holder.value, null, 0);
         return new OSPLPublisher(publisher, this);
     }
@@ -72,7 +73,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * <p/>
      * The created Publisher belongs to the DomainParticipant that is its
      * factory.
-     * 
+     *
      * @param qos
      *            The desired QoS policies. If the specified QoS policies are
      *            not consistent, the operation will fail and no Publisher will
@@ -90,25 +91,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
         throw new RuntimeException("Not implemented");
     }
 
-    /**
-     * This operation creates a Publisher.
-     * <p/>
-     * The created Publisher belongs to the DomainParticipant that is its
-     * factory.
-     * 
-     * @param listener
-     *            The listener to be attached.
-     * @param statuses
-     *            Of which status changes the listener should be notified. A
-     *            null collection signifies all status changes.
-     * @see #createPublisher(org.omg.dds.pub.PublisherQos,
-     *      org.omg.dds.pub.PublisherListener, java.util.Collection)
-     */
-    public Publisher createPublisher(String qosLibraryName,
-            String qosProfileName, PublisherListener listener,
-            Collection<Class<? extends Status<?>>> statuses) {
-        throw new RuntimeException("Not implemented");
-    }
+
 
     /**
      * This operation creates a Subscriber with default QoS policies and no
@@ -116,15 +99,15 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * <p/>
      * The created Subscriber belongs to the DomainParticipant that is its
      * factory.
-     * 
+     *
      * @see #createSubscriber(org.omg.dds.sub.SubscriberQos,
      *      org.omg.dds.sub.SubscriberListener, java.util.Collection)
      */
     public Subscriber createSubscriber() {
         DDS.SubscriberQosHolder holder = new DDS.SubscriberQosHolder();
-        openspliceParticipant.get_default_subscriber_qos(holder);
+        peer.get_default_subscriber_qos(holder);
         // holder.value.partition.name = new String[] {partition};
-        DDS.Subscriber subscriber = openspliceParticipant.create_subscriber(
+        DDS.Subscriber subscriber = peer.create_subscriber(
                 holder.value, null, 0);
         subscriber.enable();
         OSPLSubscriber subscriberOpensplice = new OSPLSubscriber(subscriber);
@@ -136,7 +119,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * <p/>
      * The created Subscriber belongs to the DomainParticipant that is its
      * factory.
-     * 
+     *
      * @param qos
      *            The desired QoS policies. If the specified QoS policies are
      *            not consistent, the operation will fail and no Subscriber will
@@ -150,26 +133,6 @@ public class OSPLDomainParticipant implements DomainParticipant {
      */
     public Subscriber createSubscriber(SubscriberQos qos,
             SubscriberListener listener,
-            Collection<Class<? extends Status<?>>> statuses) {
-        throw new RuntimeException("Not implemented");
-    }
-
-    /**
-     * This operation creates a Subscriber.
-     * <p/>
-     * The created Subscriber belongs to the DomainParticipant that is its
-     * factory.
-     * 
-     * @param listener
-     *            The listener to be attached.
-     * @param statuses
-     *            Of which status changes the listener should be notified. A
-     *            null collection signifies all status changes.
-     * @see #createSubscriber(org.omg.dds.sub.SubscriberQos,
-     *      org.omg.dds.sub.SubscriberListener, java.util.Collection)
-     */
-    public Subscriber createSubscriber(String qosLibraryName,
-            String qosProfileName, SubscriberListener listener,
             Collection<Class<? extends Status<?>>> statuses) {
         throw new RuntimeException("Not implemented");
     }
@@ -194,7 +157,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * TopicListener.
      * <p/>
      * The created Topic belongs to the DomainParticipant that is its factory.
-     * 
+     *
      * @param topicName
      *            The name of the new Topic.
      * @param type
@@ -204,7 +167,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      *            based on this type.
      */
     public <TYPE> Topic<TYPE> createTopic(String topicName, Class<TYPE> type) {
-        return new OSPLTopic<TYPE>(this, topicName, type, null);
+        return new OSPLTopic<TYPE>(this, topicName, type);
     }
 
     /**
@@ -212,7 +175,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * to it the specified TopicListener.
      * <p/>
      * The created Topic belongs to the DomainParticipant that is its factory.
-     * 
+     *
      * @param topicName
      *            The name of the new Topic.
      * @param type
@@ -236,36 +199,13 @@ public class OSPLDomainParticipant implements DomainParticipant {
         throw new RuntimeException("Not implemented");
     }
 
-    /**
-     * This operation creates a Topic with the desired QoS policies and attaches
-     * to it the specified TopicListener.
-     * <p/>
-     * The created Topic belongs to the DomainParticipant that is its factory.
-     * 
-     * @param topicName
-     *            The name of the new Topic.
-     * @param type
-     *            The type of all samples to be published and subscribed over
-     *            the new Topic. The Service will attempt to locate an
-     *            appropriate {@link org.omg.dds.type.TypeSupport} instance
-     *            based on this type.
-     * @param statuses
-     *            Of which status changes the listener should be notified. A
-     *            null collection signifies all status changes.
-     */
-    public <TYPE> Topic<TYPE> createTopic(String topicName, Class<TYPE> type,
-            String qosLibraryName, String qosProfileName,
-            TopicListener<TYPE> listener,
-            Collection<Class<? extends Status<?>>> statuses) {
-        throw new RuntimeException("Not implemented");
-    }
 
     /**
      * This operation creates a Topic with default QoS policies and no
      * TopicListener.
      * <p/>
      * The created Topic belongs to the DomainParticipant that is its factory.
-     * 
+     *
      * @param topicName
      *            The name of the new Topic.
      * @param type
@@ -283,7 +223,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * to it the specified TopicListener.
      * <p/>
      * The created Topic belongs to the DomainParticipant that is its factory.
-     * 
+     *
      * @param topicName
      *            The name of the new Topic.
      * @param type
@@ -328,7 +268,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * Regardless of whether the middleware chooses to propagate topics, the
      * {@link org.omg.dds.topic.Topic#close()} operation disposes of only the
      * local proxy.
-     * 
+     *
      * @return a non-null Topic.
      * @throws java.util.concurrent.TimeoutException
      *             if the specified timeout elapses and no suitable Topic could
@@ -362,7 +302,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * Regardless of whether the middleware chooses to propagate topics, the
      * {@link org.omg.dds.topic.Topic#close()} operation disposes of only the
      * local proxy.
-     * 
+     *
      * @return a non-null Topic.
      * @throws java.util.concurrent.TimeoutException
      *             if the specified timeout elapses and no suitable Topic could
@@ -397,7 +337,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * will fail.
      * <p/>
      * If the operation fails to locate a TopicDescription, it returns null.
-     * 
+     *
      * @param <TYPE>
      *            The type of all samples subscribed to with the
      *            TopicDescription.
@@ -411,7 +351,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
     /**
      * This operation creates a ContentFilteredTopic. A ContentFilteredTopic can
      * be used to do content-based subscriptions.
-     * 
+     *
      * @param <TYPE>
      *            The type of all samples subscribed to with the new
      *            ContentFilteredTopic. It may be the same as the type of the
@@ -439,7 +379,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * subscribe to multiple topics and combine/filter the received data into a
      * resulting type. In particular, MultiTopic provides a content-based
      * subscription mechanism.
-     * 
+     *
      * @param <TYPE>
      *            The type of all samples subscribed to with the new MultiTopic.
      * @param name
@@ -481,7 +421,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * <p/>
      * Once closeContainedEntities returns successfully, the application may
      * delete the DomainParticipant knowing that it has no contained entities.
-     * 
+     *
      * @throws org.omg.dds.core.PreconditionNotMetException
      *             if any of the contained entities is in a state where it
      *             cannot be closed.
@@ -514,7 +454,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * <p/>
      * This operation is not required to be reversible. The Service offers no
      * means to reverse it.
-     * 
+     *
      * @throws org.omg.dds.core.OutOfResourcesException
      *             if the Service is unable to ignore the indicated participant
      *             because an internal resource has been exhausted.
@@ -539,7 +479,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * <p/>
      * This operation is not required to be reversible. The Service offers no
      * means to reverse it.
-     * 
+     *
      * @throws org.omg.dds.core.OutOfResourcesException
      *             if the Service is unable to ignore the indicated topic
      *             because an internal resource has been exhausted.
@@ -563,7 +503,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * <p/>
      * This operation is not required to be reversible. The Service offers no
      * means to reverse it.
-     * 
+     *
      * @throws org.omg.dds.core.OutOfResourcesException
      *             if the Service is unable to ignore the indicated publication
      *             because an internal resource has been exhausted.
@@ -586,7 +526,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * <p/>
      * This operation is not required to be reversible. The Service offers no
      * means to reverse it.
-     * 
+     *
      * @throws org.omg.dds.core.OutOfResourcesException
      *             if the Service is unable to ignore the indicated subscription
      *             because an internal resource has been exhausted.
@@ -603,7 +543,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      */
     public int getDomainId() {
         //TODO: Fixme and return the right id
-        // return openspliceParticipant.get_domain_id();
+        // return peer.get_domain_id();
         return 0;
     }
 
@@ -641,7 +581,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * {@link #setDefaultPublisherQos(org.omg.dds.pub.PublisherQos)}, or else,
      * if the call was never made, the default values identified by the DDS
      * specification.
-     * 
+     *
      * @see #setDefaultPublisherQos(org.omg.dds.pub.PublisherQos)
      */
     public PublisherQos getDefaultPublisherQos() {
@@ -653,7 +593,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * will be used for newly created {@link org.omg.dds.pub.Publisher} entities
      * in the case where the QoS policies are defaulted in the
      * {@link #createPublisher()} operation.
-     * 
+     *
      * @throws org.omg.dds.core.InconsistentPolicyException
      *             if the resulting policies are not self consistent; in that
      *             case, the operation will have no effect.
@@ -663,13 +603,6 @@ public class OSPLDomainParticipant implements DomainParticipant {
         throw new RuntimeException("Not implemented");
     }
 
-    /**
-     * @see #setDefaultPublisherQos(org.omg.dds.pub.PublisherQos)
-     */
-    public void setDefaultPublisherQos(String qosLibraryName,
-            String qosProfileName) {
-        throw new RuntimeException("Not implemented");
-    }
 
     /**
      * This operation retrieves the default value of the Subscriber QoS, that
@@ -682,7 +615,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * {@link #setDefaultSubscriberQos(org.omg.dds.sub.SubscriberQos)}, or else,
      * if the call was never made, the default values identified by the DDS
      * specification.
-     * 
+     *
      * @see #setDefaultSubscriberQos(org.omg.dds.sub.SubscriberQos)
      */
     public SubscriberQos getDefaultSubscriberQos() {
@@ -694,7 +627,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * will be used for newly created {@link org.omg.dds.sub.Subscriber}
      * entities in the case where the QoS policies are defaulted in the
      * {@link #createSubscriber()} operation.
-     * 
+     *
      * @throws org.omg.dds.core.InconsistentPolicyException
      *             if the resulting policies are not self consistent; in that
      *             case, the operation will have no effect.
@@ -704,13 +637,6 @@ public class OSPLDomainParticipant implements DomainParticipant {
         throw new RuntimeException("Not implemented");
     }
 
-    /**
-     * @see #setDefaultSubscriberQos(org.omg.dds.sub.SubscriberQos)
-     */
-    public void setDefaultSubscriberQos(String qosLibraryName,
-            String qosProfileName) {
-        throw new RuntimeException("Not implemented");
-    }
 
     /**
      * This operation retrieves the default value of the Topic QoS, that is, the
@@ -724,7 +650,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * {@link #setDefaultTopicQos(org.omg.dds.topic.TopicQos)}, or else, if the
      * call was never made, the default values identified by the DDS
      * specification.
-     * 
+     *
      * @see #setDefaultTopicQos(org.omg.dds.topic.TopicQos)
      */
     public TopicQos getDefaultTopicQos() {
@@ -736,7 +662,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * be used for newly created {@link org.omg.dds.topic.Topic} entities in the
      * case where the QoS policies are defaulted in the
      * {@link #createTopic(String, Class)} operation.
-     * 
+     *
      * @throws org.omg.dds.core.InconsistentPolicyException
      *             if the resulting policies are not self consistent; in that
      *             case, the operation will have no effect.
@@ -746,19 +672,14 @@ public class OSPLDomainParticipant implements DomainParticipant {
         throw new RuntimeException("Not implemented");
     }
 
-    /**
-     * @see #setDefaultTopicQos(org.omg.dds.topic.TopicQos)
-     */
-    public void setDefaultTopicQos(String qosLibraryName, String qosProfileName) {
-        throw new RuntimeException("Not implemented");
-    }
+
 
     /**
      * This operation retrieves the list of DomainParticipants that have been
      * discovered in the domain and that the application has not indicated
      * should be "ignored" by means of the
      * {@link #ignoreParticipant(org.omg.dds.core.InstanceHandle)} operation.
-     * 
+     *
      * @param participantHandles
      *            a container, into which this method will place handles to the
      *            discovered participants.
@@ -782,7 +703,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * Use the operation
      * {@link #getDiscoveredParticipants(java.util.Collection)} to find the
      * DomainParticipants that are currently discovered.
-     * 
+     *
      * @param participantData
      *            a container, into which this method will store the participant
      *            data.
@@ -808,7 +729,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * that have been discovered in the domain and that the application has not
      * indicated should be "ignored" by means of the
      * {@link #ignoreTopic(org.omg.dds.core.InstanceHandle)} operation.
-     * 
+     *
      * @param topicHandles
      *            a container, into which this method will place handles to the
      *            discovered topics.
@@ -831,7 +752,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * <p/>
      * Use the operation {@link #getDiscoveredTopics(java.util.Collection)} to
      * find the Topics that are currently discovered.
-     * 
+     *
      * @param topicData
      *            a container, into which this method will store the participant
      *            data.
@@ -872,7 +793,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * This operation returns the current value of the time that the service
      * uses to time stamp data writes and to set the reception time stamp for
      * the data updates it receives.
-     * 
+     *
      * @param currentTime
      *            a container for the current time, which the Service will
      *            overwrite with the result of this operation.
@@ -880,8 +801,16 @@ public class OSPLDomainParticipant implements DomainParticipant {
      */
     public Time getCurrentTime(Time currentTime) {
         Time_tHolder holder = new Time_tHolder();
-        openspliceParticipant.get_current_time(holder);
+        peer.get_current_time(holder);
         return OSPL.convert(holder.value);
+    }
+
+    public void setListener(DomainParticipantListener listener) {
+        this.dlistener = listener;
+    }
+
+    public DomainParticipantListener getListener() {
+        return this.dlistener;
     }
 
     /**
@@ -933,7 +862,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * false.
      */
     public void enable() {
-        openspliceParticipant.enable();
+        peer.enable();
     }
 
     /**
@@ -959,7 +888,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      * The list of statuses returned refers to the statuses that are triggered
      * on the Entity itself and does not include statuses that apply to
      * contained entities.
-     * 
+     *
      * @param statuses
      *            a container for the resulting statuses; its contents will be
      *            overwritten by the result of this operation.
@@ -977,7 +906,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
      */
     public InstanceHandle getInstanceHandle() {
         return new OSPLInstanceHandle(
-                openspliceParticipant.get_instance_handle());
+                peer.get_instance_handle());
     }
 
     /**

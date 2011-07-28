@@ -1,0 +1,31 @@
+2011-07-28  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* src/main/java/org/opensplice/demo/ping/PingPublisher.java:
+	* src/main/java/org/opensplice/demo/ping/PingSubscriber.java:
+	  Added simple Ping Example that shows foundation of the 
+	  new Java API.
+
+
+	* src/main/java/org/omg/dds/domain/DomainParticipant.java:
+	* src/main/java/org/omg/dds/pub/DataWriter.java:
+	* src/main/java/org/omg/dds/pub/Publisher.java:
+	* src/main/java/org/omg/dds/sub/DataReader.java:
+	* src/main/java/org/omg/dds/sub/Subscriber.java
+	* src/main/java/org/omg/dds/topic/TopicDescription.java:
+	  Removed all methods that required a qosLibrary as this
+	  is deprecated on the spec.
+
+
+	* src/main/java/org/opensplice/psm/java/domain/OSPLDomainParticipant.java:
+	* src/main/java/org/opensplice/psm/java/pub/OSPLDataWriter.java:
+	* src/main/java/org/opensplice/psm/java/pub/OSPLPublisher.java:
+	* src/main/java/org/opensplice/psm/java/sub/OSPLDataReader.java:
+	* src/main/java/org/opensplice/psm/java/sub/OSPLSample.java:
+	* src/main/java/org/opensplice/psm/java/sub/OSPLSubscriber.java:
+	* src/main/java/org/opensplice/psm/java/topic/OSPLTopic.java:
+
+	Major refactoring to use the generic writer/reader FooDataWriter/Reader
+	in place of using reflection on the peer.
+
+
+

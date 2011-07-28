@@ -88,16 +88,6 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      */
     public Class<TYPE> getType();
 
-    /**
-     * Cast this data reader to the given type, or throw an exception if
-     * the cast fails.
-     * 
-     * @param <OTHER>   The type of the data subscribed to by this reader,
-     *                  according to the caller.
-     * @return          this data reader
-     * @throws          ClassCastException if the cast fails
-     */
-    public <OTHER> DataReader<OTHER> cast();
 
     public ReadCondition<TYPE> createReadCondition();
 
@@ -209,8 +199,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
     /**
      * This operation allows access to the REQUESTED_INCOMPATIBLE_QOS
      * communication status.
-     * 
-     * @param   status  a container, into which this method places it result.
+     *
      * @return  the input status, as a convenience to facilitate chaining.
      * 
      * @see     org.omg.dds.core.status
@@ -346,20 +335,6 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
             InstanceHandle publicationHandle);
 
 
-    // --- Type-specific interface: ------------------------------------------
-
-    /**
-     * Create and return a new Sample of the same type as may be accessed by
-     * this DataReader.
-     * 
-     * Applications may use this method, for example, to preallocate samples
-     * to be overwritten by the <code>read</code> and/or <code>take</code>
-     * methods of this interface.
-     * 
-     * @see #read(List)
-     * @see #take(List)
-     */
-    public Sample<TYPE> createSample();
 
     /**
      * TODO: Add JavaDoc.
@@ -367,6 +342,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      * @return  a non-null unmodifiable iterator over loaned samples.
      */
     public Sample.Iterator<TYPE> read();
+
     public Sample.Iterator<TYPE> read(
             Collection<SampleState> sampleStates, 
             Collection<ViewState> viewStates, 
@@ -778,4 +754,10 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
     public InstanceHandle lookupInstance(
             InstanceHandle handle,
             TYPE keyHolder);
+
+    // -- Listener API
+
+    public DataReaderListener<TYPE> getListener();
+
+    public void setListener(DataReaderListener<TYPE> listener);
 }

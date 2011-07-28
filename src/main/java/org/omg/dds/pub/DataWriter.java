@@ -899,4 +899,9 @@ public interface DataWriter<TYPE> extends Entity<DataWriter<TYPE>> {
     public InstanceHandle lookupInstance(
             InstanceHandle handle,
             TYPE keyHolder);
+
+    // -- Listener API
+
+    public void setListener(DataWriterListener<TYPE> listener);
+    public DataWriterListener<TYPE> getListener();
 }

@@ -499,4 +499,8 @@ public interface Publisher extends Entity<Publisher> {
      * @param src   the QoS from which the policies are to be taken.
      */
     public void copyFromTopicQos(DataWriterQos dst, TopicQos src);
+
+    public PublisherListener getListener();
+
+    public void setListener(PublisherListener listener);
 }

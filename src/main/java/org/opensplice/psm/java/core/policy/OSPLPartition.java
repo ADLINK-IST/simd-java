@@ -5,6 +5,9 @@ import java.util.Collection;
 
 import org.omg.dds.core.policy.Partition;
 
+//TODO: This class should removed from here and
+// should be implemented on the org.dds.omg.core.policy package
+
 public class OSPLPartition implements
         Partition {
 

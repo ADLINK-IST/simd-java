@@ -2,6 +2,8 @@ package org.opensplice.psm.java.topic;
 
 import java.util.Collection;
 
+import DDS.*;
+import org.omg.dds.core.DDSException;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.StatusCondition;
 import org.omg.dds.core.policy.Durability;
@@ -10,20 +12,11 @@ import org.omg.dds.core.status.InconsistentTopic;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.topic.Topic;
-import org.omg.dds.topic.TopicDescription;
 import org.omg.dds.topic.TopicQos;
 import org.opensplice.dds.dcps.TypeSupportImpl;
 import org.opensplice.psm.java.core.OSPLInstanceHandle;
+import org.opensplice.psm.java.core.policy.OSPL;
 import org.opensplice.psm.java.domain.OSPLDomainParticipant;
-
-import DDS.ANY_STATUS;
-import DDS.DURATION_INFINITE_NSEC;
-import DDS.DURATION_INFINITE_SEC;
-import DDS.DurabilityQosPolicyKind;
-import DDS.Duration_t;
-import DDS.RETCODE_OK;
-import DDS.ReliabilityQosPolicyKind;
-import DDS.TopicQosHolder;
 
 public class OSPLTopic<TYPE> implements Topic<TYPE> {
 
@@ -35,108 +28,88 @@ public class OSPLTopic<TYPE> implements Topic<TYPE> {
     private final OSPLDomainParticipant participant;
     private final String topicName;
     private final Class<TYPE> type;
-    private DDS.Topic topic = null;
+    private DDS.Topic peer = null;
     private TopicQos qos = null;
+    private TypeSupport typeSupport= null;
 
-    public DDS.Topic getTopic() {
-        return topic;
+
+    public OSPLTopic(OSPLDomainParticipant participant,
+                     String topicName,
+                    Class<TYPE> type)
+    {
+        this.participant = participant;
+        this.topicName = topicName;
+        this.type = type;
+
+        TopicQosHolder holder = new TopicQosHolder();
+        participant.getPeer().get_default_topic_qos(holder);
+        DDS.TopicQos tqos = holder.value;
+        // Add converter
+        this.qos = null;
+        this.typeSupport = registerType();
+        System.out.println("OSPLTopic("+this.topicName +", "+ this.typeSupport.get_type_name() + ")");
+        this.peer =
+                this.participant.getPeer().create_topic(
+                        this.topicName,
+                        this.typeSupport.get_type_name(),
+                        tqos, null,
+                        DDS.STATUS_MASK_ANY_V1_2.value);
+        assert(this.peer != null);
     }
 
-    public OSPLTopic(OSPLDomainParticipant theparticipant, String thetopicName,
-            Class<TYPE> thetype, TopicQos theqos) {
-        participant = theparticipant;
-        topicName = thetopicName;
-        type = thetype;
-        qos = theqos;
-        registerType();
-        createTopic();
+    public OSPLTopic(OSPLDomainParticipant participant,
+                     String topicName,
+                     Class<TYPE> type,
+                     TopicQos qos) {
+        this.participant = participant;
+        this.topicName = topicName;
+        this.type = type;
+
+        TopicQosHolder holder = new TopicQosHolder();
+        participant.getPeer().get_default_topic_qos(holder);
+        DDS.TopicQos tqos = holder.value;
+        // TODO: Ensure that the QoS is really taken into account!
+        this.qos = qos;
+        this.typeSupport = registerType();
+        this.peer =
+                this.participant.getPeer().create_topic(
+                        this.topicName,
+                        this.typeSupport.get_type_name(),
+                        tqos, null,
+                        DDS.STATUS_MASK_ANY_V1_2.value);
     }
 
-    private void registerType() {
+    private TypeSupport registerType() {
+        TypeSupport typeSupport;
         Class<?> typeSupportClass = null;
-        String typeSupportName = type.getName() + "TypeSupport";
+        String typeSupportName = this.type.getName() + "TypeSupport";
         int rc;
         try {
             typeSupportClass = Class.forName(typeSupportName);
-            TypeSupportImpl typeSupport =
-                    (TypeSupportImpl) typeSupportClass.newInstance();
+            typeSupport =
+                    (TypeSupport) typeSupportClass.newInstance();
             rc = typeSupport.register_type(
-                    participant.getOpenspliceParticipant(),
-                    topicName);
+                    this.participant.getPeer(),
+                    typeSupport.get_type_name());
         } catch (java.lang.Exception e) {
             throw new RuntimeException("register_type failed " + e.getMessage());
         }
         if (rc != RETCODE_OK.value) {
             throw new RuntimeException("register_type failed");
         }
-    }
-
-    protected void createTopic() {
-        DurabilityQosPolicyKind durabilityKind = DurabilityQosPolicyKind.VOLATILE_DURABILITY_QOS;
-        ReliabilityQosPolicyKind reliabilityKind = ReliabilityQosPolicyKind.BEST_EFFORT_RELIABILITY_QOS;
-
-        //TODO: Frans, I think it would be better from a code duplication perspective
-        // to have a bunch of conversion classes that would transform a new QoS type
-        // into a legacy QoS type.
-        if (qos != null) {
-            if (qos.getDurability().getKind()
-                    .equals(Durability.Kind.PERSISTENT)) {
-                durabilityKind = DurabilityQosPolicyKind.PERSISTENT_DURABILITY_QOS;
-            } else if (qos.getDurability().getKind()
-                    .equals(Durability.Kind.TRANSIENT)) {
-                durabilityKind = DurabilityQosPolicyKind.TRANSIENT_DURABILITY_QOS;
-            } else if (qos.getDurability().getKind()
-                    .equals(Durability.Kind.TRANSIENT_LOCAL)) {
-                durabilityKind = DurabilityQosPolicyKind.TRANSIENT_LOCAL_DURABILITY_QOS;
-            }
-            if (qos.getReliability().getKind()
-                    .equals(Reliability.Kind.RELIABLE)) {
-                reliabilityKind = ReliabilityQosPolicyKind.RELIABLE_RELIABILITY_QOS;
-            }
-            qos.getLatencyBudget().getDuration();
-
-        }
-
-        // TODO: Frans, why are you setting the LatencyBudget to this arbitrary constant?
-        // Latency_Budget
-        double latencyBudget = 0.04;
-        if (reliabilityKind == ReliabilityQosPolicyKind.BEST_EFFORT_RELIABILITY_QOS) {
-            latencyBudget = 0.03;
-        }
-
-        // Lifespan
-        double lifespan = Double.POSITIVE_INFINITY;
-
-        // First find the Topic in the system...
-        topic = participant.getOpenspliceParticipant().find_topic(topicName,
-                new Duration_t(0, 50000000));
-        if (null != topic) {
-            return;
-        }
-
-        final TopicQosHolder holder = new TopicQosHolder();
-        participant.getOpenspliceParticipant().get_default_topic_qos(holder);
-        DDS.TopicQos topicQos = holder.value;
-        setDuration(topicQos.latency_budget.duration, latencyBudget);
-        setDuration(topicQos.lifespan.duration, lifespan);
-        topicQos.durability.kind = durabilityKind;
-        topicQos.durability_service.service_cleanup_delay.sec = SERVICE_CLEANUP_DELAY_SEC;
-        topicQos.durability_service.max_samples_per_instance = MAX_SAMPLES_PER_INSTANCE;
-        topicQos.reliability.kind = reliabilityKind;
-        topicQos.destination_order.kind = DESTINATION_ORDER_KIND;
-        // topicQos.resource_limits.max_samples_per_instance = 1;
-
-        topic = participant.getOpenspliceParticipant().create_topic(topicName,
-                topicName, topicQos, null, ANY_STATUS.value);
-
-        // Still no Topic...
-        if (null == topic) {
-            throw new NullPointerException("not default Topic created for "
-                    + topicName);
-        }
+        return typeSupport;
 
     }
 
+    public DDS.Topic getPeer() {
+        return peer;
+    }
+
+    public TypeSupport getTypeSupport() {
+        return typeSupport;
+    }
+
+    //TODO: Frans, what is this method for?
     private static void setDuration(Duration_t to, double from) {
         if (Double.isInfinite(from)) {
             to.sec = DURATION_INFINITE_SEC.value;
@@ -150,11 +123,6 @@ public class OSPLTopic<TYPE> implements Topic<TYPE> {
     
     public Class<TYPE> getType() {
         return type;
-    }
-
-    
-    public <OTHER> TopicDescription<OTHER> cast() {
-        return (TopicDescription<OTHER>) this;
     }
 
     
@@ -178,7 +146,7 @@ public class OSPLTopic<TYPE> implements Topic<TYPE> {
 
     
     public void enable() {
-        topic.enable();
+        peer.enable();
     }
 
     
@@ -189,7 +157,7 @@ public class OSPLTopic<TYPE> implements Topic<TYPE> {
 
     
     public InstanceHandle getInstanceHandle() {
-        return new OSPLInstanceHandle(topic.get_instance_handle());
+        return new OSPLInstanceHandle(peer.get_instance_handle());
     }
 
     

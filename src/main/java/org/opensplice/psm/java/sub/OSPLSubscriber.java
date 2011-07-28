@@ -26,23 +26,23 @@ import org.opensplice.psm.java.domain.OSPLDomainParticipant;
 
 public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
 
-    private DDS.Subscriber subscriber = null;
+    private DDS.Subscriber peer = null;
     private SubscriberListener thelistener = null;
     private OSPLDomainParticipant participant = null;
     private SubscriberQos theQos = null;
 
     public OSPLSubscriber(DDS.Subscriber impl) {
-        subscriber = impl;
+        peer = impl;
     }
 
-    public DDS.Subscriber getSubscriber() {
-        return subscriber;
+    public DDS.Subscriber getPeer() {
+        return peer;
     }
 
     
     public void enable() {
-        if (subscriber != null) {
-            subscriber.enable();
+        if (peer != null) {
+            peer.enable();
         }
     }
 
@@ -53,7 +53,7 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
 
     
     public InstanceHandle getInstanceHandle() {
-        return new OSPLInstanceHandle(subscriber.get_instance_handle());
+        return new OSPLInstanceHandle(peer.get_instance_handle());
     }
 
     
@@ -82,14 +82,7 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
         return reader;
     }
 
-    
-    public <TYPE> DataReader<TYPE> createDataReader(
-            TopicDescription<TYPE> topic, String qosLibraryName,
-            String qosProfileName, DataReaderListener<TYPE> listener,
-            Collection<Class<? extends Status<?>>> statuses) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+
 
     
     public BytesDataReader createBytesDataReader(TopicDescription<byte[]> topic) {
@@ -106,23 +99,21 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
         return null;
     }
 
-    
-    public BytesDataReader createBytesDataReader(
-            TopicDescription<byte[]> topic, String qosLibraryName,
-            String qosProfileName, DataReaderListener<byte[]> listener,
-            Collection<Class<? extends Status<?>>> statuses) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
-    
     public KeyedBytesDataReader createKeyedBytesDataReader(
             TopicDescription<KeyedBytes> topic) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    
+    public void setListener(SubscriberListener listener) {
+        this.thelistener = listener;
+    }
+
+    public SubscriberListener getListener() {
+        return this.thelistener;
+    }
+
     public KeyedBytesDataReader createKeyedBytesDataReader(
             TopicDescription<KeyedBytes> topic, DataReaderQos qos,
             DataReaderListener<KeyedBytes> listener,
@@ -132,15 +123,7 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
     }
 
     
-    public KeyedBytesDataReader createKeyedBytesDataReader(
-            TopicDescription<KeyedBytes> topic, String qosLibraryName,
-            String qosProfileName, DataReaderListener<KeyedBytes> listener,
-            Collection<Class<? extends Status<?>>> statuses) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
-    
     public StringDataReader createStringDataReader(
             TopicDescription<String> topic) {
         // TODO Auto-generated method stub
@@ -156,14 +139,6 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
         return null;
     }
 
-    
-    public StringDataReader createStringDataReader(
-            TopicDescription<String> topic, String qosLibraryName,
-            String qosProfileName, DataReaderListener<String> listener,
-            Collection<Class<? extends Status<?>>> statuses) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     
     public KeyedStringDataReader createKeyedStringDataReader(
@@ -182,13 +157,7 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
     }
 
     
-    public KeyedStringDataReader createKeyedStringDataReader(
-            TopicDescription<KeyedString> topic, String qosLibraryName,
-            String qosProfileName, DataReaderListener<KeyedString> listener,
-            Collection<Class<? extends Status<?>>> statuses) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+
 
     
     public <TYPE> DataReader<TYPE> lookupDataReader(String topicName) {
@@ -274,21 +243,21 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
     
     public DataReaderQos getDefaultDataReaderQos() {
         DDS.DataReaderQosHolder holder = new DDS.DataReaderQosHolder();
-        subscriber.get_default_datareader_qos(holder);
+        peer.get_default_datareader_qos(holder);
         return new OSPLDataReaderQos(holder.value);
     }
 
     
     public void setDefaultDataReaderQos(DataReaderQos qos) {
-        subscriber.set_default_datareader_qos(((OSPLDataReaderQos)qos).getQos());
+        peer.set_default_datareader_qos(((OSPLDataReaderQos)qos).getQos());
     }
 
     
     public void copyFromTopicQos(DataReaderQos dst, TopicQos src) {
 //    	TODO implement OSPLTopicQos
 //        DDS.DataReaderQosHolder holder = new DDS.DataReaderQosHolder();
-//    	subscriber.copy_from_topic_qos(holder, ((OSPLTopicQos)src).getQos());
-//    	subscriber.set_default_datareader_qos(holder.value);
+//    	peer.copy_from_topic_qos(holder, ((OSPLTopicQos)src).getQos());
+//    	peer.set_default_datareader_qos(holder.value);
     }
 
 	

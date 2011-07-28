@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import DDS.*;
+import org.omg.dds.core.DDSException;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.StatusCondition;
@@ -24,12 +26,6 @@ import org.omg.dds.type.builtin.KeyedStringDataWriter;
 import org.omg.dds.type.builtin.StringDataWriter;
 import org.opensplice.psm.java.core.OSPLInstanceHandle;
 import org.opensplice.psm.java.domain.OSPLDomainParticipant;
-
-import DDS.LivelinessLostStatus;
-import DDS.OfferedDeadlineMissedStatus;
-import DDS.OfferedIncompatibleQosStatus;
-import DDS.PublicationMatchedStatus;
-import DDS.PublisherQosHolder;
 
 public class OSPLPublisher implements Publisher {
 
@@ -60,7 +56,6 @@ public class OSPLPublisher implements Publisher {
 
         }
 
-    
         public void on_offered_incompatible_qos(DDS.DataWriter arg0,
                 OfferedIncompatibleQosStatus arg1) {
             // TODO Auto-generated method stub
@@ -87,12 +82,15 @@ public class OSPLPublisher implements Publisher {
     }
 
     public void setListener(PublisherListener thelistener) {
+        // TODO: It is not necessary to create a new listener
+        // for each <setListener> we could simply change
+        // a property of the MyPublisherListener
         listener = thelistener;
-        if (thelistener == null) {
+        if (this.listener == null) {
             publisher.set_listener(null, 0);
         } else {
-            MyPublisherListener mylistener = new MyPublisherListener(this,
-                    thelistener);
+            MyPublisherListener mylistener =
+                    new MyPublisherListener(this, thelistener);
             publisher.set_listener(mylistener, DDS.ANY_STATUS.value);
         }
     }
@@ -130,8 +128,8 @@ public class OSPLPublisher implements Publisher {
 
 
     public <TYPE> DataWriter<TYPE> createDataWriter(Topic<TYPE> topic) {
-        DataWriter<TYPE> writer = new OSPLDataWriter<TYPE>(
-                topic, this, null);
+        DataWriter<TYPE> writer =
+                new OSPLDataWriter<TYPE>(topic, this, null);
         return writer;
     }
 
@@ -145,8 +143,8 @@ public class OSPLPublisher implements Publisher {
     public <TYPE> DataWriter<TYPE> createDataWriter(Topic<TYPE> topic,
             DataWriterQos qos, DataWriterListener<TYPE> listener,
             Collection<Class<? extends Status<?>>> statuses) {
-        DataWriter<TYPE> writer = new OSPLDataWriter<TYPE>(
-                topic, this, qos);
+        DataWriter<TYPE> writer =
+                new OSPLDataWriter<TYPE>(topic, this, qos);
         // writer.setListener(listener);
         return writer;
     }
@@ -284,6 +282,10 @@ public class OSPLPublisher implements Publisher {
     public void copyFromTopicQos(DataWriterQos dst, TopicQos src) {
         // TODO Auto-generated method stub
 
+    }
+
+    public PublisherListener getListener() {
+        return this.listener;
     }
 
 

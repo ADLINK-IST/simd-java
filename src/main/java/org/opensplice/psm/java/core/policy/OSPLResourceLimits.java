@@ -2,6 +2,8 @@ package org.opensplice.psm.java.core.policy;
 
 import org.omg.dds.core.policy.ResourceLimits;
 
+//TODO: This class should removed from here and
+// should be implemented on the org.dds.omg.core.policy package
 public class OSPLResourceLimits implements ResourceLimits {
 
     /** The default serialVersionUID. */

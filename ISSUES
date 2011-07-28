@@ -96,6 +96,11 @@
    data. This is a remark true in general for DDS which needs to be fixed for all PSM
    as well as for the PIM!
 
+   The following methods on the DataReader interface are superfluous:
+    - cast
+    - createSample
+
+
 [Status]
    The org.omg.dds.core.status.Status class currently extends the java.util.EventObject.
    The issue I have with this is that a status and an event are to different concepts.

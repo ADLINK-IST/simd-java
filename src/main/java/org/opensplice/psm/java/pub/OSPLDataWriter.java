@@ -9,16 +9,15 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.omg.dds.core.Duration;
-import org.omg.dds.core.InstanceHandle;
-import org.omg.dds.core.StatusCondition;
-import org.omg.dds.core.Time;
+import DDS.TypeSupport;
+import org.omg.dds.core.*;
 import org.omg.dds.core.status.LivelinessLost;
 import org.omg.dds.core.status.OfferedDeadlineMissed;
 import org.omg.dds.core.status.OfferedIncompatibleQos;
 import org.omg.dds.core.status.PublicationMatched;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.pub.DataWriter;
+import org.omg.dds.pub.DataWriterListener;
 import org.omg.dds.pub.DataWriterQos;
 import org.omg.dds.pub.Publisher;
 import org.omg.dds.topic.SubscriptionBuiltinTopicData;
@@ -31,23 +30,34 @@ import DDS.ANY_STATUS;
 public class OSPLDataWriter<TYPE> implements DataWriter<TYPE> {
     final private OSPLTopic<TYPE> topic;
     final private OSPLPublisher publisher;
-    private DDS.DataWriter dataWriter = null;
-    private Method write = null;
-    private Method dispose = null;
-    private Object[] writeParameters = null;
+    private DDS.DataWriter peer = null;
     private OSPLDataWriterQos qos = null;
+    private DataWriterListener<TYPE> listener = null;
+    private long copyCache = 0;
+
 
     public OSPLDataWriter(
-            TopicDescription<TYPE> theTopic, Publisher thePublisher,
-            DataWriterQos theQos) {
-        topic = (OSPLTopic<TYPE>) theTopic;
-        publisher = (OSPLPublisher) thePublisher;
-        if (theQos != null) {
-            qos = (OSPLDataWriterQos) theQos;
+            TopicDescription<TYPE> topic, Publisher publisher,
+            DataWriterQos qos) {
+
+        this.topic = (OSPLTopic<TYPE>) topic;
+        this.publisher = (OSPLPublisher) publisher;
+        if (qos != null) {
+            this.qos = (OSPLDataWriterQos) qos;
         } else {
-            qos = (OSPLDataWriterQos) publisher.getDefaultDataWriterQos();
+            this.qos = (OSPLDataWriterQos) publisher.getDefaultDataWriterQos();
         }
         createWriter();
+        try {
+            TypeSupport ts = this.topic.getTypeSupport();
+            Class<?> tsClass = ts.getClass();
+            Method m = tsClass.getDeclaredMethod("get_copyCache");
+            Long r = (Long)m.invoke(ts);
+            this.copyCache = r.longValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -77,32 +87,20 @@ public class OSPLDataWriter<TYPE> implements DataWriter<TYPE> {
     }
 
     private void createWriter() {
-        try {
-            dataWriter = publisher.getPublisher().create_datawriter(
-                    topic.getTopic(), qos.getQos(), null, ANY_STATUS.value);
-            Class<?> dataWriterImplClass = Class.forName(topic.getTypeName()
-                    + "DataWriterImpl");
+        peer =
+                publisher.getPublisher().create_datawriter(
+                        topic.getPeer(),
+                        qos.getQos(),
+                        null,
+                        ANY_STATUS.value);
 
-            Class<?> partypes[] = new Class[2];
-            partypes[1] = Long.TYPE;
-            partypes[0] = topic.getType();
 
-            write = dataWriterImplClass.getMethod("write", partypes);
-            dispose = dataWriterImplClass.getMethod("dispose", partypes);
-            writeParameters = new Object[2];
-            writeParameters[1] = new Long(0);
-        } catch (Exception e) {
-            System.err.println("Could not create writer for: "
-                    + topic.getName() + " " + e.getClass().getName() + "."
-                    + e.getMessage());
-            dataWriter = null;
-        }
-
+        assert (peer != null);
     }
 
     public void enable() {
-        if (dataWriter != null) {
-            dataWriter.enable();
+        if (peer != null) {
+            peer.enable();
         }
     }
 
@@ -119,7 +117,7 @@ public class OSPLDataWriter<TYPE> implements DataWriter<TYPE> {
 
 
     public void close() {
-        // dataWriter.close();
+        // peer.close();
     }
 
 
@@ -225,13 +223,13 @@ public class OSPLDataWriter<TYPE> implements DataWriter<TYPE> {
     }
 
 
-    public void write(TYPE instanceData) throws TimeoutException {
-        writeParameters[0] = instanceData;
-        try {
-            write.invoke(dataWriter, writeParameters);
-        } catch (Exception e) {
-            System.err.println("Write failed " + e.getMessage());
-        }
+    public void write(TYPE sample) throws TimeoutException {
+        org.opensplice.dds.dcps.FooDataWriterImpl.write
+                (this.peer,
+                        this.copyCache,
+                        sample,
+                        DDS.HANDLE_NIL.value);
+
     }
 
 
@@ -276,12 +274,7 @@ public class OSPLDataWriter<TYPE> implements DataWriter<TYPE> {
 
     public void dispose(InstanceHandle instanceHandle, TYPE instanceData)
             throws TimeoutException {
-        writeParameters[0] = instanceData;
-        try {
-            dispose.invoke(dataWriter, writeParameters);
-        } catch (Exception e) {
-            System.err.println("Write failed " + e.getMessage());
-        }
+        org.opensplice.dds.dcps.FooDataWriterImpl.dispose(this.peer,copyCache, instanceData, 0);
     }
 
 
@@ -339,6 +332,14 @@ public class OSPLDataWriter<TYPE> implements DataWriter<TYPE> {
     public InstanceHandle lookupInstance(InstanceHandle handle, TYPE keyHolder) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public void setListener(DataWriterListener<TYPE> typeDataWriterListener) {
+        this.listener = listener;
+    }
+
+    public DataWriterListener<TYPE> getListener() {
+        return this.listener;
     }
 
 }
