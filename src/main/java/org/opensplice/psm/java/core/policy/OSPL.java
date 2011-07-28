@@ -23,8 +23,7 @@ public class OSPL {
     /**
      * A utility class should not have a public constructor.
      */
-    private OSPL() {
-    }
+    private OSPL() { }
 
     public static Duration convert(DDS.Duration_t ddsduration) {
         if (DDS.DURATION_INFINITE.value.equals(ddsduration)) {
