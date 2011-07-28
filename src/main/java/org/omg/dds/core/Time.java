@@ -20,8 +20,12 @@ package org.omg.dds.core;
 
 import java.util.concurrent.TimeUnit;
 
+import com.sun.org.apache.bcel.internal.generic.RETURN;
+import org.omg.dds.core.AbstractTime;
 import org.omg.dds.type.Extensibility;
 import org.omg.dds.type.Nested;
+
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -30,81 +34,56 @@ import org.omg.dds.type.Nested;
  */
 @Extensibility(Extensibility.Kind.FINAL_EXTENSIBILITY)
 @Nested
-public class Time implements Value, Comparable<Time>
+
+public  class Time extends AbstractTime
 {
-    // -----------------------------------------------------------------------
-    // Private Constants
-    // -----------------------------------------------------------------------
+    private static final Time ZERO = new Time(0,0);
+    private static final Time INFINITE = createInfinite();
+
+    private static Time createInfinite() {
+        Time inf = ZERO ;
+        inf.sec = Long.MAX_VALUE ;
+        inf.nanoSec = Long.MAX_VALUE ;
+        return inf ;
+    }
 
     private static final long serialVersionUID = -132361141453190372L;
 
-    private static final Time INVALID = new Time(0x7fffffffffffffffL,
-            0x7fffffffffffffffL);
-    private static long NANOSECONDSPERSECOND = 1000000000L;
 
-    /**
-     * TODO verify that this should be two longs, as opposed to two int's. A
-     * java long is 64 bit whereas a c/c++ long is likely 32 bit on a 32 bit
-     * machine
-     */
-    private long sec;
-    private long nanoSec;
+    public Time(long sec, long nanoSec){
 
-
-    // -----------------------------------------------------------------------
-    // Factory Methods
-    // -----------------------------------------------------------------------
-
-    /**
-     * Construct a specific instant in time.
-     * 
-     * Negative values are considered invalid and will result in the
-     * construction of a time <code>t</code> such that:
-     * 
-     * <code>t.isValid() == false</code>
-     * 
-     * @param bootstrap Identifies the Service instance to which the new
-     *                  object will belong.
-     * 
-     * @see     #isValid()
-     */
-    /*
-    public static ModifiableTime newTime(
-            long time, TimeUnit units, Bootstrap bootstrap) {
-        return bootstrap.getSPI().newTime(time, units);
-    }
-      */
-
-    /**
-     * @return      An unmodifiable {@link Time} that is not valid.
-     */
-    public static Time invalidTime() {
-        return INVALID;
-    }
-
-
-    public Time(long sec) {
-        this.sec = sec;
-        this.nanoSec = 0;
-    }
-
-    public Time(long time, TimeUnit unit) {
-    	long timeInNanoSec = unit.convert(time, TimeUnit.NANOSECONDS);
-    	this.sec = timeInNanoSec / NANOSECONDSPERSECOND;
-        this.nanoSec = timeInNanoSec % NANOSECONDSPERSECOND;
-    }
-
-    public Time(long sec, long nanoSec) {
+        assertTrue("Invalid arguments ", nanoSec >= 0 && sec >= 0  && Math.pow(10,9)> nanoSec );
         this.sec = sec;
         this.nanoSec = nanoSec;
+
     }
 
 
-    // -----------------------------------------------------------------------
-    // Instance Methods
-    // -----------------------------------------------------------------------
+    /**
+     * Adds a <code>Duration</code> instance to this <code>time</code>  .
+     *
+     * @param d : the <code>Duration</code> instance that will be
+     *              added to this <code>Time</code>.
+     * @return new <code>Time</code> as result of the summation
+     */
+    public Time add (Duration d) throws OverflowException {
+        return (Time) super.add(d);
+    }
 
-    // --- Data access: ------------------------------------------------------
+    /**
+     * Subtracts two <code>Duration</code> instances.
+     *
+     * @param that the <code>Duration</code> instance that will be
+     *              added to this <code>Duration</code>.
+     * @return new <code>Duration</code> as result of the summation
+     */
+
+    public Time subtract(Duration that) {
+
+        return (Time) super.subtract(that);
+
+    }
+
 
     /**
      * Truncate this time to a whole-number quantity of the given time
@@ -112,29 +91,24 @@ public class Time implements Value, Comparable<Time>
      * nanoseconds since the start of the epoch, calling this method with an
      * argument of {@link TimeUnit#SECONDS} will result in the value
      * <code>1</code>.
-     * 
+     * <p/>
      * If this time is invalid, this method shall return
      * a negative value, regardless of the units given.
-     * 
+     * <p/>
      * If this time cannot be expressed in the given units without
      * overflowing, this method shall return {@link Long#MAX_VALUE}. In such
      * a case, the caller may wish to use this method in combination with
      * {@link #getRemainder(TimeUnit, TimeUnit)} to obtain the full time
      * without lack of precision.
-     * 
-     * @param   inThisUnit  The time unit in which the return result will
-     *                      be measured.
-     * 
-     * @see     #getRemainder(TimeUnit, TimeUnit)
-     * @see     Long#MAX_VALUE
-     * @see     TimeUnit
+     *
+     * @param inThisUnit The time unit in which the return result will
+     *                   be measured.
+     * @see #getRemainder(TimeUnit, TimeUnit)
+     * @see Long#MAX_VALUE
+     * @see TimeUnit
      */
     public long getTime(TimeUnit inThisUnit) {
-        if (inThisUnit.equals(TimeUnit.SECONDS)) {
-            return sec;
-        }
-        return inThisUnit.convert(nanoSec, TimeUnit.NANOSECONDS) +
-                inThisUnit.convert(sec, TimeUnit.SECONDS);
+        return super.getDuration(inThisUnit);
     }
 
     /**
@@ -146,66 +120,52 @@ public class Time implements Value, Comparable<Time>
      * start of the epoch, calling this method with arguments of
      * {@link TimeUnit#SECONDS} and {@link TimeUnit#NANOSECONDS} respectively
      * will result in the value <code>100</code>.
-     * 
+     * <p/>
      * This method is equivalent to the following pseudo-code:
-     * 
+     * <p/>
      * <code>(this - getTime(primaryUnit)).getTime(remainderUnit)</code>
-     * 
+     * <p/>
      * If <code>remainderUnit</code> is represents a coarser granularity than
      * <code>primaryUnit</code> (for example, the former is
      * {@link TimeUnit#HOURS} but the latter is {@link TimeUnit#SECONDS}),
      * this method shall return <code>0</code>.
-     * 
+     * <p/>
      * If the resulting time cannot be expressed in the given units
      * without overflowing, this method shall return {@link Long#MAX_VALUE}.
-     * 
-     * @param   primaryUnit
-     * @param   remainderUnit   The time unit in which the return result will
-     *                          be measured.
-     * 
-     * @see     #getTime(TimeUnit)
-     * @see     Long#MAX_VALUE
-     * @see     TimeUnit
+     *
+     * @param primaryUnit
+     * @param remainderUnit The time unit in which the return result will
+     *                      be measured.
+     * @see #getTime(TimeUnit)
+     * @see Long#MAX_VALUE
+     * @see TimeUnit
      */
-    public long getRemainder(
-            TimeUnit primaryUnit, TimeUnit remainderUnit) {
-        // TODO This will require some unit testing to confirm
-        long valueInRemainderUnit =
-                remainderUnit.convert(sec, TimeUnit.SECONDS) +
-                        remainderUnit.convert(nanoSec, TimeUnit.NANOSECONDS);
-        long valueInPrimaryUnit = primaryUnit.convert(valueInRemainderUnit,
-                remainderUnit);
-        long truncatedValueInRemainderUnit =
-                remainderUnit.convert(valueInPrimaryUnit, primaryUnit);
-        return valueInRemainderUnit - truncatedValueInRemainderUnit;
+
+    public long getRemainder(TimeUnit primaryUnit, TimeUnit remainderUnit) {
+        return super.getRemainder(primaryUnit,remainderUnit);
     }
 
 
-    // --- Query: ------------------------------------------------------------
+    public boolean isValid() {
+        return (this.nanoSec >= 0 && this.sec >= 0 && Math.pow(10,9)> this.nanoSec);
+    }
 
     /**
-     * @return  whether this time represents a meaningful instant in time.
+     *
+     * @return  A {@link AbstractTime} of zero length.
      */
-    public boolean isValid() {
-    	return sec >= 0 && nanoSec >= 0 && !INVALID.equals(this);
+    public static Time zero() {
+        return ZERO;
+    }
+
+    public static AbstractTime infinite() {
+        return INFINITE ;
+    }
+
+    public int compareTo(Time that) {
+        return super.compareTo(that) ;
     }
 
 
-    // --- From Object: ------------------------------------------------------
 
-    @Override
-    public Time clone() {
-    	return new Time(sec, nanoSec);
-    }
-
-	@Override
-	public int compareTo(Time that) {
-        if (sec != that.sec) {
-            return sec < that.sec ? -1 : 1;
-        }
-        if (nanoSec == that.nanoSec) {
-            return 0;
-        }
-        return nanoSec < that.nanoSec ? -1 : 1;
-	}
 }

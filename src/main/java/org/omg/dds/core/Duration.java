@@ -18,223 +18,135 @@
 
 package org.omg.dds.core;
 
+import java.lang.management.ThreadInfo;
+import java.nio.channels.OverlappingFileLockException;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.*;
+import com.sun.corba.se.spi.ior.IdentifiableFactory;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
+import org.hamcrest.Factory;
+import org.omg.dds.core.AbstractTime;
+import org.omg.dds.core.OverflowException;
 import org.omg.dds.type.Extensibility;
 import org.omg.dds.type.Nested;
+
+import javax.xml.transform.Result;
+
 
 /**
  * A span of elapsed time expressed with nanosecond precision.
  */
 @Extensibility(Extensibility.Kind.FINAL_EXTENSIBILITY)
 @Nested
-public class Duration implements Value, Comparable<Duration> {
-    private static final Duration INFINITE = new Duration(0x7fffffffffffffffL,
-            0x7fffffffffffffffL);
-    private static final Duration ZERO = new Duration(0, 0);
-    private static long NANOSECONDSPERSECOND = 1000000000L;
 
-    /**
-     * TODO verify that this should be two longs, as opposed to two int's. A
-     * java long is 64 bit whereas a c/c++ long is likely 32 bit on a 32 bit
-     * machine
-     */
-    private long sec;
-    private long nanoSec;
-
-    public Duration(long sec) {
-        this.sec = sec;
-        this.nanoSec = 0;
-    }
-
-    public Duration(long sec, long nanoSec) {
-        this.sec = sec;
-        this.nanoSec = nanoSec;
-    }
-
-    public Duration(long time, TimeUnit unit) {
-    	long timeInNanoSec = unit.convert(time, TimeUnit.NANOSECONDS);
-    	this.sec = timeInNanoSec / NANOSECONDSPERSECOND;
-        this.nanoSec = timeInNanoSec % NANOSECONDSPERSECOND;
-    }
-
-    /**
-     * Compares two <code>Duration</code> instances.
-     * 
-     * @param that
-     *            the <code>Duration</code> instance that will be compared with
-     *            this <code>Duration</code>.
-     * @return (1) a negative value if (this < that), (2) zero if (this ==
-     *         that), and (3) a positive value if (this > that)
-     */
-    public int compareTo(Duration that) {
-        if (sec != that.sec) {
-            return sec < that.sec ? -1 : 1;
-        }
-        if (nanoSec == that.nanoSec) {
-            return 0;
-        }
-        return nanoSec < that.nanoSec ? -1 : 1;
-    }
-
-    /**
-     * 
-     * @param that
-     * @return
-     */
-    public Duration add(Duration that) {
-        long sec = this.sec + that.sec;
-        long nanoSec = this.nanoSec + that.nanoSec;
-        if (nanoSec >= NANOSECONDSPERSECOND) {
-            nanoSec -= NANOSECONDSPERSECOND;
-            sec--;
-        } else if (nanoSec < 0) {
-            nanoSec += NANOSECONDSPERSECOND;
-            sec++;
-        }
-        return new Duration(sec, nanoSec);
-    }
+public class Duration extends AbstractTime
+{
 
     // -----------------------------------------------------------------------
     // Private Constants
     // -----------------------------------------------------------------------
 
+    private static final Duration ZERO  = new Duration(0, 0);
+    private static final Duration INFINITE = createInfinite();
     private static final long serialVersionUID = 6926514364942353575L;
 
     // -----------------------------------------------------------------------
-    // Factory Methods
+    // Factory methods
     // -----------------------------------------------------------------------
 
+
+    public Duration(long sec) {
+        super(sec);
+    }
+
+    public Duration(long sec, long nanoSec) {
+        super(sec, nanoSec);
+    }
+
+
+    private static Duration createInfinite() {
+        Duration inf = ZERO ;
+        inf.sec = Long.MAX_VALUE ;
+        inf.nanoSec = Long.MAX_VALUE ;
+        return inf ;
+    }
+
+
+    // -----------------------------------------------------------------------
+    // Proper methods
+    // -----------------------------------------------------------------------
+
+
+
     /**
-     * 
-     * @return An unmodifiable {@link Duration} of infinite length.
+     * multiply <code>Duration</code> instances by a constant.
+     *
+     * @param  c the constant that will be multiplied  to this <code>Duration</code>.
+     * @return new <code>Duration</code> as result of the multiplication
      */
-    public static Duration infinite() {
+
+    public Duration multiply (long c) throws OverflowException {
+
+        assertTrue(" cannot multiply a duration by a negative constant ",c >= 0);
+
+        Duration result =  ZERO;
+        double multiplication = (this.sec * Math.pow(10, 9) * c) + (double) (this.nanoSec * c);
+
+        //  check overflow for seconds multiplication
+        if ( multiplication /Math.pow(10,9) >= Long.MAX_VALUE)  throw new OverflowException();
+        else
+            result.sec = (long)(multiplication / Math.pow(10,9))  ;
+
+        result.nanoSec = (long) (multiplication - (result.sec * Math.pow(10, 9)));
+
+        return result;
+    }
+    /**
+     * devide two <code>Duration</code> instances.
+     *
+     * @param that the <code>Duration</code> instance that will
+     *              divide this <code>Duration</code>.
+     * @return  a constant as result of the division
+     */
+    public double divide (Duration that) {
+
+        double d_this = this.sec * Math.pow(10,9) + this.nanoSec ;
+        double d_that = that.sec * Math.pow(10,9) + that.nanoSec ;
+        return d_this/d_that;
+
+    }
+
+    /**
+     * devide this <code>Duration</code> instances by a constant.
+     *
+     * @param c the constant that will be used to divide this <code>Duration</code>.
+     * @return new duration as result of the division
+     */
+    public Duration divide (long c) {
+        assertTrue ("cannot divide a duration by a non-positive constant ", c > 0);
+
+        Duration result = (Duration) ZERO;
+
+        double division = ((double)this.sec * Math.pow(10,9) +(double)( this.nanoSec)) /c ;
+
+        result.sec = (long) (division / Math.pow(10,9));
+        result.nanoSec = (long) (division - result.sec*Math.pow(10,9));
+
+
+        return result ;
+
+    }
+
+
+
+    public static Duration infinite(){
         return INFINITE;
     }
 
-    /**
-     * 
-     * @return A {@link Duration} of zero length.
-     */
-    public static Duration zero() {
+    public static Duration zero(){
         return ZERO;
     }
-
-    // -----------------------------------------------------------------------
-    // Instance Methods
-    // -----------------------------------------------------------------------
-
-    // --- Data access: ------------------------------------------------------
-
-    /**
-     * Truncate this duration to a whole-number quantity of the given time unit.
-     * For example, if this duration is equal to one second plus 100
-     * nanoseconds, calling this method with an argument of
-     * {@link TimeUnit#SECONDS} will result in the value <code>1</code>.
-     * 
-     * If this duration is infinite, this method shall return
-     * {@link Long#MAX_VALUE}, regardless of the units given.
-     * 
-     * If this duration cannot be expressed in the given units without
-     * overflowing, this method shall return {@link Long#MAX_VALUE}. In such a
-     * case, the caller may wish to use this method in combination with
-     * {@link #getRemainder(TimeUnit, TimeUnit)} to obtain the full duration
-     * without lack of precision.
-     * 
-     * @param inThisUnit
-     *            The time unit in which the return result will be measured.
-     * 
-     * @see #getRemainder(TimeUnit, TimeUnit)
-     * @see Long#MAX_VALUE
-     * @see TimeUnit
-     */
-    public long getDuration(TimeUnit inThisUnit) {
-        if (inThisUnit.equals(TimeUnit.SECONDS)) {
-            return sec;
-        }
-        return inThisUnit.convert(nanoSec, TimeUnit.NANOSECONDS) +
-                inThisUnit.convert(sec, TimeUnit.SECONDS);
-    }
-
-    /**
-     * If getting the magnitude of this duration in the given
-     * <code>primaryUnit</code> would cause truncation with respect to the given
-     * <code>remainderUnit</code>, return the magnitude of the truncation in the
-     * latter (presumably finer-grained) unit. For example, if this duration is
-     * equal to one second plus 100 nanoseconds, calling this method with
-     * arguments of {@link TimeUnit#SECONDS} and {@link TimeUnit#NANOSECONDS}
-     * respectively will result in the value <code>100</code>.
-     * 
-     * This method is equivalent to the following pseudo-code:
-     * 
-     * <code>
-     * (this - getDuration(primaryUnit)).getDuration(remainderUnit)
-     * </code>
-     * 
-     * If <code>remainderUnit</code> is represents a coarser granularity than
-     * <code>primaryUnit</code> (for example, the former is
-     * {@link TimeUnit#HOURS} but the latter is {@link TimeUnit#SECONDS}), this
-     * method shall return <code>0</code>.
-     * 
-     * If the resulting duration cannot be expressed in the given units without
-     * overflowing, this method shall return {@link Long#MAX_VALUE}.
-     * 
-     * @param primaryUnit
-     * @param remainderUnit
-     *            The time unit in which the return result will be measured.
-     * 
-     * @see #getDuration(TimeUnit)
-     * @see Long#MAX_VALUE
-     * @see TimeUnit
-     */
-    public long getRemainder(TimeUnit primaryUnit, TimeUnit remainderUnit) {
-        if (TimeUnit.SECONDS.equals(primaryUnit)
-                && TimeUnit.NANOSECONDS.equals(remainderUnit)) {
-            return nanoSec;
-        }
-        // TODO This will require some unit testing to confirm
-        long valueInRemainderUnit =
-                remainderUnit.convert(sec, TimeUnit.SECONDS) +
-                        remainderUnit.convert(nanoSec, TimeUnit.NANOSECONDS);
-        long valueInPrimaryUnit = primaryUnit.convert(valueInRemainderUnit,
-                remainderUnit);
-        long truncatedValueInRemainderUnit =
-                remainderUnit.convert(valueInPrimaryUnit, primaryUnit);
-        return valueInRemainderUnit - truncatedValueInRemainderUnit;
-    }
-
-    // --- Query: ------------------------------------------------------------
-
-    /**
-     * Report whether this duration lasts no time at all. The result of this
-     * method is equivalent to the following:
-     * 
-     * <code>this.getDuration(TimeUnit.NANOSECONDS) == 0;</code>
-     * 
-     * @see #getDuration(TimeUnit)
-     */
-    public boolean isZero() {
-        return equals(ZERO);
-    }
-
-    /**
-     * Report whether this duration lasts forever.
-     * 
-     * If this duration is infinite, the following relationship shall be true:
-     * 
-     * <code>this.equals(infiniteDuration(this.getBootstrap()))</code>
-     * 
-     * @see #infinite()
-     */
-    public boolean isInfinite() {
-        return equals(INFINITE);
-    }
-
-    // --- From Object: ------------------------------------------------------
-
-    @Override
-    public Duration clone() {
-        return new Duration(this.sec, this.nanoSec);
-    }
 }
+
+
