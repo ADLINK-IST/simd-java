@@ -99,9 +99,7 @@ public class Partition implements QosPolicy {
     // factory methods
     // -----------------------------------------------------------------------
 
-    public Partition(){
-        this.names.add("");
-    }
+    public Partition() { }
 
     public Partition(String name){
         this.names.add(name);
@@ -157,15 +155,15 @@ public class Partition implements QosPolicy {
         return Result ;
     }
   
-    public boolean equals(Partition that) {
-        return this.names.equals(that.names) ;
+    public boolean equals(Object that) {
+        boolean e = false;
+        if (that instanceof Partition)
+            e = this.names.equals(((Partition)that).names);
+        return e;
     }
 
     public int getSize() {
-        int  size =this.names.size() ;
-        if (this.names.equals("")) size = 0 ;
-
-        return size;
+        return this.names.size();
     }
 
     /**

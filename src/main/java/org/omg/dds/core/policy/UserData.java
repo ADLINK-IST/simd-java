@@ -18,6 +18,8 @@
 
 package org.omg.dds.core.policy;
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 /**
  * User data not known by the middleware, but distributed by means of built-in
  * topics. The default value is an empty (zero-sized) sequence.
@@ -54,7 +56,8 @@ public class UserData implements QosPolicy {
     private final byte value[];
 
     public UserData(byte value[]) {
-        this.value = value;
+        this.value = new byte[value.length];
+        System.arraycopy(value, 0, this.value, 0, value.length);
     }
 
     /**

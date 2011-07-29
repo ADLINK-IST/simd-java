@@ -38,7 +38,7 @@ public  class Time extends AbstractTime
     private static final Time ZERO = new Time(0,0);
     private static final Time INFINITE = new Time(-1);
     private static final Time INVALID_TIME =  makeInvalidTime();
-    private static final long serialVersionUID = -132361141453190372L;
+    private static final long serialVersionUID = -42416461846201843L;
 
     public Time(long d, TimeUnit unit) {
         super(d, unit);

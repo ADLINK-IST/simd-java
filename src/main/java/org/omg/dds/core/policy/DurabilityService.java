@@ -67,17 +67,10 @@ public class DurabilityService implements QosPolicy {
     }
 
     /**
-     * @return the historyKind
+     * @return the history
      */
-    public History.Kind getHistoryKind() {
-        return this.history.getKind();
-    }
-
-    /**
-     * @return the historyDepth
-     */
-    public int getHistoryDepth() {
-        return this.history.getDepth();
+    public History getHistory() {
+        return this.history;
     }
 
     /**

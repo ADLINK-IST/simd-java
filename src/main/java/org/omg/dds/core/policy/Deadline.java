@@ -20,6 +20,8 @@ package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * {@link org.omg.dds.sub.DataReader} expects a new sample updating the value of
  * each instance at least once every deadline period. The
@@ -72,6 +74,10 @@ public class Deadline implements QosPolicy, Comparable<Deadline> {
 
     public Deadline(Duration period) {
         this.period = period;
+    }
+
+    public Deadline(long d, TimeUnit unit) {
+        this.period = new Duration(d, unit);
     }
 
     public Duration getPeriod() {

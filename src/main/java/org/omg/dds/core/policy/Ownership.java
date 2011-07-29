@@ -23,7 +23,8 @@ package org.omg.dds.core.policy;
  * to write the same instance of the data and if so, how these modifications
  * should be arbitrated.
  * 
- * <b>Concerns:</b> {@link org.omg.dds.topic.Topic}, {@link org.omg.dds.sub.DataReader}, {@link org.omg.dds.pub.DataWriter}
+ * <b>Concerns:</b> {@link org.omg.dds.topic.Topic}, {@link org.omg.dds.sub.DataReader},
+ * {@link org.omg.dds.pub.DataWriter}
  * 
  * <b>RxO:</b> Yes
  * 
@@ -79,8 +80,8 @@ public class Ownership implements QosPolicy {
     }
 
     // -- Ctors
-    private Ownership(Kind kind) {
-        this.kind = kind;
+    private Ownership(Kind k) {
+        this.kind = k;
     }
 
     // -- Methods from QosPolicy

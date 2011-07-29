@@ -1,14 +1,11 @@
 package org.omg.dds.core;
 
-
-import com.sun.jmx.snmp.tasks.ThreadService;
-import com.sun.org.apache.bcel.internal.generic.LineNumberGen;
 import org.omg.dds.core.Value;
-
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 
-public abstract class AbstractTime implements Value, Comparable<AbstractTime>
+public abstract class AbstractTime implements Value, Comparable<AbstractTime>, Serializable
 {
 
     protected static final int SEC_MAX = 0x7fffffff;
@@ -23,9 +20,9 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>
         long sec = unit.convert(d, TimeUnit.SECONDS);
         long nsec = unit.convert(d, TimeUnit.NANOSECONDS) - (sec * NSEC_MAX);
 
-        // Make sure we don't go beyond the max values
-        // as expected by the DDS standard.
-        if (this.sec > SEC_MAX)
+        // If sec is negative that means we've gone out of
+        // the allowable max time.
+        if (this.sec < 0)
             throw new OverflowException("Time Out of Bounds");
 
         this.sec = (int)sec;
@@ -37,7 +34,9 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>
 
         this.nanoSec = (nanoSec < NSEC_MAX) ?  nanoSec : (nanoSec % NSEC_MAX);
         this.sec = sec + this.nanoSec/NSEC_MAX;
-        if (this.sec > SEC_MAX)
+        // If sec is negative that means we've gone out of
+        // the allowable max time.
+        if (this.sec < 0)
             throw new OverflowException("Time Out of Bounds");
     }
 
