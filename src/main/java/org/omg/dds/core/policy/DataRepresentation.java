@@ -23,8 +23,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class DataRepresentation implements QosPolicy {
-    private static final long serialVersionUID = 1L;
-    public static final int ID = 19;
+	
+	private static final long serialVersionUID = 5725828041265152040L;
+	
+	public static final int ID = 19;
     private static final String NAME = "DataRepresentation";
     private final List<Short> value;
 
@@ -52,12 +54,10 @@ public class DataRepresentation implements QosPolicy {
         public static final short XML_DATA_REPRESENTATION = 1;
     }
 
-    @Override
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
     public String getPolicyName() {
         return NAME;
     }

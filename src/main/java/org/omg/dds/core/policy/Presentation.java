@@ -18,11 +18,6 @@
 
 package org.omg.dds.core.policy;
 
-import org.omg.dds.pub.DataWriter;
-import org.omg.dds.pub.Publisher;
-import org.omg.dds.sub.DataReader;
-import org.omg.dds.sub.Subscriber;
-
 /**
  * Specifies how the samples representing changes to data instances are
  * presented to the subscribing application. This policy affects the
@@ -32,7 +27,7 @@ import org.omg.dds.sub.Subscriber;
  * preserved. The two booleans control whether coherent access and ordered
  * access are supported within the scope accessScope.
  * 
- * <b>Concerns:</b> {@link Publisher}, {@link Subscriber}
+ * <b>Concerns:</b> {@link org.omg.dds.pub.Publisher}, {@link org.omg.dds.sub.Subscriber}
  * 
  * <b>RxO:</b> Yes
  * 
@@ -44,8 +39,8 @@ import org.omg.dds.sub.Subscriber;
  * 
  * The setting of coherentAccess controls whether the Service will preserve the
  * groupings of changes made by the publishing application by means of the
- * operations {@link Publisher#beginCoherentChanges()} and
- * {@link Publisher#endCoherentChanges()}.
+ * operations {@link org.omg.dds.pub.Publisher#beginCoherentChanges()} and
+ * {@link org.omg.dds.pub.Publisher#endCoherentChanges()}.
  * 
  * The setting of orderedAccess controls whether the Service will preserve the
  * order of changes.
@@ -75,8 +70,9 @@ import org.omg.dds.sub.Subscriber;
  */
 public class Presentation implements QosPolicy {
 
-    // -- Constant Members
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5431219018741643415L;
+
+	// -- Constant Members
     public static final int ID = 16;
     private final static String NAME = "Presentation";
 
@@ -102,23 +98,23 @@ public class Presentation implements QosPolicy {
      * <ul>
      * <li>If accessAcope is set to
      * {@link Presentation.AccessScopeKind#INSTANCE}, the use of
-     * {@link Publisher#beginCoherentChanges()} and
-     * {@link Publisher#endCoherentChanges()} has no effect on how the
+     * {@link org.omg.dds.pub.Publisher#beginCoherentChanges()} and
+     * {@link org.omg.dds.pub.Publisher#endCoherentChanges()} has no effect on how the
      * subscriber can access the data because with the scope limited to each
      * instance, changes to separate instances are considered independent and
      * thus cannot be grouped by a coherent change.
      * <li>If accessScope is set to {@link Presentation.AccessScopeKind#TOPIC},
      * then coherent changes (indicated by their enclosure within calls to
-     * {@link Publisher#beginCoherentChanges()} and
-     * {@link Publisher#endCoherentChanges()}) will be made available as such to
-     * each remote {@link DataReader} independently. That is, changes made to
-     * instances within each individual {@link DataWriter} will be available as
+     * {@link org.omg.dds.pub.Publisher#beginCoherentChanges()} and
+     * {@link org.omg.dds.pub.Publisher#endCoherentChanges()}) will be made available as such to
+     * each remote {@link org.omg.dds.sub.DataReader} independently. That is, changes made to
+     * instances within each individual {@link org.omg.dds.pub.DataWriter} will be available as
      * coherent with respect to other changes to instances in that same
      * DataWriter, but will not be grouped with changes made to instances
      * belonging to a different DataWriter.
      * <li>If accessScope is set to {@link Presentation.AccessScopeKind#GROUP},
      * then coherent changes made to instances through a DataWriter attached to
-     * a common {@link Publisher} are made available as a unit to remote
+     * a common {@link org.omg.dds.pub.Publisher} are made available as a unit to remote
      * subscribers.</li>
      * </ul>
      * 
@@ -139,14 +135,14 @@ public class Presentation implements QosPolicy {
      * any other instance. That means that changes (creations, deletions,
      * modifications) made to two instances are not necessarily seen in the
      * order they occur. This is the case even if it is the same application
-     * thread making the changes using the same {@link DataWriter}.</li>
+     * thread making the changes using the same {@link org.omg.dds.pub.DataWriter}.</li>
      * <li>If accessScope is set to {@link Presentation.AccessScopeKind#TOPIC},
      * changes (creations, deletions, modifications) made by a single
-     * {@link DataWriter} are made available to subscribers in the same order
+     * {@link org.omg.dds.pub.DataWriter} are made available to subscribers in the same order
      * they occur. Changes made to instances through different DataWriter
      * entities are not necessarily seen in the order they occur. This is the
      * case, even if the changes are made by a single application thread using
-     * DataWriter objects attached to the same {@link Publisher}.</li>
+     * DataWriter objects attached to the same {@link org.omg.dds.pub.Publisher}.</li>
      * <li>Finally, if accessScope is set to
      * {@link Presentation.AccessScopeKind#GROUP}, changes made to instances via
      * DataWriter entities attached to the same Publisher object are made
@@ -173,16 +169,16 @@ public class Presentation implements QosPolicy {
         INSTANCE,
 
         /**
-         * Scope spans to all instances within the same {@link DataWriter} (or
-         * {@link DataReader}), but not across instances in different DataWriter
+         * Scope spans to all instances within the same {@link org.omg.dds.pub.DataWriter} (or
+         * {@link org.omg.dds.sub.DataReader}), but not across instances in different DataWriter
          * (or DataReader).
          */
         TOPIC,
 
         /**
          * [optional] Scope spans to all instances belonging to
-         * {@link DataWriter} (or {@link DataReader}) entities within the same
-         * {@link Publisher} (or {@link Subscriber}).
+         * {@link org.omg.dds.pub.DataWriter} (or {@link org.omg.dds.sub.DataReader}) entities within the same
+         * {@link org.omg.dds.pub.Publisher} (or {@link org.omg.dds.sub.Subscriber}).
          */
         GROUP
     }
@@ -194,12 +190,10 @@ public class Presentation implements QosPolicy {
         this.coherentAccess = coherentAccess;
     }
 
-    @Override
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
     public String getPolicyName() {
         return NAME;
     }

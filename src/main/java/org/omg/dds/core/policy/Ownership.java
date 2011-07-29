@@ -18,16 +18,12 @@
 
 package org.omg.dds.core.policy;
 
-import org.omg.dds.pub.DataWriter;
-import org.omg.dds.sub.DataReader;
-import org.omg.dds.topic.Topic;
-
 /**
- * [optional] Specifies whether it is allowed for multiple {@link DataWriter}s
+ * [optional] Specifies whether it is allowed for multiple {@link org.omg.dds.pub.DataWriter}s
  * to write the same instance of the data and if so, how these modifications
  * should be arbitrated.
  * 
- * <b>Concerns:</b> {@link Topic}, {@link DataReader}, {@link DataWriter}
+ * <b>Concerns:</b> {@link org.omg.dds.topic.Topic}, {@link org.omg.dds.sub.DataReader}, {@link org.omg.dds.pub.DataWriter}
  * 
  * <b>RxO:</b> Yes
  * 
@@ -36,9 +32,10 @@ import org.omg.dds.topic.Topic;
  * @see OwnershipStrength
  */
 public class Ownership implements QosPolicy {
-    /** The default serialVersionUID. */
-    private static final long serialVersionUID = 1L;
-    // -- Constant Members
+
+	private static final long serialVersionUID = -1580048650309198230L;
+	
+	// -- Constant Members
     public final static int ID = 9;
     private final static String NAME = "Ownership";
     private static final Ownership SHARED = new Ownership(Kind.SHARED);
@@ -71,7 +68,7 @@ public class Ownership implements QosPolicy {
         SHARED,
 
         /**
-         * Indicates each instance can only be owned by one {@link DataWriter},
+         * Indicates each instance can only be owned by one {@link org.omg.dds.pub.DataWriter},
          * but the owner of an instance can change dynamically. The selection of
          * the owner is controlled by the setting of the
          * {@link OwnershipStrength}. The owner is always set to be the

@@ -18,18 +18,15 @@
 
 package org.omg.dds.core.policy;
 
-import org.omg.dds.pub.DataWriter;
-import org.omg.dds.topic.Topic;
-
 /**
  * [optional] Specifies the value of the "strength" used to arbitrate among
- * multiple {@link DataWriter} objects that attempt to modify the same instance
- * of a data object (identified by {@link Topic} + key). This policy only
+ * multiple {@link org.omg.dds.pub.DataWriter} objects that attempt to modify the same instance
+ * of a data object (identified by {@link org.omg.dds.topic.Topic} + key). This policy only
  * applies if the {@link Ownership#getKind()} is
  * {@link Ownership.Kind#EXCLUSIVE}. The default value of the ownership strength
  * is zero.
  * 
- * <b>Concerns:</b> {@link DataWriter}
+ * <b>Concerns:</b> {@link org.omg.dds.pub.DataWriter}
  * 
  * <b>RxO:</b> N/A
  * 
@@ -38,9 +35,10 @@ import org.omg.dds.topic.Topic;
  * @see Ownership
  */
 public class OwnershipStrength implements QosPolicy {
-    /** The default serialVersionUID. */
-    private static final long serialVersionUID = 1L;
-    // -- Constant Members
+
+	private static final long serialVersionUID = -1444720520507142752L;
+	
+	// -- Constant Members
     public final static int ID = 10;
     private final static String NAME = "OwnershipStrength";
     final private int value;

@@ -19,28 +19,21 @@
 package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
-import org.omg.dds.core.Entity;
-import org.omg.dds.core.WaitSet;
-import org.omg.dds.core.status.Status;
-import org.omg.dds.domain.DomainParticipant;
-import org.omg.dds.pub.DataWriter;
-import org.omg.dds.sub.DataReader;
-import org.omg.dds.topic.Topic;
 
 /**
  * Determines the mechanism and parameters used by the application to determine
- * whether an {@link Entity} is "active" (alive). The "liveliness" status of an
+ * whether an {@link org.omg.dds.core.Entity} is "active" (alive). The "liveliness" status of an
  * Entity is used to maintain instance ownership in combination with the setting
  * of the {@link Ownership}. The application is also informed via an Entity
- * {@link Status} change when an Entity is no longer alive. The
- * {@link DataReader} requests that liveliness of the writers is maintained by
+ * {@link org.omg.dds.core.status.Status} change when an Entity is no longer alive. The
+ * {@link org.omg.dds.sub.DataReader} requests that liveliness of the writers is maintained by
  * the requested means and loss of liveliness is detected with delay not to
- * exceed the leaseDuration. The {@link DataWriter} commits to signaling its
+ * exceed the leaseDuration. The {@link org.omg.dds.pub.DataWriter} commits to signaling its
  * liveliness using the stated means at intervals not to exceed the
  * leaseDuration. The default kind is {@link Liveliness.Kind#AUTOMATIC} and the
  * default value of the leaseDuration is infinite.
  * 
- * <b>Concerns:</b> {@link Topic}, {@link DataReader}, {@link DataWriter}
+ * <b>Concerns:</b> {@link org.omg.dds.topic.Topic}, {@link org.omg.dds.sub.DataReader}, {@link org.omg.dds.pub.DataWriter}
  * 
  * <b>RxO:</b> Yes
  * 
@@ -55,7 +48,7 @@ import org.omg.dds.topic.Topic;
  * applications that only need to detect failures at the process level, but not
  * application-logic failures within a process. The Service takes responsibility
  * for renewing the leases at the required rates and thus, as long as the local
- * process where a {@link DomainParticipant} is running and the link connecting
+ * process where a {@link org.omg.dds.domain.DomainParticipant} is running and the link connecting
  * it to remote participants remains connected, the entities within the
  * DomainParticipant will be considered alive. This requires the lowest
  * overhead.
@@ -65,8 +58,8 @@ import org.omg.dds.topic.Topic;
  * to periodically assert the liveliness before the lease expires to indicate
  * the corresponding Entity is still alive. The action can be explicit by
  * calling the <code>assertLiveliness</code> operations (
- * {@link DataWriter#assertLiveliness()},
- * {@link DomainParticipant#assertLiveliness()}) or implicit by writing some
+ * {@link org.omg.dds.pub.DataWriter#assertLiveliness()},
+ * {@link org.omg.dds.domain.DomainParticipant#assertLiveliness()}) or implicit by writing some
  * data.
  * 
  * The two possible manual settings control the granularity at which the
@@ -96,12 +89,14 @@ import org.omg.dds.topic.Topic;
  * Changes in LIVELINESS must be detected by the Service with a time granularity
  * greater or equal to the leaseDuration. This ensures that the value of the
  * {@link org.omg.dds.core.status.LivelinessChanged} is updated at least once
- * during each leaseDuration and the related Listeners and {@link WaitSet}s are
+ * during each leaseDuration and the related Listeners and {@link org.omg.dds.core.WaitSet}s are
  * notified within a leaseDuration from the time the LIVELINESS changed.
  */
 public class Liveliness implements QosPolicy {
-    // -- Constant Members
-    private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 3384552103414040877L;
+
+	// -- Constant Members
     public final static int ID = 8;
     private final static String NAME = "Liveliness";
     private static final Liveliness AUTOMATIC = new Liveliness(Kind.AUTOMATIC);
@@ -136,7 +131,7 @@ public class Liveliness implements QosPolicy {
     public enum Kind {
         /**
          * The infrastructure will automatically signal liveliness for the
-         * {@link DataWriter}s at least as often as required by the
+         * {@link org.omg.dds.pub.DataWriter}s at least as often as required by the
          * leaseDuration.
          */
         AUTOMATIC,
@@ -145,10 +140,10 @@ public class Liveliness implements QosPolicy {
          * The user application takes responsibility to signal liveliness to the
          * Service. Liveliness must be asserted at least once every
          * leaseDuration otherwise the Service will assume the corresponding
-         * {@link Entity} is no longer "active/alive."
+         * {@link org.omg.dds.core.Entity} is no longer "active/alive."
          * 
-         * The Service will assume that as long as at least one {@link Entity}
-         * within the {@link DomainParticipant} has asserted its liveliness the
+         * The Service will assume that as long as at least one {@link org.omg.dds.core.Entity}
+         * within the {@link org.omg.dds.domain.DomainParticipant} has asserted its liveliness the
          * other Entities in that same DomainParticipant are also alive.
          */
         MANUAL_BY_PARTICIPANT,
@@ -157,9 +152,9 @@ public class Liveliness implements QosPolicy {
          * The user application takes responsibility to signal liveliness to the
          * Service. Liveliness must be asserted at least once every
          * leaseDuration otherwise the Service will assume the corresponding
-         * {@link Entity} is no longer "active/alive."
+         * {@link org.omg.dds.core.Entity} is no longer "active/alive."
          * 
-         * The Service will only assume liveliness of the {@link DataWriter} if
+         * The Service will only assume liveliness of the {@link org.omg.dds.pub.DataWriter} if
          * the application has asserted liveliness of that DataWriter itself.
          */
         MANUAL_BY_TOPIC

@@ -19,9 +19,6 @@
 package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
-import org.omg.dds.pub.DataWriter;
-import org.omg.dds.sub.DataReader;
-import org.omg.dds.topic.Topic;
 
 /**
  * Specifies the maximum acceptable delay from the time the data is written
@@ -31,7 +28,7 @@ import org.omg.dds.topic.Topic;
  * required to track or alert the user of any violation. The default value of
  * the duration is zero indicating that the delay should be minimized.
  * 
- * <b>Concerns:</b> {@link Topic}, {@link DataReader}, {@link DataWriter}
+ * <b>Concerns:</b> {@link org.omg.dds.topic.Topic}, {@link org.omg.dds.sub.DataReader}, {@link org.omg.dds.pub.DataWriter}
  * 
  * <b>RxO:</b> Yes
  * 
@@ -49,8 +46,10 @@ import org.omg.dds.topic.Topic;
  * true.
  */
 public class LatencyBudget implements QosPolicy {
-    private static final long serialVersionUID = 1L;
-    public static final int ID = 6;
+
+	private static final long serialVersionUID = 2966959985048968650L;
+	
+	public static final int ID = 6;
     private static final String NAME = "LatencyBudget";
     final private Duration duration;
 

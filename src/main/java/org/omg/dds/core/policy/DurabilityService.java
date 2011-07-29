@@ -19,31 +19,31 @@
 package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
-import org.omg.dds.pub.DataWriter;
-import org.omg.dds.sub.DataReader;
-import org.omg.dds.topic.Topic;
 
 /**
  * Specifies the configuration of the durability service. That is, the service
  * that implements the {@link Durability.Kind} of
  * {@link Durability.Kind#TRANSIENT} and {@link Durability.Kind#PERSISTENT}.
  * 
- * <b>Concerns:</b> {@link Topic}, {@link DataWriter}
+ * <b>Concerns:</b> {@link org.omg.dds.topic.Topic}, {@link org.omg.dds.pub.DataWriter}
  * 
  * <b>RxO:</b> No
  * 
  * <b>Changeable:</b> No
  * 
  * This policy is used to configure the {@link History} and the
- * {@link ResourceLimits} used by the fictitious {@link DataReader} and
- * {@link DataWriter} used by the "persistence service." The "persistence
+ * {@link ResourceLimits} used by the fictitious {@link org.omg.dds.sub.DataReader} and
+ * {@link org.omg.dds.pub.DataWriter} used by the "persistence service." The "persistence
  * service" is the one responsible for implementing
  * {@link Durability.Kind#TRANSIENT} and {@link Durability.Kind#PERSISTENT}.
  * 
  * @see Durability
  */
 public class DurabilityService implements QosPolicy {
-    public static final int ID = 22;
+
+	private static final long serialVersionUID = -2000671481342023181L;
+	
+	public static final int ID = 22;
     private static final String NAME = "DurabilityService";
 
     final private History history;

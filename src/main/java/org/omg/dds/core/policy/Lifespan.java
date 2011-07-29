@@ -53,8 +53,10 @@ import org.omg.dds.core.Duration;
  * source time stamp in its computation of the "expiration time."
  */
 public class Lifespan implements QosPolicy {
-    private static final long serialVersionUID = 1L;
-    public static final int ID = 7;
+
+	private static final long serialVersionUID = 4066473942720638916L;
+	
+	public static final int ID = 7;
     private static final String NAME = "Lifespan";
     final private Duration duration;
 

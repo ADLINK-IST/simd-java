@@ -18,30 +18,24 @@
 
 package org.omg.dds.core.policy;
 
-import java.util.*;
-
-import org.omg.dds.core.DDSException;
-import org.omg.dds.core.Entity;
-import org.omg.dds.pub.DataWriter;
-import org.omg.dds.pub.Publisher;
-import org.omg.dds.sub.DataReader;
-import org.omg.dds.sub.Subscriber;
+import java.util.Collection;
+import java.util.ArrayList;
 
 
 /**
  * This policy allows the introduction of a logical partition concept inside
  * the "physical" partition induced by a domain. It consists of a set of
  * strings that introduces a logical partition among the topics
- * visible by the {@link Publisher} and {@link Subscriber}.
+ * visible by the {@link org.omg.dds.pub.Publisher} and {@link org.omg.dds.sub.Subscriber}.
  *
- * <b>Concerns:</b> {@link Publisher}, {@link Subscriber}
+ * <b>Concerns:</b> {@link org.omg.dds.pub.Publisher}, {@link org.omg.dds.sub.Subscriber}
  *
  * <b>RxO:</b> No
  *
  * <b>Changeable:</b> Yes
  *
- * A {@link DataWriter} within a Publisher only communicates with a
- * {@link DataReader} in a Subscriber if (in addition to matching the Topic
+ * A {@link org.omg.dds.pub.DataWriter} within a Publisher only communicates with a
+ * {@link org.omg.dds.sub.DataReader} in a Subscriber if (in addition to matching the Topic
  * and having compatible QoS) the Publisher and Subscriber have a common
  * partition name string. Each string in the list that defines this QoS
  * policy defines a partition name. A partition name may contain wild cards.
@@ -70,13 +64,13 @@ import org.omg.dds.sub.Subscriber;
  *
  * PARTITION names can be regular expressions and include wild cards as
  * defined by the POSIX fnmatch API (1003.2-1992 section B.6). Either
- * {@link Publisher} or {@link Subscriber} may include regular expressions in
+ * {@link org.omg.dds.pub.Publisher} or {@link org.omg.dds.sub.Subscriber} may include regular expressions in
  * partition names, but no two names that both contain wild cards will ever
  * be considered to match. This means that although regular expressions may
  * be used both at publisher as well as subscriber side, the service will not
  * try to match two regular expressions (between publishers and subscribers).
  *
- * Partitions are different from creating {@link Entity} objects in different
+ * Partitions are different from creating {@link org.omg.dds.core.WaitSet} objects in different
  * domains in several ways. First, entities belonging to different domains
  * are completely isolated from each other; there is no traffic, meta-traffic
  * or any other way for an application or the Service itself to see entities
@@ -94,12 +88,12 @@ public class Partition implements QosPolicy {
     //  Constants & attributes
     // -----------------------------------------------------------------------
 
-    public static final int ID = 10;
+	private static final long serialVersionUID = 5970064547365158906L;
+
+	public static final int ID = 10;
     public static final String NAME = "Partition";
 
-
-    private ArrayList<String> names = new ArrayList<String>();
-    private int length = 0 ;
+    private final ArrayList<String> names = new ArrayList<String>();
 
     // -----------------------------------------------------------------------
     // factory methods
@@ -121,31 +115,58 @@ public class Partition implements QosPolicy {
     // Proper methods
     // -----------------------------------------------------------------------
 
-      public void clear() {
-          names.removeAll(this.names);
-          names.add("");
+    /* add a set of names to a this partition */
+    public Partition add(Collection<String> names)  {
+        Partition Result = new Partition(this.names)  ;
+        Result.names.addAll(names);
+        return Result ;
     }
 
-     public void add(Collection<String> names)  {
-        this.names.addAll(names) ;
+    /* add a  name to a this partition */
+    public Partition add(String name) {
+        Partition Result =  new Partition(this.names) ;
+        Result.names.add(name);
+        return Result;
     }
 
-    public void add(String partitionName) {
-
+    /* add names of partition to a this partition */
+    public Partition add(Partition partition) {
+        Partition Result =  new Partition(this.names) ;
+        Result.names.addAll(partition.names);
+        return Result ;
     }
 
-    public void add(Partition partition) {
-
+    /* remove a set of names from a this partition */
+    public Partition remove(Collection<String> names)  {
+        Partition Result =  new Partition(this.names) ;
+        Result.names.removeAll(names);
+        return Result ;
     }
 
+    /* remove a  name  from a this partition */
+    public Partition remove(String partitionName) {
+        Partition Result =  new Partition(this.names) ;
+        Result.names.remove(partitionName);
+        return Result;
+    }
+
+    /* add names of that partition from a this partition */
+    public Partition remove(Partition partition) {
+        Partition Result =  new Partition(this.names) ;
+        Result.names.removeAll(partition.names);
+        return Result ;
+    }
+  
     public boolean equals(Partition that) {
-        // TODO: Implement this
-        return false;
+        return this.names.equals(that.names) ;
     }
 
+    public int getSize() {
+        int  size =this.names.size() ;
+        if (this.names.equals("")) size = 0 ;
 
-    // etc ...
-
+        return size;
+    }
 
     /**
      * @return an unmodifiable collection of partition names.
@@ -154,7 +175,6 @@ public class Partition implements QosPolicy {
         return this.names ;
     }
 
-
     public int getPolicyId() {
         return ID;
     }
@@ -162,4 +182,5 @@ public class Partition implements QosPolicy {
     public String getPolicyName() {
         return NAME;
     }
+    
 }

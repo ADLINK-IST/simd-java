@@ -18,10 +18,6 @@
 
 package org.omg.dds.core.policy;
 
-import org.omg.dds.pub.DataWriter;
-import org.omg.dds.sub.DataReader;
-import org.omg.dds.topic.Topic;
-
 /**
  * Specifies the behavior of the Service in the case where the value of a sample
  * changes (one or more times) before it can be successfully communicated to one
@@ -33,9 +29,9 @@ import org.omg.dds.topic.Topic;
  * DataReader entities discovered after a sample is written is controlled by the
  * {@link Durability}. On the subscribing side it controls the samples that
  * should be maintained until the application "takes" them from the Service via
- * {@link DataReader#take()}.
+ * {@link org.omg.dds.sub.DataReader#take()}.
  * 
- * <b>Concerns:</b> {@link Topic}, {@link DataReader}, {@link DataWriter}
+ * <b>Concerns:</b> {@link org.omg.dds.topic.Topic}, {@link org.omg.dds.sub.DataReader}, {@link org.omg.dds.pub.DataWriter}
  * 
  * <b>RxO:</b> No
  * 
@@ -74,7 +70,9 @@ import org.omg.dds.topic.Topic;
  */
 public class History implements QosPolicy {
 
-    public static final int ID = 13;
+	private static final long serialVersionUID = -5053820784464142641L;
+	
+	public static final int ID = 13;
     public static final String NAME = "History";
     public static final History KEEP_LAST = new History(Kind.KEEP_LAST, 1);
     public static final History KEEP_ALL = new History(Kind.KEEP_ALL);
@@ -87,10 +85,10 @@ public class History implements QosPolicy {
          * On the publishing side, the Service will only attempt to keep the
          * most recent "depth" samples ({@link History#getDepth()}) of each
          * instance of data (identified by its key) managed by the
-         * {@link DataWriter}. On the subscribing side, the DataReader will only
+         * {@link org.omg.dds.pub.DataWriter}. On the subscribing side, the DataReader will only
          * attempt to keep the most recent "depth" samples received for each
          * instance (identified by its key) until the application "takes" them
-         * via {@link DataReader#take()}. KEEP_LAST is the default kind. The
+         * via {@link org.omg.dds.sub.DataReader#take()}. KEEP_LAST is the default kind. The
          * default value of depth is 1. If a value other than 1 is specified, it
          * must be consistent with the settings of the {@link ResourceLimits}.
          */
@@ -99,12 +97,12 @@ public class History implements QosPolicy {
         /**
          * On the publishing side, the Service will attempt to keep all samples
          * (representing each value written) of each instance of data
-         * (identified by its key) managed by the {@link DataWriter} until they
+         * (identified by its key) managed by the {@link org.omg.dds.pub.DataWriter} until they
          * can be delivered to all subscribers. On the subscribing side, the
          * Service will attempt to keep all samples of each instance of data
-         * (identified by its key) managed by the {@link DataReader}. These
+         * (identified by its key) managed by the {@link org.omg.dds.sub.DataReader}. These
          * samples are kept until the application "takes" them from the Service
-         * via {@link DataReader#take()}. The setting of depth has no effect.
+         * via {@link org.omg.dds.sub.DataReader#take()}. The setting of depth has no effect.
          * Its implied value is {@link ResourceLimits#LENGTH_UNLIMITED}.
          */
         KEEP_ALL

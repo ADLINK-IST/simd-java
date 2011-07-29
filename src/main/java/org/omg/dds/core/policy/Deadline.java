@@ -63,7 +63,9 @@ import org.omg.dds.core.Duration;
  */
 public class Deadline implements QosPolicy, Comparable<Deadline> {
 
-    public static final int ID = 4;
+	private static final long serialVersionUID = -9093387182791133485L;
+	
+	public static final int ID = 4;
     private static final String NAME = "Deadline";
 
     private Duration period;

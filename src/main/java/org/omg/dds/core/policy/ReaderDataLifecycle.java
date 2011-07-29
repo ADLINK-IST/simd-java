@@ -19,16 +19,13 @@
 package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
-import org.omg.dds.sub.DataReader;
-import org.omg.dds.sub.InstanceState;
-import org.omg.dds.sub.ViewState;
 
 
 /**
- * Specifies the behavior of the {@link DataReader} with regards to the life
+ * Specifies the behavior of the {@link org.omg.dds.sub.DataReader} with regards to the life
  * cycle of the data instances it manages.
  * 
- * <b>Concerns:</b> {@link DataReader}
+ * <b>Concerns:</b> {@link org.omg.dds.sub.DataReader}
  * 
  * <b>RxO:</b> N/A
  * 
@@ -45,7 +42,7 @@ import org.omg.dds.sub.ViewState;
  * {@link ResourceLimits}.
  * 
  * The DataReader also maintains information regarding the identity,
- * {@link ViewState} and {@link InstanceState} of data instances even after
+ * {@link org.omg.dds.sub.ViewState} and {@link org.omg.dds.sub.InstanceState} of data instances even after
  * all samples have been 'taken.' This is needed to properly compute the
  * states when future samples arrive.
  * 
@@ -53,8 +50,8 @@ import org.omg.dds.sub.ViewState;
  * for instances for which there are no writers and for which all samples
  * have been 'taken.' The last sample the DataReader will have taken for that
  * instance will have an instance state of either
- * {@link InstanceState#NOT_ALIVE_NO_WRITERS} or
- * {@link InstanceState#NOT_ALIVE_DISPOSED} depending on whether the last
+ * {@link org.omg.dds.sub.InstanceState#NOT_ALIVE_NO_WRITERS} or
+ * {@link org.omg.dds.sub.InstanceState#NOT_ALIVE_DISPOSED} depending on whether the last
  * writer that had ownership of the instance disposed it or not. In the
  * absence of the READER_DATA_LIFECYCLE QoS this behavior could cause
  * problems if the application "forgets" to 'take' those samples. The

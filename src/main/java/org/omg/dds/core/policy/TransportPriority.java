@@ -18,14 +18,11 @@
 
 package org.omg.dds.core.policy;
 
-import org.omg.dds.pub.DataWriter;
-import org.omg.dds.topic.Topic;
-
 /**
  * This policy is a hint to the infrastructure as to how to set the priority of
  * the underlying transport used to send the data. The default value is zero.
  * 
- * <b>Concerns:</b> {@link Topic}, {@link DataWriter}
+ * <b>Concerns:</b> {@link org.omg.dds.topic.Topic}, {@link org.omg.dds.pub.DataWriter}
  * 
  * <b>RxO:</b> N/A
  * 
@@ -47,7 +44,10 @@ import org.omg.dds.topic.Topic;
  * propagating the data written by the DataWriter.
  */
 public class TransportPriority implements QosPolicy {
-    public static final int ID = 5;
+
+	private static final long serialVersionUID = 4255377165975956688L;
+	
+	public static final int ID = 5;
     private static final String NAME = "TransportPriority";
     final private int value;
 
@@ -62,12 +62,10 @@ public class TransportPriority implements QosPolicy {
         return value;
     }
 
-    @Override
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
     public String getPolicyName() {
         return NAME;
     }

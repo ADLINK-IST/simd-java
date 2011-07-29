@@ -21,8 +21,10 @@ package org.omg.dds.core.policy;
 import org.omg.dds.type.BitBound;
 
 public class TypeConsistencyEnforcement implements QosPolicy {
-    // -- Constant Members
-    private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = -1669488097073217406L;
+	
+	// -- Constant Members
     public final static int ID = 18;
     private final static String NAME = "TypeConsistencyEnforcement";
     private static final TypeConsistencyEnforcement EXACT_TYPE =
@@ -60,12 +62,10 @@ public class TypeConsistencyEnforcement implements QosPolicy {
         ASSIGNABLE_TYPE_CONSISTENCY
     }
 
-    @Override
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
     public String getPolicyName() {
         return NAME;
     }

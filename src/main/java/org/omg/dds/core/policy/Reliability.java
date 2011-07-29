@@ -66,7 +66,9 @@ import org.omg.dds.core.Duration;
  */
 public class Reliability implements QosPolicy, Comparable<Reliability>{
 
-    // -- Constant Members
+	private static final long serialVersionUID = 5636918705877501718L;
+	
+	// -- Constant Members
     public final static int ID = 11;
     private final static String NAME = "Reliability";
     private static final Reliability RELIABLE = new Reliability(Kind.RELIABLE);

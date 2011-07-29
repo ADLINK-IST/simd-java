@@ -18,24 +18,16 @@
 
 package org.omg.dds.core.policy;
 
-import org.omg.dds.core.Condition;
-import org.omg.dds.core.WaitSet;
-import org.omg.dds.domain.DomainParticipant;
-import org.omg.dds.pub.DataWriter;
-import org.omg.dds.sub.DataReader;
-import org.omg.dds.sub.InstanceState;
-import org.omg.dds.topic.Topic;
-
 /**
  * This policy expresses if the data should "outlive" their writing time.
  * 
- * <b>Concerns:</b> {@link Topic}, {@link DataReader}, {@link DataWriter}
+ * <b>Concerns:</b> {@link org.omg.dds.topic.Topic}, {@link org.omg.dds.sub.DataReader}, {@link org.omg.dds.pub.DataWriter}
  * 
  * <b>RxO:</b> Yes
  * 
  * <b>Changeable:</b> No
  * 
- * The decoupling between {@link DataReader} and {@link DataWriter} offered by
+ * The decoupling between {@link org.omg.dds.sub.DataReader} and {@link org.omg.dds.pub.DataWriter} offered by
  * the Publish/Subscribe paradigm allows an application to write data even if
  * there are no current readers on the network. Moreover, a DataReader that
  * joins the network after some data has been written could potentially be
@@ -54,9 +46,9 @@ import org.omg.dds.topic.Topic;
  * PERSISTENT.
  * 
  * For the purpose of implementing the {@link Durability.Kind} TRANSIENT or
- * PERSISTENT, the service behaves "as if" for each {@link Topic} that has
+ * PERSISTENT, the service behaves "as if" for each {@link org.omg.dds.topic.Topic} that has
  * TRANSIENT or PERSISTENT DURABILITY kind there was a corresponding "built-in"
- * {@link DataReader} and {@link DataWriter} configured to have the same
+ * {@link org.omg.dds.sub.DataReader} and {@link org.omg.dds.pub.DataWriter} configured to have the same
  * DURABILITY kind. In other words, it is "as if" somewhere in the system
  * (possibly on a remote node) there was a "built-in durability
  * DataReader" that subscribed to that Topic and a "built-in durability
@@ -66,7 +58,7 @@ import org.omg.dds.topic.Topic;
  * For each Topic, the built-in fictitious "persistence service" DataReader and
  * DataWriter has its QoS configured from the Topic QoS of the corresponding
  * Topic. In other words, it is "as-if" the service first did
- * {@link DomainParticipant#findTopic(String, org.omg.dds.core.Duration)} to
+ * {@link org.omg.dds.domain.DomainParticipant#findTopic(String, org.omg.dds.core.Duration)} to
  * access the Topic, and then used the QoS from the Topic to configure the
  * fictitious built-in entities.
  * 
@@ -86,8 +78,8 @@ import org.omg.dds.topic.Topic;
  * corresponding fictitious "built-in transient/persistent entities" cause the
  * {@link org.omg.dds.core.status.RequestedIncompatibleQos}/
  * {@link org.omg.dds.core.status.OfferedIncompatibleQos} to change and the
- * corresponding Listener invocations and/or signaling of {@link Condition} and
- * {@link WaitSet} objects as they would with non-fictitious entities.
+ * corresponding Listener invocations and/or signaling of {@link org.omg.dds.core.Condition} and
+ * {@link org.omg.dds.core.WaitSet} objects as they would with non-fictitious entities.
  * 
  * The setting of the serviceCleanupDelay controls when the TRANSIENT or
  * PERSISTENT service is able to remove all information regarding a data
@@ -96,11 +88,11 @@ import org.omg.dds.topic.Topic;
  * 
  * <ol>
  * <li>the instance has been explicitly disposed (instanceState =
- * {@link InstanceState#NOT_ALIVE_DISPOSED}),</li>
+ * {@link org.omg.dds.sub.InstanceState#NOT_ALIVE_DISPOSED}),</li>
  * <li>and while in the NOT_ALIVE_DISPOSED state the system detects that there
- * are no more "alive" {@link DataWriter} entities writing the instance, that
+ * are no more "alive" {@link org.omg.dds.pub.DataWriter} entities writing the instance, that
  * is, all existing writers either unregister the instance (call
- * {@link DataWriter#unregisterInstance(org.omg.dds.core.InstanceHandle)}) or
+ * {@link org.omg.dds.pub.DataWriter#unregisterInstance(org.omg.dds.core.InstanceHandle)}) or
  * lose their liveliness,</li>
  * <li>and a time interval longer that serviceCleanupDelay has elapsed since the
  * moment the service detected that the previous two conditions were met.</li>
@@ -119,8 +111,9 @@ import org.omg.dds.topic.Topic;
  */
 public class Durability implements QosPolicy, Comparable<Durability> {
 
-    private static final long serialVersionUID = 1L;
-    public static final int ID = 2;
+	private static final long serialVersionUID = -3973272140722248366L;
+	
+	public static final int ID = 2;
     private static final Durability VOLATILE = new Durability(Kind.VOLATILE);
     private static final Durability TRANSIENT_LOCAL = new Durability(
             Kind.TRANSIENT_LOCAL);
@@ -135,8 +128,8 @@ public class Durability implements QosPolicy, Comparable<Durability> {
     public enum Kind {
         /**
          * The Service does not need to keep any samples of data instances on
-         * behalf of any {@link DataReader} that is not known by the
-         * {@link DataWriter} at the time the instance is written. In other
+         * behalf of any {@link org.omg.dds.sub.DataReader} that is not known by the
+         * {@link org.omg.dds.pub.DataWriter} at the time the instance is written. In other
          * words the Service will only attempt to provide the data to existing
          * subscribers. This is the default kind.
          */
@@ -144,25 +137,25 @@ public class Durability implements QosPolicy, Comparable<Durability> {
 
         /**
          * The Service will attempt to keep some samples so that they can be
-         * delivered to any potential late-joining {@link DataReader}. Which
+         * delivered to any potential late-joining {@link org.omg.dds.sub.DataReader}. Which
          * particular samples are kept depends on other QoS such as
          * {@link History} and {@link ResourceLimits}.
          * 
          * For TRANSIENT_LOCAL, the service is only required to keep the data in
-         * the memory of the {@link DataWriter} that wrote the data and the data
+         * the memory of the {@link org.omg.dds.pub.DataWriter} that wrote the data and the data
          * is not required to survive the DataWriter.
          */
         TRANSIENT_LOCAL,
 
         /**
          * The Service will attempt to keep some samples so that they can be
-         * delivered to any potential late-joining {@link DataReader}. Which
+         * delivered to any potential late-joining {@link org.omg.dds.sub.DataReader}. Which
          * particular samples are kept depends on other QoS such as
          * {@link History} and {@link ResourceLimits}.
          * 
          * For TRANSIENT, the service is only required to keep the data in
          * memory and not in permanent storage; but the data is not tied to the
-         * life cycle of the {@link DataWriter} and will, in general, survive
+         * life cycle of the {@link org.omg.dds.pub.DataWriter} and will, in general, survive
          * it. Support for TRANSIENT kind is optional.
          */
         TRANSIENT,
