@@ -60,12 +60,10 @@ public class OwnershipStrength implements QosPolicy {
         return value;
     }
 
-    @Override
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
     public String getPolicyName() {
         return NAME;
     }

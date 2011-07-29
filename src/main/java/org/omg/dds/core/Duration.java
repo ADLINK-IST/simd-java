@@ -23,6 +23,8 @@ import org.omg.dds.core.OverflowException;
 import org.omg.dds.type.Extensibility;
 import org.omg.dds.type.Nested;
 
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * A span of elapsed time expressed with nanosecond precision.
@@ -37,8 +39,9 @@ public class Duration extends AbstractTime
     // Private Constants
     // -----------------------------------------------------------------------
 
-    private static final Duration ZERO  = new Duration(0, 0);
-    private static final Duration INFINITE = createInfinite();
+    private static final Duration ZERO  = new Duration(0,0);
+    // Create Infinite value and work around preconditions.
+    private static final Duration INFINITE = new Duration(-1);
     private static final long serialVersionUID = 6926514364942353575L;
 
     // -----------------------------------------------------------------------
@@ -46,23 +49,18 @@ public class Duration extends AbstractTime
     // -----------------------------------------------------------------------
 
 
-    public Duration(long sec) {
-        super(sec);
+    public Duration(long d, TimeUnit unit) {
+        super(d, unit);
     }
 
-    public Duration(long sec, long nanoSec) {
+    public Duration(int sec, int nanoSec) {
         super(sec, nanoSec);
     }
 
-
-    private static Duration createInfinite() {
-        Duration inf = ZERO ;
-        inf.sec = Long.MAX_VALUE ;
-        inf.nanoSec = Long.MAX_VALUE ;
-        return inf ;
+    private Duration(int infinite) {
+        this.sec = AbstractTime.SEC_MAX;
+        this.nanoSec = AbstractTime.NSEC_MAX;
     }
-
-
     // -----------------------------------------------------------------------
     // Proper methods
     // -----------------------------------------------------------------------
@@ -76,21 +74,16 @@ public class Duration extends AbstractTime
      * @return new <code>Duration</code> as result of the multiplication
      */
 
-    public Duration multiply (long c) throws OverflowException {
-
+    public Duration multiply(long c) {
         assert (c >= 0);
 
-        Duration result =  ZERO;
-        double multiplication = (this.sec * Math.pow(10, 9) * c) + (double) (this.nanoSec * c);
+        long s = c * this.sec;
+        long ns = c * this.nanoSec;
 
-        //  check overflow for seconds multiplication
-        if ( multiplication /Math.pow(10,9) >= Long.MAX_VALUE)  throw new OverflowException();
-        else
-            result.sec = (long)(multiplication / Math.pow(10,9))  ;
-
-        result.nanoSec = (long) (multiplication - (result.sec * Math.pow(10, 9)));
-
-        return result;
+        ns = ns % AbstractTime.NSEC_MAX;
+        s = s + (ns/AbstractTime.NSEC_MAX);
+        // This is safe due to the valid ranges for the Duration.
+        return new Duration((int)s, (int)ns);
     }
     /**
      * devide two <code>Duration</code> instances.
@@ -99,12 +92,10 @@ public class Duration extends AbstractTime
      *              divide this <code>Duration</code>.
      * @return  a constant as result of the division
      */
-    public double divide (Duration that) {
-
-        double d_this = this.sec * Math.pow(10,9) + this.nanoSec ;
-        double d_that = that.sec * Math.pow(10,9) + that.nanoSec ;
-        return d_this/d_that;
-
+    public float divide (Duration that) {
+        long a = this.sec * AbstractTime.NSEC_MAX + this.nanoSec;
+        long b = that.sec * AbstractTime.NSEC_MAX + that.nanoSec;
+        return ((float)a)/b;
     }
 
     /**
@@ -113,30 +104,86 @@ public class Duration extends AbstractTime
      * @param c the constant that will be used to divide this <code>Duration</code>.
      * @return new duration as result of the division
      */
-    public Duration divide (long c) {
-       assert ( c > 0);
-
-        Duration result = (Duration) ZERO;
-
-        double division = ((double)this.sec * Math.pow(10,9) +(double)( this.nanoSec)) /c ;
-
-        result.sec = (long) (division / Math.pow(10,9));
-        result.nanoSec = (long) (division - result.sec*Math.pow(10,9));
-
-
-        return result ;
+    public Duration divide (int c) {
+        assert ( c > 0);
+        return new Duration(this.sec/c, this.nanoSec/c);
 
     }
 
 
 
-    public static Duration infinite(){
+    public static Duration infinite() {
         return INFINITE;
     }
 
     public static Duration zero(){
         return ZERO;
     }
+
+    /**
+     * Adds two <code>Duration</code> instances.
+     *
+     * @param that the <code>Duration</code> instance that will be
+     *              added to this <code>Duration</code>.
+     * @return new <code>Duration</code> as result of the summation
+     */
+    public Duration add(Duration that) {
+        return new Duration(this.sec + that.sec, this.nanoSec + that.nanoSec);
+    }
+
+    /**
+     * Subtracts two <code>Duration</code> instances.
+     *
+     * @param that the <code>Duration</code> instance that will be
+     *              subtracted to this <code>Duration</code>.
+     * @return new <code>Duration</code> as result of the subtraction
+     */
+    public Duration subtract(Duration that) {
+
+        assert (this.compareTo(that) >= 0 );
+
+        long a = this.sec*AbstractTime.NSEC_MAX + this.nanoSec;
+        long b = that.sec*AbstractTime.NSEC_MAX + that.nanoSec;
+
+        long sub = a - b;
+        return new Duration(sub, TimeUnit.NANOSECONDS);
+    }
+
+    /**
+     * Report whether this duration lasts no time at all. The result of this
+     * method is equivalent to the following:
+     * <code>this.getDuration(TimeUnit.NANOSECONDS) == 0;</code>
+     * @see     #getDuration(TimeUnit)
+     */
+    public boolean isZero() {
+        return (this.compareTo(ZERO)==0);
+    }
+
+    /**
+     * Report whether this duration lasts forever.
+     * If this duration is infinite, the following relationship shall be
+     * true:
+     * <code>this.equals(infiniteDuration(this.getBootstrap()))</code>
+     * @see     #infinite()
+     */
+
+
+    public boolean isInfinite() {
+        // There is only one Infinite Object!
+        return this == INFINITE;
+    }
+
+
+
+    public Duration clone() {
+        return new Duration(this.sec, this.nanoSec);
+    }
+
+    @Override
+    public String toString() {
+        return this.sec + " sec "+ this.nanoSec + " nsec";
+    }
+
 }
 
 

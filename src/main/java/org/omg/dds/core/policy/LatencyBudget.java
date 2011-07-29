@@ -62,12 +62,10 @@ public class LatencyBudget implements QosPolicy {
         return duration;
     }
 
-    @Override
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
     public String getPolicyName() {
         return NAME;
     }

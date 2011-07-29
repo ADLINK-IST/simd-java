@@ -1,34 +1,47 @@
 package org.omg.dds.core;
 
 
+import com.sun.jmx.snmp.tasks.ThreadService;
+import com.sun.org.apache.bcel.internal.generic.LineNumberGen;
 import org.omg.dds.core.Value;
 
 import java.util.concurrent.TimeUnit;
 
 
-public  class AbstractTime implements Value, Comparable<AbstractTime>
+public abstract class AbstractTime implements Value, Comparable<AbstractTime>
 {
 
-    protected static final AbstractTime INFINITE = infinite();
-    protected static final AbstractTime ZERO  = new AbstractTime(0, 0);
+    protected static final int SEC_MAX = 0x7fffffff;
+    protected static final int NSEC_MAX = (int)Math.pow(10, 9);
 
-    protected long sec;
-    protected long nanoSec;
+    protected int sec = 0;
+    protected int nanoSec = 0;
 
 
-    public AbstractTime(long sec) {
-        assert (sec >= 0 );
-        this.sec = sec;
-        this.nanoSec = 0;
+    public AbstractTime(long d, TimeUnit unit) {
+        assert (d >= 0 );
+        long sec = unit.convert(d, TimeUnit.SECONDS);
+        long nsec = unit.convert(d, TimeUnit.NANOSECONDS) - (sec * NSEC_MAX);
+
+        // Make sure we don't go beyond the max values
+        // as expected by the DDS standard.
+        if (this.sec > SEC_MAX)
+            throw new OverflowException("Time Out of Bounds");
+
+        this.sec = (int)sec;
+        this.nanoSec = (int)nsec;
     }
-    public AbstractTime(long sec, long nanoSec) {
-        assert (nanoSec >= 0 && sec >= 0 &&  (nanoSec <(long)Math.pow(10,9)));
-        this.sec = sec;
-        this.nanoSec = nanoSec;
+
+    public AbstractTime(int sec, int nanoSec) {
+        assert (nanoSec >= 0 && sec >= 0);
+
+        this.nanoSec = (nanoSec < NSEC_MAX) ?  nanoSec : (nanoSec % NSEC_MAX);
+        this.sec = sec + this.nanoSec/NSEC_MAX;
+        if (this.sec > SEC_MAX)
+            throw new OverflowException("Time Out of Bounds");
     }
 
-    public AbstractTime() {
-    }
+    public AbstractTime() { }
 
     /**
      * Truncate this duration to a whole-number quantity of the given time
@@ -41,18 +54,10 @@ public  class AbstractTime implements Value, Comparable<AbstractTime>
      *
      *
      **/
-
-
     public long getDuration(TimeUnit inThisUnit) {
-
-        AbstractTime result = new AbstractTime(Long.MAX_VALUE,0) ;
-
-        if ( ! this.isInfinite() )
-        {
-            result.sec = inThisUnit.convert(this.sec,TimeUnit.SECONDS);
-            result.nanoSec = inThisUnit.convert(this.nanoSec,TimeUnit.NANOSECONDS);
-        }
-        return result.sec + result.nanoSec ;
+        long d = inThisUnit.convert(this.sec, TimeUnit.SECONDS)
+                + inThisUnit.convert(this.nanoSec, TimeUnit.NANOSECONDS);
+        return d;
     }
 
 
@@ -90,119 +95,16 @@ public  class AbstractTime implements Value, Comparable<AbstractTime>
     //  this(10, 123456789).getReminder(MICROSEC) == 456789
     public long getRemainder( TimeUnit primaryUnit , TimeUnit reminderUnit ) {
 
-        double sec_factor = reminderUnit.convert(1,TimeUnit.SECONDS);
-        double nanosec_factor = reminderUnit.convert(1,TimeUnit.NANOSECONDS);
+        long pu = primaryUnit.convert(this.sec, TimeUnit.SECONDS)
+                + primaryUnit.convert(this.nanoSec,TimeUnit.NANOSECONDS);
 
-        double converted = (double)this.sec * sec_factor + (double)this.nanoSec * nanosec_factor;
+        long sec = TimeUnit.SECONDS.convert(pu, primaryUnit);
+        long nsec =TimeUnit.NANOSECONDS.convert(pu, primaryUnit) - sec*NSEC_MAX;
 
-        double factor =  reminderUnit.convert(1,primaryUnit) ;
+        long remainder = this.nanoSec - nsec;
 
-        long remainder = (long) (converted - (this.getDuration(primaryUnit)* factor))     ;
-
-        return remainder ;
+        return reminderUnit.convert(remainder, TimeUnit.NANOSECONDS);
     }
-
-    /**
-     * Adds two <code>Duration</code> instances.
-     *
-     * @param that the <code>Duration</code> instance that will be
-     *              added to this <code>Duration</code>.
-     * @return new <code>Duration</code> as result of the summation
-     */
-    public AbstractTime add(AbstractTime that) throws OverflowException {
-        AbstractTime result =  ZERO;
-
-        // overflow cannot occur for nanoseconds addition
-        long nanoSec = this.nanoSec + that.nanoSec;
-
-        // check overflow for seconds addition
-        if ((double)this.sec + (double)that.sec + nanoSec/Math.pow(10,9) >= (double)Long.MAX_VALUE ) throw new OverflowException();
-        else result.sec = this.sec + that.sec + (long)(nanoSec/Math.pow(10,9));
-
-        result.nanoSec = (long) (nanoSec % Math.pow(10,9));
-
-        return result ;
-
-
-    }
-
-    /**
-     * Subtracts two <code>Duration</code> instances.
-     *
-     * @param that the <code>Duration</code> instance that will be
-     *              subtracted to this <code>Duration</code>.
-     * @return new <code>Duration</code> as result of the subtraction
-     */
-    public AbstractTime subtract(AbstractTime that) {
-
-        assert (this.compareTo(that) >= 0 );
-
-        AbstractTime result = ZERO ;
-
-        result.sec = this.sec - that.sec;
-
-        if (this.nanoSec >= that.nanoSec )
-            result.nanoSec = this.nanoSec - that.nanoSec;
-        else {
-            result.nanoSec = (long)Math.pow(10,10)-(that.nanoSec - this.nanoSec) ;
-            result.sec = this.sec - (that.sec+1) ;
-        }
-
-        return result;
-    }
-
-    /**
-     * Report whether this duration lasts no time at all. The result of this
-     * method is equivalent to the following:
-     * <code>this.getDuration(TimeUnit.NANOSECONDS) == 0;</code>
-     * @see     #getDuration(TimeUnit)
-     */
-    public boolean isZero() {
-        return (this.compareTo(ZERO)==0);
-    }
-
-    /**
-     * Report whether this duration lasts forever.
-     * If this duration is infinite, the following relationship shall be
-     * true:
-     * <code>this.equals(infiniteDuration(this.getBootstrap()))</code>
-     * @see     #infinite()
-     */
-
-
-    public boolean isInfinite() {
-        return (this.compareTo(INFINITE)==0);
-    }
-
-
-    // -----------------------------------------------------------------------
-    // Factory Methods
-    // -----------------------------------------------------------------------
-
-
-    /**
-     *
-     * @return  An unmodifiable {@link AbstractTime} of infinite length.
-     */
-    public static AbstractTime infinite() {
-       return INFINITE ;
-    }
-
-
-
-    public long getSec() {
-        return sec;
-    }
-
-    public long getNanoSec() {
-        return nanoSec;
-    }
-
-    public AbstractTime clone() {
-        return new AbstractTime(this.sec, this.nanoSec);
-    }
-
-
 
 
     public int compareTo(AbstractTime that) {
@@ -219,7 +121,13 @@ public  class AbstractTime implements Value, Comparable<AbstractTime>
         return c;
     }
 
+    public int getSec() {
+        return sec;
+    }
 
+    public int getNanoSec() {
+        return nanoSec;
+    }
 
 }
 

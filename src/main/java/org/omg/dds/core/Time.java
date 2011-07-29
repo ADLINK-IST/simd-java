@@ -36,51 +36,41 @@ import org.omg.dds.type.Nested;
 public  class Time extends AbstractTime
 {
     private static final Time ZERO = new Time(0,0);
-    private static final Time INFINITE = createInfinite();
-
-    private static Time createInfinite() {
-        Time inf = ZERO ;
-        inf.sec = Long.MAX_VALUE ;
-        inf.nanoSec = Long.MAX_VALUE ;
-        return inf ;
-    }
-
+    private static final Time INFINITE = new Time(-1);
+    private static final Time INVALID_TIME =  makeInvalidTime();
     private static final long serialVersionUID = -132361141453190372L;
 
+    public Time(long d, TimeUnit unit) {
+        super(d, unit);
+    }
 
-    public Time(long sec, long nanoSec){
-
-        assert ( sec >= 0  && Math.pow(10,9)> nanoSec );
-        this.sec = sec;
-        this.nanoSec = nanoSec;
+    public Time(int sec, int nanoSec){
+        super(sec, nanoSec);
 
     }
 
+    private static Time makeInvalidTime() {
+        Time t = new Time(0, 0);
+        t.sec = -1;
+        t.nanoSec = -1;
+        return t;
+    }
 
+    private Time(int t) {
+        this.sec = AbstractTime.SEC_MAX;
+        this.nanoSec = AbstractTime.NSEC_MAX;
+    }
     /**
-     * Adds a <code>Duration</code> instance to this <code>time</code>  .
+     * Adds a <code>Time</code> instance to this <code>time</code>  .
      *
-     * @param d : the <code>Duration</code> instance that will be
+     * @param that : the <code>Duration</code> instance that will be
      *              added to this <code>Time</code>.
      * @return new <code>Time</code> as result of the summation
      */
-    public Time add (Duration d) throws OverflowException {
-        return (Time) super.add(d);
+    public Time add (Duration that)  {
+        return new Time(this.sec + that.sec, this.nanoSec + that.nanoSec);
     }
 
-    /**
-     * Subtracts two <code>Duration</code> instances.
-     *
-     * @param that the <code>Duration</code> instance that will be
-     *              added to this <code>Duration</code>.
-     * @return new <code>Duration</code> as result of the summation
-     */
-
-    public Time subtract(Duration that) {
-
-        return (Time) super.subtract(that);
-
-    }
 
 
     /**
@@ -143,11 +133,6 @@ public  class Time extends AbstractTime
         return super.getRemainder(primaryUnit,remainderUnit);
     }
 
-
-    public boolean isValid() {
-        return (this.nanoSec >= 0 && this.sec >= 0 && Math.pow(10,9)> this.nanoSec);
-    }
-
     /**
      *
      * @return  A {@link AbstractTime} of zero length.
@@ -156,14 +141,43 @@ public  class Time extends AbstractTime
         return ZERO;
     }
 
-    public static AbstractTime infinite() {
+    public static Time infinite() {
         return INFINITE ;
     }
+
 
     public int compareTo(Time that) {
         return super.compareTo(that) ;
     }
 
 
+    public boolean isValid() {
+        return (this == Time.INVALID_TIME);
+    }
 
+     /**
+     * Subtracts a <code>Duration</code> to this.
+     *
+     * @param that the <code>Duration</code> instance that will be
+     *              subtracted to this <code>Duration</code>.
+     * @return new <code>Duration</code> as result of the subtraction
+     */
+    public Time subtract(Duration that) {
+
+        assert (this.compareTo(that) >= 0 );
+
+        int a = this.sec - that.sec;
+        int b = this.nanoSec - that.nanoSec;
+        if (b < 0) {
+            b += AbstractTime.NSEC_MAX;
+            a -= 1;
+        }
+
+        return new Time(a, b);
+    }
+
+    @Override
+    public String toString() {
+        return this.sec + " sec "+ this.nanoSec + " nsec";
+    }
 }

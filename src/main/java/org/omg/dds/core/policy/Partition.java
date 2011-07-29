@@ -20,7 +20,6 @@ package org.omg.dds.core.policy;
 
 import java.util.*;
 
-import DDS.PartitionQosPolicy;
 import org.omg.dds.core.DDSException;
 import org.omg.dds.core.Entity;
 import org.omg.dds.pub.DataWriter;

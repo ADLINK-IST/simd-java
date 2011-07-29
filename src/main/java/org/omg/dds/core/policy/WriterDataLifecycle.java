@@ -97,12 +97,10 @@ public class WriterDataLifecycle implements QosPolicy {
         return NOT_AUT_DISPOSE_UNREGISTERED_INSTANCES;
     }
 
-    @Override
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
     public String getPolicyName() {
         return NAME;
     }

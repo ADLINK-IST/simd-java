@@ -66,12 +66,10 @@ public class Lifespan implements QosPolicy {
         return duration;
     }
 
-    @Override
     public int getPolicyId() {
         return ID;
     }
 
-    @Override
     public String getPolicyName() {
         return NAME;
     }

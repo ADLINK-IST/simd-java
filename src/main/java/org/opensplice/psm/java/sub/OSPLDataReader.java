@@ -7,9 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
 import DDS.*;
-import com.sun.org.apache.xpath.internal.operations.Or;
 import org.omg.dds.core.DDSException;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.InstanceHandle;
@@ -204,7 +202,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     public void waitForHistoricalData(long maxWait, TimeUnit unit)
             throws TimeoutException {
-        Duration wait = new Duration(unit.convert(maxWait, TimeUnit.SECONDS));
+        Duration wait = new Duration(maxWait, unit);
         waitForHistoricalData(wait);
     }
 
