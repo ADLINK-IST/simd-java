@@ -8,6 +8,11 @@
 #   . IntelliJ Idea
 *.iml
 .idea
+#   . Eclipse files
+.project
+.settings
+.classpath
+
 
 # Maven target
 target
@@ -18,3 +23,4 @@ src/main/gen/*
 
 # Emacs Temp Files
 *~
+
