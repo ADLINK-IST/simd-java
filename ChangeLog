@@ -1,3 +1,22 @@
+2011-08-01  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* src/main/java/org/omg/dds/core/AbstractTime.java:
+	* src/main/java/org/omg/dds/core/Duration.java:
+	* src/main/java/org/omg/dds/core/Time.java:
+
+	 Refactored implementation to be aligned with the definition of
+	Time/Duration found in the  DDSI Specification as opposed to the
+	DDS spec. Apparently the DDSI and DDS specification use slightly
+	differetn defitions of the two types for what conerns maximum
+	values. This implementation takes not as a reference what defined
+	in the DDSI spec.
+	
+	* src/main/java/org/omg/dds/core/policy/DestinationOrder.java:
+	* src/main/java/org/omg/dds/core/policy/Durability.java:
+	* src/main/java/org/omg/dds/core/policy/Reliability.java:
+	Refactored the code to address some of the issues found by QACheck.
+
+
 2011-07-28  Angelo Corsaro  <angelo@icorsaro.net>
 
 	* src/main/idl/ping.idl:

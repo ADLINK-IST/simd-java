@@ -155,9 +155,7 @@ public class Reliability implements QosPolicy, Comparable<Reliability>{
 
 
     public int compareTo(Reliability other) {
-        int c = this.getKind().ordinal() - other.getKind().ordinal();
-        return c;
-
+        return this.getKind().ordinal() - other.getKind().ordinal();
     }
     // -----------------------------------------------------------------------
     // Types

@@ -36,15 +36,26 @@ import org.omg.dds.type.Nested;
 public  class Time extends AbstractTime
 {
     private static final Time ZERO = new Time(0,0);
-    private static final Time INFINITE = new Time(-1);
+    private static final Time INFINITE = new InfiniteTime();
     private static final Time INVALID_TIME =  makeInvalidTime();
     private static final long serialVersionUID = -42416461846201843L;
+
+    // This class is used to represent the infinite time w/o
+    // violating the invariants of the class Time.
+    private static final class InfiniteTime extends Time {
+        InfiniteTime() {
+            this.sec = AbstractTime.SEC_MAX;
+            this.nanoSec = 0xffffffff;
+        }
+
+    }
+    private Time() { super(); }
 
     public Time(long d, TimeUnit unit) {
         super(d, unit);
     }
 
-    public Time(int sec, int nanoSec){
+    public Time(int sec, long nanoSec){
         super(sec, nanoSec);
 
     }
@@ -56,10 +67,6 @@ public  class Time extends AbstractTime
         return t;
     }
 
-    private Time(int t) {
-        this.sec = AbstractTime.SEC_MAX;
-        this.nanoSec = AbstractTime.NSEC_MAX;
-    }
     /**
      * Adds a <code>Time</code> instance to this <code>time</code>  .
      *
@@ -145,12 +152,6 @@ public  class Time extends AbstractTime
         return INFINITE ;
     }
 
-
-    public int compareTo(Time that) {
-        return super.compareTo(that) ;
-    }
-
-
     public boolean isValid() {
         return (this == Time.INVALID_TIME);
     }
@@ -167,7 +168,7 @@ public  class Time extends AbstractTime
         assert (this.compareTo(that) >= 0 );
 
         int a = this.sec - that.sec;
-        int b = this.nanoSec - that.nanoSec;
+        long b = this.nanoSec - that.nanoSec;
         if (b < 0) {
             b += AbstractTime.NSEC_MAX;
             a -= 1;

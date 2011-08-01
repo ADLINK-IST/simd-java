@@ -120,8 +120,7 @@ public class DestinationOrder implements QosPolicy, Comparable<DestinationOrder>
     public String getPolicyName() { return NAME; }
 
     public int compareTo(DestinationOrder that) {
-        int c = this.kind.ordinal() - that.kind.ordinal();
-        return c;
+        return (this.kind.ordinal() - that.kind.ordinal());
     }
 
 

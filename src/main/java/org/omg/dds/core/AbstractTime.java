@@ -12,7 +12,7 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>, S
     protected static final int NSEC_MAX = (int)Math.pow(10, 9);
 
     protected int sec = 0;
-    protected int nanoSec = 0;
+    protected long nanoSec = 0;
 
 
     public AbstractTime(long d, TimeUnit unit) {
@@ -22,22 +22,24 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>, S
 
         // If sec is negative that means we've gone out of
         // the allowable max time.
-        if (this.sec < 0)
+        if (this.sec < 0) {
             throw new OverflowException("Time Out of Bounds");
+        }
 
         this.sec = (int)sec;
-        this.nanoSec = (int)nsec;
+        this.nanoSec = nsec;
     }
 
-    public AbstractTime(int sec, int nanoSec) {
+    public AbstractTime(int sec, long nanoSec) {
         assert (nanoSec >= 0 && sec >= 0);
 
         this.nanoSec = (nanoSec < NSEC_MAX) ?  nanoSec : (nanoSec % NSEC_MAX);
-        this.sec = sec + this.nanoSec/NSEC_MAX;
+        this.sec = sec + (int)(this.nanoSec/NSEC_MAX);
         // If sec is negative that means we've gone out of
         // the allowable max time.
-        if (this.sec < 0)
+        if (this.sec < 0) {
             throw new OverflowException("Time Out of Bounds");
+        }
     }
 
     public AbstractTime() { }
@@ -124,7 +126,7 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>, S
         return sec;
     }
 
-    public int getNanoSec() {
+    public long getNanoSec() {
         return nanoSec;
     }
 

@@ -41,26 +41,32 @@ public class Duration extends AbstractTime
 
     private static final Duration ZERO  = new Duration(0,0);
     // Create Infinite value and work around preconditions.
-    private static final Duration INFINITE = new Duration(-1);
+    private static final Duration INFINITE = new InfiniteDuration();
     private static final long serialVersionUID = 6926514364942353575L;
 
     // -----------------------------------------------------------------------
     // Factory methods
     // -----------------------------------------------------------------------
 
+    private Duration() { super(); }
+
+    // This class is used to represent the infinite time w/o
+    // violating the invariants of the class Time.
+    private static final class InfiniteDuration extends Duration {
+        InfiniteDuration() {
+            this.sec = AbstractTime.SEC_MAX;
+            this.nanoSec = 0xffffffff;
+        }
+    }
 
     public Duration(long d, TimeUnit unit) {
         super(d, unit);
     }
 
-    public Duration(int sec, int nanoSec) {
+    public Duration(int sec, long nanoSec) {
         super(sec, nanoSec);
     }
 
-    private Duration(int infinite) {
-        this.sec = AbstractTime.SEC_MAX;
-        this.nanoSec = AbstractTime.NSEC_MAX;
-    }
     // -----------------------------------------------------------------------
     // Proper methods
     // -----------------------------------------------------------------------
@@ -80,8 +86,8 @@ public class Duration extends AbstractTime
         long s = c * this.sec;
         long ns = c * this.nanoSec;
 
-        ns = ns % AbstractTime.NSEC_MAX;
-        s = s + (ns/AbstractTime.NSEC_MAX);
+        ns %= AbstractTime.NSEC_MAX;
+        s += (ns/AbstractTime.NSEC_MAX);
         // This is safe due to the valid ranges for the Duration.
         return new Duration((int)s, (int)ns);
     }
@@ -165,19 +171,13 @@ public class Duration extends AbstractTime
      * true:
      * <code>this.equals(infiniteDuration(this.getBootstrap()))</code>
      * @see     #infinite()
+     * @return true if this is infinite
      */
-
-
     public boolean isInfinite() {
         // There is only one Infinite Object!
         return this == INFINITE;
     }
 
-
-
-    public Duration clone() {
-        return new Duration(this.sec, this.nanoSec);
-    }
 
     @Override
     public String toString() {

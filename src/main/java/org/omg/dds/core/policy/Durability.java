@@ -215,8 +215,7 @@ public class Durability implements QosPolicy, Comparable<Durability> {
     }
 
     public int compareTo(Durability other) {
-        int c = this.getKind().ordinal() - other.getKind().ordinal();
-        return c;
+        return (this.getKind().ordinal() - other.getKind().ordinal());
     }
 
 }
