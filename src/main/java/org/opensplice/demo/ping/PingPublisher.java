@@ -22,12 +22,6 @@ public class PingPublisher {
         DomainParticipant dp = dpf.createParticipant(0);
         Topic<PingType> topic = dp.createTopic("PingTopic", PingType.class);
 
-        TopicQos tqos =
-                new TopicQos()
-                        .with(Reliability.Reliable(),
-                                History.KeepLast(10));
-
-
         Publisher pub = dp.createPublisher();
 
         DataWriter<PingType> writer = pub.createDataWriter(topic);
