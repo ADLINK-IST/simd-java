@@ -21,7 +21,6 @@ import org.omg.dds.core.policy.UserData;
 import org.omg.dds.core.policy.WriterDataLifecycle;
 import org.omg.dds.pub.DataWriterQos;
 import org.opensplice.psm.java.core.policy.OSPL;
-import org.opensplice.psm.java.core.policy.OSPLResourceLimits;
 
 public class OSPLDataWriterQos implements DataWriterQos {
 
@@ -165,7 +164,7 @@ public class OSPLDataWriterQos implements DataWriterQos {
 
 
     public ResourceLimits getResourceLimits() {
-        return new OSPLResourceLimits(qos.resource_limits);
+        return OSPL.convert(qos.resource_limits);
     }
 
 

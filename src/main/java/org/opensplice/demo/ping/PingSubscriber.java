@@ -40,6 +40,7 @@ public class PingSubscriber {
 
         while (true) {
             dr.read(data);
+            System.out.println(">> " + data.size());
             Iterator<Sample<PingType>> iterator = data.iterator();
             while (iterator.hasNext()) {
                 PingType s = iterator.next().getData();

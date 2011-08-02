@@ -20,6 +20,8 @@ package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Filter that allows a {@link org.omg.dds.sub.DataReader} to specify that it is interested
  * only in (potentially) a subset of the values of the data. The filter
@@ -72,7 +74,45 @@ import org.omg.dds.core.Duration;
  * @see History
  * @see Reliability
  */
-public interface TimeBasedFilter extends QosPolicy {
-    public Duration getMinimumSeparation();
+public class TimeBasedFilter implements QosPolicy, Comparable<TimeBasedFilter> {
+    private static final int ID = 9;
+    private static final String NAME = "TimeBasedFilter";
 
+    private final Duration minSeparation;
+
+    public TimeBasedFilter(long d, TimeUnit unit) {
+        this.minSeparation = new Duration(d, unit);
+    }
+
+    public TimeBasedFilter(Duration d) {
+        this.minSeparation = d;
+    }
+
+    public Duration getMinimumSeparation() {
+        return this.minSeparation;
+    }
+
+    public int getPolicyId() {
+        return ID;
+    }
+
+    public String getPolicyName() {
+        return NAME;
+    }
+
+    @Override
+    public boolean equals(Object that) {
+        boolean r = false;
+        if (this == that)
+            r = true;
+        else if (that instanceof TimeBasedFilter) {
+            TimeBasedFilter tbf = (TimeBasedFilter) that;
+            r = (tbf.compareTo(this) == 0);
+        }
+        return r;
+    }
+
+    public int compareTo(TimeBasedFilter that) {
+        return this.minSeparation.compareTo(that.minSeparation);
+    }
 }

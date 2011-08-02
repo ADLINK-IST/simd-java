@@ -105,6 +105,11 @@ public class Partition implements QosPolicy {
         this.names.add(name);
     }
 
+    public Partition(String ... names) {
+        for (String name: names)
+            this.names.add(name);
+    }
+
     public Partition(Collection<String> names){
         this.names.addAll(names) ;
     }
@@ -113,46 +118,59 @@ public class Partition implements QosPolicy {
     // Proper methods
     // -----------------------------------------------------------------------
 
+    public Partition add(String ... names) {
+        Partition r = new Partition(names);
+        r.names.addAll(this.names);
+        return r;
+    }
+
     /* add a set of names to a this partition */
     public Partition add(Collection<String> names)  {
-        Partition Result = new Partition(this.names)  ;
-        Result.names.addAll(names);
-        return Result ;
+        Partition r = new Partition(this.names)  ;
+        r.names.addAll(names);
+        return r ;
     }
 
     /* add a  name to a this partition */
     public Partition add(String name) {
-        Partition Result =  new Partition(this.names) ;
-        Result.names.add(name);
-        return Result;
+        Partition r =  new Partition(this.names) ;
+        r.names.add(name);
+        return r;
     }
 
     /* add names of partition to a this partition */
     public Partition add(Partition partition) {
-        Partition Result =  new Partition(this.names) ;
-        Result.names.addAll(partition.names);
-        return Result ;
+        Partition r=  new Partition(this.names) ;
+        r.names.addAll(partition.names);
+        return r;
+    }
+
+    public Partition remove(String ... names) {
+        Partition r= new Partition(this.names);
+        for (String name: names)
+            r.names.remove(name);
+        return r;
     }
 
     /* remove a set of names from a this partition */
     public Partition remove(Collection<String> names)  {
-        Partition Result =  new Partition(this.names) ;
-        Result.names.removeAll(names);
-        return Result ;
+        Partition r =  new Partition(this.names) ;
+        r.names.removeAll(names);
+        return r;
     }
 
     /* remove a  name  from a this partition */
     public Partition remove(String partitionName) {
-        Partition Result =  new Partition(this.names) ;
-        Result.names.remove(partitionName);
-        return Result;
+        Partition r =  new Partition(this.names) ;
+        r.names.remove(partitionName);
+        return r;
     }
 
     /* add names of that partition from a this partition */
     public Partition remove(Partition partition) {
-        Partition Result =  new Partition(this.names) ;
-        Result.names.removeAll(partition.names);
-        return Result ;
+        Partition r =  new Partition(this.names) ;
+        r.names.removeAll(partition.names);
+        return r ;
     }
   
     public boolean equals(Object that) {

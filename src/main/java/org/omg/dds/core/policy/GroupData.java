@@ -21,39 +21,63 @@ package org.omg.dds.core.policy;
 /**
  * User data not known by the middleware, but distributed by means of
  * built-in topics. The default value is an empty (zero-sized) sequence.
- * 
+ *
  * <b>Concerns:</b> {@link org.omg.dds.pub.Publisher}, {@link org.omg.dds.sub.Subscriber}
- * 
+ *
  * <b>RxO:</b> No
- * 
+ *
  * <b>Changeable:</b> Yes
- * 
+ *
  * The purpose of this QoS is to allow the application to attach additional
  * information to the created {@link org.omg.dds.pub.Publisher} or {@link org.omg.dds.sub.Subscriber}. The
  * value of the GROUP_DATA is available to the application on the
  * {@link org.omg.dds.sub.DataReader} and {@link org.omg.dds.pub.DataWriter} entities and is propagated by
  * means of the built-in topics.
- * 
+ *
  * This QoS can be used by an application combination with the
  * {@link org.omg.dds.sub.DataReaderListener} and {@link org.omg.dds.pub.DataWriterListener} to implement
  * matching policies similar to those of the {@link Partition}
  * except the decision can be made based on an application-defined policy.
  */
-public interface GroupData extends QosPolicy {
-	public static int ID = 20;
-    /**
-     * Copy the data into the given array, starting at the index at the given
-     * offset.
-     * 
-     * @return  The total number of bytes in the data, independent of the
-     *          number of bytes copied. Callers can use this result to
-     *          determine if the output array is long enough or, if it is
-     *          long enough, what range within it contains valid data.
-     */
-    public int getValue(byte[] value, int offset);
+public class GroupData implements QosPolicy {
+    public final static int ID = 20;
+    private final static String NAME = "GroupData";
+    private static final GroupData EMPTY_GROUP_DATA = new GroupData();
+
+
+    private final byte value[];
+
+    private GroupData() {
+        this.value = new byte[0];
+    }
+    public GroupData(byte v[]) {
+        this.value = new byte[v.length];
+        System.arraycopy(v, 0, this.value, 0, v.length);
+    }
+
+    public byte[] getValue() {
+        return this.value.clone();
+    }
+    public byte valueAt(int offset) {
+        return this.value[offset];
+    }
 
     /**
      * @return  the length of the <code>value</code> property.
      */
-    public int getLength();
+    public int getLength() {
+        return this.value.length;
+    }
+
+    public int getPolicyId() {
+        return ID;
+    }
+
+    public String getPolicyName() {
+        return NAME;
+    }
+
+    public GroupData EmptyGroupData() {
+        return EMPTY_GROUP_DATA;
+    }
 }

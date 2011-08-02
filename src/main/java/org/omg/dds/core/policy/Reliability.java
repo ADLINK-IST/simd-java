@@ -70,7 +70,7 @@ public class Reliability implements QosPolicy, Comparable<Reliability>{
 	
 	// -- Constant Members
     public final static int ID = 11;
-    private final static String NAME = "Reliability";
+    public final static String NAME = "Reliability";
     private static final Reliability RELIABLE = new Reliability(Kind.RELIABLE);
     private static final Reliability BEST_EFFORT = new Reliability(Kind.BEST_EFFORT);
     // - Attributes

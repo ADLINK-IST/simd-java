@@ -20,6 +20,8 @@ package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
 
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * Specifies the behavior of the {@link org.omg.dds.sub.DataReader} with regards to the life
@@ -72,10 +74,53 @@ import org.omg.dds.core.Duration;
  * @see History
  * @see ResourceLimits
  */
-public interface ReaderDataLifecycle extends QosPolicy {
+public class ReaderDataLifecycle implements QosPolicy {
+    private static final int ID = 17;
+    private static final String NAME = "ReaderDataLifecycle";
 
-    public Duration getAutoPurgeNoWriterSamplesDelay();
+    final Duration dwPurgeDelay;
+    final Duration sPurgeDelay;
 
-    public Duration getAutoPurgeDisposedSamplesDelay();
+    public ReaderDataLifecycle(long writerPurgeDelay, long disposedSamplesPurgeDelay, TimeUnit unit) {
+        this.dwPurgeDelay = new Duration(writerPurgeDelay, unit);
+        this.sPurgeDelay = new Duration(disposedSamplesPurgeDelay, unit);
+    }
 
+    public ReaderDataLifecycle(Duration writerPurgeDelay, Duration disposedSamplesPurgeDelay) {
+        this.dwPurgeDelay = writerPurgeDelay;
+        this.sPurgeDelay = disposedSamplesPurgeDelay;
+    }
+
+    public Duration getAutoPurgeNoWriterSamplesDelay() {
+        return this.dwPurgeDelay;
+    }
+
+    public Duration getAutoPurgeDisposedSamplesDelay() {
+        return this.sPurgeDelay;
+    }
+
+
+    public int getPolicyId() {
+        return ID;
+    }
+
+    public String getPolicyName() {
+        return NAME;
+    }
+
+    /**
+     * Implementing classes should override <code>equals()</code>.
+     */
+    public boolean equals(Object that) {
+        boolean r = false;
+        if (that == this)
+            r = true;
+        else if (that instanceof ReaderDataLifecycle) {
+            ReaderDataLifecycle rdl = (ReaderDataLifecycle)that;
+            r = this.dwPurgeDelay.equals(rdl.dwPurgeDelay)
+                    && this.sPurgeDelay.equals(rdl.sPurgeDelay);
+
+        }
+        return r;
+    }
 }

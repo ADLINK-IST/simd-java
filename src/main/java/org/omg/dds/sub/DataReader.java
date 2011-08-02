@@ -52,10 +52,10 @@ import org.omg.dds.core.Entity;
  * 
  * All operations except for the inherited operations
  * {@link #setQos(org.omg.dds.core.EntityQos)}, {@link #getQos()},
- * {@link #setListener(java.util.EventListener)}, {@link #getListener()},
+ * {@link #setListener(DataReaderListener<TYPE>)}, {@link #getListener()},
  * {@link #enable()}, {@link #getStatusCondition()}, and {@link #close()} may
  * fail with the exception {@link NotEnabledException}.
- * 
+ *
  * All sample-accessing operations, namely all variants of {@link #read()} or
  * {@link #take()}, may fail with the exception
  * {@link PreconditionNotMetException}.

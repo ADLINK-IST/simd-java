@@ -37,20 +37,59 @@ package org.omg.dds.core.policy;
  * {@link org.omg.dds.domain.DomainParticipant#ignoreTopic(org.omg.dds.core.InstanceHandle)},
  * these QoS can assist an application to extend the provided QoS.
  */
-public interface TopicData extends QosPolicy {
+public class TopicData implements QosPolicy {
+
+    static final long serialVersionUID = 4791687692148780088L;
+
+    public static final int ID = 18;
+    private static final String NAME = "TopicData";
+    private static final TopicData EMPTY_TOPIC_DATA = new TopicData();
+    private final byte value[];
+
+    private TopicData() {
+        this.value = new byte[0];
+    }
+
+    public TopicData(byte value[]) {
+        this.value = new byte[value.length];
+        System.arraycopy(value, 0, this.value, 0, value.length);
+    }
+
     /**
      * Copy the data into the given array, starting at the index at the given
      * offset.
-     * 
-     * @return  The total number of bytes in the data, independent of the
-     *          number of bytes copied. Callers can use this result to
-     *          determine if the output array is long enough or, if it is
-     *          long enough, what range within it contains valid data.
+     *
+     * @return The total number of bytes in the data, independent of the number
+     *         of bytes copied. Callers can use this result to determine if the
+     *         output array is long enough or, if it is long enough, what range
+     *         within it contains valid data.
      */
-    public int getValue(byte[] value, int offset);
+    public byte[] getValue() {
+        return this.value.clone();
+    }
+
+    public byte valueAt(int i) {
+        return value[i];
+    }
+
+
 
     /**
-     * @return  the length of the <code>value</code> property.
+     * @return the length of the <code>value</code> property.
      */
-    public int getLength();
+    public int getLength() {
+        return this.value.length;
+    }
+
+    public int getPolicyId() {
+        return ID;
+    }
+
+    public String getPolicyName() {
+        return NAME;
+    }
+
+    public TopicData EmptyTopicData() {
+        return EMPTY_TOPIC_DATA;
+    }
 }

@@ -2,24 +2,10 @@ package org.opensplice.psm.java.core.policy;
 
 import java.util.concurrent.TimeUnit;
 
-
-import DDS.TIMESTAMP_INVALID;
-import DDS.Time_t;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.Time;
-import org.omg.dds.core.policy.DestinationOrder;
-import org.omg.dds.core.policy.Durability;
-import org.omg.dds.core.policy.EntityFactory;
-import org.omg.dds.core.policy.History;
-import org.omg.dds.core.policy.Liveliness;
-import org.omg.dds.core.policy.Ownership;
-import org.omg.dds.core.policy.Presentation;
+import org.omg.dds.core.policy.*;
 import org.omg.dds.core.policy.Presentation.AccessScopeKind;
-import org.omg.dds.core.policy.Reliability;
-import org.omg.dds.core.policy.WriterDataLifecycle;
-
-import DDS.DestinationOrderQosPolicyKind;
-import DDS.ReliabilityQosPolicyKind;
 
 public class OSPL {
     /**
@@ -36,7 +22,7 @@ public class OSPL {
         return new Duration(ddsduration.sec, ddsduration.nanosec);
     }
 
-    public static Time convert(Time_t time) {
+    public static Time convert(DDS.Time_t time) {
         // TODO: Fix extreme cases.
         return new Time(time.sec, time.nanosec);
     }
@@ -87,7 +73,7 @@ public class OSPL {
     public static DestinationOrder convert(
             DDS.DestinationOrderQosPolicy destination_order) {
         return destination_order.kind
-                .equals(DestinationOrderQosPolicyKind.BY_RECEPTION_TIMESTAMP_DESTINATIONORDER_QOS)
+                .equals(DDS.DestinationOrderQosPolicyKind.BY_RECEPTION_TIMESTAMP_DESTINATIONORDER_QOS)
                 ? DestinationOrder.ReceptionTimestamp()
                 : DestinationOrder.SourceTimestamp();
     }
@@ -160,11 +146,11 @@ public class OSPL {
     public static DDS.ReliabilityQosPolicy convert(Reliability reliability) {
         DDS.ReliabilityQosPolicy ddsreliability = new DDS.ReliabilityQosPolicy();
         if (Reliability.Kind.RELIABLE.equals(reliability)) {
-            ddsreliability.kind = ReliabilityQosPolicyKind.RELIABLE_RELIABILITY_QOS;
+            ddsreliability.kind = DDS.ReliabilityQosPolicyKind.RELIABLE_RELIABILITY_QOS;
             ddsreliability.max_blocking_time = convert(reliability
                     .getMaxBlockingTime());
         } else {
-            ddsreliability.kind = ReliabilityQosPolicyKind.BEST_EFFORT_RELIABILITY_QOS;
+            ddsreliability.kind = DDS.ReliabilityQosPolicyKind.BEST_EFFORT_RELIABILITY_QOS;
         }
         return ddsreliability;
     }
@@ -235,6 +221,28 @@ public class OSPL {
         DDS.EntityFactoryQosPolicy ddsentityfactory = new DDS.EntityFactoryQosPolicy();
         ddsentityfactory.autoenable_created_entities = entityfactory.isAutoEnable();
         return ddsentityfactory;
+    }
+
+    public static DDS.ResourceLimitsQosPolicy convert(ResourceLimits rl) {
+        return new DDS.ResourceLimitsQosPolicy(
+                rl.getMaxSamples(),
+                rl.getMaxInstances(),
+                rl.getMaxSamplesPerInstance());
+    }
+
+    public static ResourceLimits convert(DDS.ResourceLimitsQosPolicy rl) {
+        return new ResourceLimits(
+                rl.max_samples,
+                rl.max_instances,
+                rl.max_samples_per_instance);
+    }
+
+    public static DDS.GroupDataQosPolicy convert(GroupData gd){
+        return new DDS.GroupDataQosPolicy(gd.getValue());
+    }
+
+    public static GroupData convert(DDS.GroupDataQosPolicy gd){
+        return new GroupData(gd.value);
     }
 
 }

@@ -43,7 +43,7 @@ package org.omg.dds.core.policy;
  * to each transport. This mapping would then be used by the infrastructure when
  * propagating the data written by the DataWriter.
  */
-public class TransportPriority implements QosPolicy {
+public class TransportPriority implements QosPolicy, Comparable<TransportPriority> {
 
 	private static final long serialVersionUID = 4255377165975956688L;
 	
@@ -70,4 +70,19 @@ public class TransportPriority implements QosPolicy {
         return NAME;
     }
 
+    @Override
+    public boolean equals(Object that) {
+        boolean r = false;
+        if (this == that)
+            r = true;
+        else if (that instanceof TransportPriority) {
+            TransportPriority tp = (TransportPriority)that;
+            r = (this.compareTo(tp) == 0);
+        }
+        return r;
+    }
+
+    public int compareTo(TransportPriority that) {
+        return this.value - that.value;
+    }
 }

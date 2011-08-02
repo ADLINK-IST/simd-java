@@ -52,8 +52,12 @@ public class UserData implements QosPolicy {
     
     public static final int ID = 1;
     private static final String NAME = "UserData";
-
+    private static final UserData EMPTY_USER_DATA = new UserData();
     private final byte value[];
+
+    private UserData() {
+        this.value = new byte[0];
+    }
 
     public UserData(byte value[]) {
         this.value = new byte[value.length];
@@ -70,8 +74,14 @@ public class UserData implements QosPolicy {
      *         within it contains valid data.
      */
     public byte[] getValue() {
-        return value.clone();
+        return this.value.clone();
     }
+
+    public byte valueAt(int i) {
+        return value[i];
+    }
+
+
 
     /**
      * @return the length of the <code>value</code> property.
@@ -88,4 +98,7 @@ public class UserData implements QosPolicy {
         return NAME;
     }
 
+    public UserData EmptyUserData() {
+        return EMPTY_USER_DATA;
+    }
 }

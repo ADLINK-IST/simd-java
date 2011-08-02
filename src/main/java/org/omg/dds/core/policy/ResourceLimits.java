@@ -18,6 +18,10 @@
 
 package org.omg.dds.core.policy;
 
+import sun.awt.image.RasterListener;
+
+import javax.print.DocFlavor;
+
 /**
  * Specifies the resources that the Service can consume in order to meet the
  * requested QoS.
@@ -62,23 +66,75 @@ package org.omg.dds.core.policy;
  * @see History
  * @see Reliability
  */
-public interface ResourceLimits extends QosPolicy {
-    public static final int LENGTH_UNLIMITED = -1;
-    public static final int ID = 19;
+public class ResourceLimits implements QosPolicy {
+    public static final int ID = 14;
+    public static final String NAME = "ResourceLimits";
 
+    private final int maxSamples;
+    private final int maxInstances;
+    private final int maxSamples4Instance;
+
+    private final static ResourceLimits UNLIMITED = new ResourceLimits(-1, -1, -1);
+    /**
+     * Creates a Resource Limits QoS policy.
+     *
+     * @param ms Max Samples
+     * @param mi Max Instances
+     * @param ms4i Max Samples for Instance
+     */
+    public ResourceLimits(int ms, int mi, int ms4i) {
+        this.maxSamples = ms;
+        this.maxInstances = mi;
+        this.maxSamples4Instance = ms4i;
+    }
     /**
      * @return the maxSamples
      */
-    public int getMaxSamples();
+    public int getMaxSamples() {
+        return this.maxSamples;
+    }
 
     /**
      * @return the maxInstances
      */
-    public int getMaxInstances();
+    public int getMaxInstances() {
+        return this.maxInstances;
+    }
 
     /**
      * @return the maxSamplesPerInstance
      */
-    public int getMaxSamplesPerInstance();
+    public int getMaxSamplesPerInstance() {
+        return this.maxSamples4Instance;
+    }
+
+    public int getPolicyId() {
+        return ID;
+    }
+
+    public String getPolicyName() {
+        return NAME;
+    }
+
+    public ResourceLimits Unlimited() {
+        return ResourceLimits.UNLIMITED;
+    }
+
+    @Override
+    public boolean equals(Object that) {
+        boolean r = false;
+        if (this == that)
+            r =  true;
+        else if (that instanceof ResourceLimits) {
+            ResourceLimits rl = (ResourceLimits)that;
+            r = (rl.maxInstances == this.maxInstances)
+                    && (rl.maxSamples == this.maxSamples)
+                    && (rl.maxSamples4Instance == this.maxSamples4Instance);
+        }
+        return r;
+    }
+
+
+
 
 }

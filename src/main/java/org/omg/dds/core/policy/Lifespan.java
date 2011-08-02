@@ -20,6 +20,8 @@ package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Specifies the maximum duration of validity of the data written by the
  * {@link org.omg.dds.pub.DataWriter}. The default value of the lifespan
@@ -60,6 +62,9 @@ public class Lifespan implements QosPolicy {
     private static final String NAME = "Lifespan";
     final private Duration duration;
 
+    public Lifespan(long d, TimeUnit unit) {
+        this.duration = new Duration(d, unit);
+    }
     public Lifespan(Duration duration) {
         this.duration = duration;
     }

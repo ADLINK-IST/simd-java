@@ -70,6 +70,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
             Method m = tsClass.getDeclaredMethod("get_copyCache");
             Long r = (Long)m.invoke(ts);
             this.copyCache = r.longValue();
+            System.out.println("Copy Cache = "+ this.copyCache);
             String typeName = this.topic.getType().getName();
             this.dataSeqClass = Class.forName(typeName + "SeqHolder");
             this.valueField = dataSeqClass.getField("value");
@@ -422,7 +423,8 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
             Object data = this.dataSeqClass.newInstance();
             DDS.SampleInfoSeqHolder info =
                     new DDS.SampleInfoSeqHolder();
-            org.opensplice.dds.dcps.FooDataReaderImpl.read(
+            int rv =
+                org.opensplice.dds.dcps.FooDataReaderImpl.read(
                     this.peer,
                     this.copyCache,
                     data,
@@ -430,8 +432,8 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
                     DDS.LENGTH_UNLIMITED.value,
                     DDS.NOT_READ_SAMPLE_STATE.value,
                     DDS.ANY_VIEW_STATE.value,
-                    DDS.ALIVE_INSTANCE_STATE.value
-            );
+                    DDS.ALIVE_INSTANCE_STATE.value);
+            System.out.println(">> " + rv);
             TYPE vals[] = (TYPE[])this.valueField.get(data);
             for (int i = 0; i < vals.length; ++i) {
                 Sample<TYPE> s = new OSPLSample<TYPE>(vals[i], info.value[i]);

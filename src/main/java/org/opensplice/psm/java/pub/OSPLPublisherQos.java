@@ -7,7 +7,6 @@ import org.omg.dds.core.policy.Presentation;
 import org.omg.dds.core.policy.QosPolicy;
 import org.omg.dds.pub.PublisherQos;
 import org.opensplice.psm.java.core.policy.OSPL;
-import org.opensplice.psm.java.core.policy.OSPLGroupData;
 
 public class OSPLPublisherQos implements PublisherQos {
 
@@ -62,7 +61,7 @@ public class OSPLPublisherQos implements PublisherQos {
 
 
     public GroupData getGroupData() {
-        return new OSPLGroupData(qos.group_data);
+        return OSPL.convert(qos.group_data);
     }
 
 
