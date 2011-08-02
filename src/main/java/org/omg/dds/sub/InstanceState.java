@@ -28,7 +28,8 @@ public enum InstanceState {
 
     ALIVE(0x0001 << 0),
     NOT_ALIVE_DISPOSED(0x0001 << 1),
-    NOT_ALIVE_NO_WRITERS(0x0001 << 2);
+    NOT_ALIVE_NO_WRITERS(0x0001 << 2),
+    ANY(0x00111);
 
 
 
@@ -39,33 +40,6 @@ public enum InstanceState {
     public final int value;
 
 
-
-    // -----------------------------------------------------------------------
-    // Object Life Cycle
-    // -----------------------------------------------------------------------
-
-    /**
-     * @param bootstrap Identifies the Service instance to which the
-     *                  object will belong.
-     */
-    /*
-    public static Set<InstanceState> anyInstanceStateSet(
-            Bootstrap bootstrap) {
-        return bootstrap.getSPI().anyInstanceStateSet();
-    }
-    */
-
-
-    /**
-     * @param bootstrap Identifies the Service instance to which the
-     *                  object will belong.
-     */
-    /*
-    public static Set<InstanceState> notAliveInstanceStateSet(
-            Bootstrap bootstrap) {
-        return bootstrap.getSPI().anyInstanceStateSet();
-    }
-    */
 
 
     // -----------------------------------------------------------------------

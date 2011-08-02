@@ -11,8 +11,8 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>, S
     protected static final int SEC_MAX = 0x7fffffff;
     protected static final int NSEC_MAX = (int)Math.pow(10, 9);
 
-    protected int sec = 0;
-    protected long nanoSec = 0;
+    protected final int sec;
+    protected final long nanoSec;
 
 
     public AbstractTime(long d, TimeUnit unit) {
@@ -22,7 +22,7 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>, S
 
         // If sec is negative that means we've gone out of
         // the allowable max time.
-        if (this.sec < 0) {
+        if (sec < 0) {
             throw new OverflowException("Time Out of Bounds");
         }
 
@@ -42,7 +42,13 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>, S
         }
     }
 
-    public AbstractTime() { }
+    /**
+     * This default constructors creates an invalid time.
+     */
+    protected AbstractTime() {
+        this.sec = -1;
+        this.nanoSec = 0xffffffff;
+    }
 
     /**
      * Truncate this duration to a whole-number quantity of the given time

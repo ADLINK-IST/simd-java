@@ -114,7 +114,9 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
         return new OSPLSample<TYPE>(value, sampleInfo);
     }
 
-    public static class SampleIterator<TYPE> implements Iterator<TYPE> {
+
+
+    public static final class SampleIterator<TYPE> implements Iterator<TYPE> {
 
         final private OSPLDataReader<TYPE> reader;
         private int index = 0;
@@ -167,8 +169,9 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
             return --index;
         }
 
-        
+
         public void returnLoan() {
+
             reader.returnLoan(sampleDataList, sampleInfoList);
         }
 

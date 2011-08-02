@@ -95,17 +95,10 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      * This operation creates a ReadCondition. The returned ReadCondition
      * will be attached and belong to the DataReader.
      * 
-     * @param   sampleStates    The returned condition will only trigger on
-     *          samples with one of these sample states.
-     * @param   viewStates      The returned condition will only trigger on
-     *          samples with one of these view states.
-     * @param   instanceStates  The returned condition will only trigger on
-     *          samples with one of these instance states.
+     * @param state the state for the Sample, Instance and View.
      */
-    public ReadCondition<TYPE> createReadCondition(
-            Collection<SampleState> sampleStates,
-            Collection<ViewState> viewStates,
-            Collection<InstanceState> instanceStates);
+    public ReadCondition<TYPE> createReadCondition(ReadState state);
+
 
     /**
      * This operation creates a QueryCondition. The returned QueryCondition
@@ -117,7 +110,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      * @param   queryParameters A set of parameter values for the
      *          queryExpression.
      *
-     * @see     #createQueryCondition(Collection, Collection, Collection, String, List)
+     * @see     #createQueryCondition(ReadState, String, List)
      */
     public QueryCondition<TYPE> createQueryCondition(
             String queryExpression,
@@ -127,12 +120,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      * This operation creates a QueryCondition. The returned QueryCondition
      * will be attached and belong to the DataReader.
      * 
-     * @param   sampleStates    The returned condition will only trigger on
-     *          samples with one of these sample states.
-     * @param   viewStates      The returned condition will only trigger on
-     *          samples with one of these view states.
-     * @param   instanceStates  The returned condition will only trigger on
-     *          samples with one of these instance states.
+     * @param   state    The state for the Sample, Instance and View.
      * @param   queryExpression The returned condition will only trigger on
      *          samples that pass this content-based filter expression.
      * @param   queryParameters A set of parameter values for the
@@ -141,9 +129,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      * @see     #createQueryCondition(String, List)
      */
     public QueryCondition<TYPE> createQueryCondition(
-            Collection<SampleState> sampleStates,
-            Collection<ViewState> viewStates,
-            Collection<InstanceState> instanceStates,
+            ReadState state,
             String queryExpression,
             List<String> queryParameters);
 
@@ -188,7 +174,6 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      * This operation allows access to the REQUESTED_DEADLINE_MISSED
      * communication status.
      * 
-     * @param   status  a container, into which this method places it result.
      * @return  the input status, as a convenience to facilitate chaining.
      * 
      * @see     org.omg.dds.core.status
@@ -343,10 +328,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      */
     public Sample.Iterator<TYPE> read();
 
-    public Sample.Iterator<TYPE> read(
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+    public Sample.Iterator<TYPE> read(ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -366,9 +348,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
     public void read(
             List<Sample<TYPE>> samples,
             int maxSamples,
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+            ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -376,10 +356,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      * @return  a non-null unmodifiable iterator over loaned samples.
      */
     public Sample.Iterator<TYPE> take();
-    public Sample.Iterator<TYPE> take(
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+    public Sample.Iterator<TYPE> take(ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -399,9 +376,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
     public void take(
             List<Sample<TYPE>> samples,
             int maxSamples,
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+            ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -490,9 +465,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      */
     public Sample.Iterator<TYPE> read(
             InstanceHandle handle,
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+            ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -514,9 +487,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
             List<Sample<TYPE>> samples,
             InstanceHandle handle,
             int maxSamples,
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+            ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -533,9 +504,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      */
     public Sample.Iterator<TYPE> take(
             InstanceHandle handle,
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+            ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -557,9 +526,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
             List<Sample<TYPE>> samples,
             InstanceHandle handle,
             int maxSamples,
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+            ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -576,9 +543,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      */
     public Sample.Iterator<TYPE> readNext(
             InstanceHandle previousHandle,
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+            ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -600,9 +565,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
             List<Sample<TYPE>> samples,
             InstanceHandle previousHandle,
             int maxSamples,
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+            ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -619,9 +582,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
      */
     public Sample.Iterator<TYPE> takeNext(
             InstanceHandle previousHandle,
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+            ReadState state);
 
     /**
      * TODO: Add JavaDoc.
@@ -643,9 +604,7 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
             List<Sample<TYPE>> samples,
             InstanceHandle previousHandle,
             int maxSamples,
-            Collection<SampleState> sampleStates, 
-            Collection<ViewState> viewStates, 
-            Collection<InstanceState> instanceStates);
+            ReadState state);
 
     /**
      * TODO: Add JavaDoc.

@@ -37,18 +37,21 @@ public  class Time extends AbstractTime
 {
     private static final Time ZERO = new Time(0,0);
     private static final Time INFINITE = new InfiniteTime();
-    private static final Time INVALID_TIME =  makeInvalidTime();
+    private static final Time INVALID_TIME =  new Time();
     private static final long serialVersionUID = -42416461846201843L;
 
     // This class is used to represent the infinite time w/o
     // violating the invariants of the class Time.
     private static final class InfiniteTime extends Time {
         InfiniteTime() {
-            this.sec = AbstractTime.SEC_MAX;
-            this.nanoSec = 0xffffffff;
+            super(AbstractTime.SEC_MAX, 0xffffffff);
         }
 
     }
+
+    /**
+     * The default constructor creates an Invalid time.
+     */
     private Time() { super(); }
 
     public Time(long d, TimeUnit unit) {
@@ -60,11 +63,8 @@ public  class Time extends AbstractTime
 
     }
 
-    private static Time makeInvalidTime() {
-        Time t = new Time(0, 0);
-        t.sec = -1;
-        t.nanoSec = -1;
-        return t;
+    public static Time invalidTime() {
+        return INVALID_TIME;
     }
 
     /**

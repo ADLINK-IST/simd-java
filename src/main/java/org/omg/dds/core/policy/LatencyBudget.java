@@ -20,6 +20,8 @@ package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Specifies the maximum acceptable delay from the time the data is written
  * until the data is inserted in the receiver's application cache and the
@@ -53,6 +55,9 @@ public class LatencyBudget implements QosPolicy {
     private static final String NAME = "LatencyBudget";
     final private Duration duration;
 
+    public LatencyBudget(long d, TimeUnit unit) {
+        this.duration = new Duration(d, unit);
+    }
     public LatencyBudget(Duration duration) {
         this.duration = duration;
     }

@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import DDS.*;
 import org.omg.dds.core.DDSException;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.InstanceHandle;
@@ -21,16 +20,11 @@ import org.omg.dds.core.status.SampleLost;
 import org.omg.dds.core.status.SampleRejected;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.core.status.SubscriptionMatched;
-import org.omg.dds.sub.DataReader;
-import org.omg.dds.sub.DataReaderListener;
-import org.omg.dds.sub.InstanceState;
+import org.omg.dds.sub.*;
 import org.omg.dds.sub.QueryCondition;
 import org.omg.dds.sub.ReadCondition;
-import org.omg.dds.sub.Sample;
 import org.omg.dds.sub.Sample.Iterator;
-import org.omg.dds.sub.SampleState;
 import org.omg.dds.sub.Subscriber;
-import org.omg.dds.sub.ViewState;
 import org.omg.dds.topic.PublicationBuiltinTopicData;
 import org.omg.dds.topic.TopicDescription;
 import org.opensplice.psm.java.core.OSPLInstanceHandle;
@@ -71,7 +65,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         this.subscriber = (OSPLSubscriber) subscriber;
         this.peer = createReader();
         try {
-            TypeSupport ts = this.topic.getTypeSupport();
+            DDS.TypeSupport ts = this.topic.getTypeSupport();
             Class<?> tsClass = ts.getClass();
             Method m = tsClass.getDeclaredMethod("get_copyCache");
             Long r = (Long)m.invoke(ts);
@@ -86,7 +80,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     private DDS.DataReader createReader() {
         DDS.DataReader dr = null;
-        DataReaderQosHolder holder = new DataReaderQosHolder();
+        DDS.DataReaderQosHolder holder = new DDS.DataReaderQosHolder();
         subscriber.getPeer().get_default_datareader_qos(holder);
         DDS.DataReaderQos drQos = holder.value;
 
@@ -94,7 +88,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
                 this.subscriber.getPeer().create_datareader(
                         this.topic.getPeer(),
                         drQos, null,
-                        ANY_STATUS.value);
+                        DDS.ANY_STATUS.value);
 
         assert (dr != null);
         return dr;
@@ -119,9 +113,37 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         }
     }
 
-
+    /**
+     * This operation allows access to the {@link org.omg.dds.core.StatusCondition} associated
+     * with the Entity. The returned condition can then be added to a
+     * {@link org.omg.dds.core.WaitSet} so that the application can wait for specific status
+     * changes that affect the Entity.
+     */
     public StatusCondition<DataReader<TYPE>> getStatusCondition() {
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * This operation retrieves the list of communication statuses in the
+     * Entity that are 'triggered.' That is, the list of statuses whose value
+     * has changed since the last time the application read the status.
+     * <p/>
+     * When the entity is first created or if the entity is not enabled, all
+     * communication statuses are in the "untriggered" state so the list
+     * returned will be empty.
+     * <p/>
+     * The list of statuses returned refers to the statuses that are
+     * triggered on the Entity itself and does not include statuses that
+     * apply to contained entities.
+     *
+     * @param statuses a container for the resulting statuses; its
+     *                 contents will be overwritten by the result of
+     *                 this operation.
+     * @return the argument as a convenience in order to facilitate call
+     *         chaining.
+     */
+    public Collection<Class<? extends Status<?>>> getStatusChanges(Collection<Class<? extends Status<?>>> statuses) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 
@@ -129,71 +151,192 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return new OSPLInstanceHandle(peer.get_instance_handle());
     }
 
-
+    /**
+     * Halt communication and dispose the resources held by this Entity.
+     * <p/>
+     * Closing an Entity implicitly closes all of its contained objects, if
+     * any. For example, closing a Publisher also closes all of its contained
+     * DataWriters.
+     * <p/>
+     * An Entity cannot be closed if it has any unclosed dependent objects,
+     * not including contained objects. These include the following:
+     * <p/>
+     * <ul>
+     * <li>A {@link org.omg.dds.topic.Topic} cannot be closed if it is still in use by any
+     * {@link org.omg.dds.topic.ContentFilteredTopic}s or {@link org.omg.dds.topic.MultiTopic}s.</li>
+     * <li>A Topic cannot be closed if any {@link org.omg.dds.pub.DataWriter}s or
+     * {@link org.omg.dds.sub.DataReader} is still using it.</li>
+     * <li>A DataReader cannot be closed if it has any outstanding loans
+     * as a result of a call to {@link org.omg.dds.sub.DataReader#read()},
+     * {@link org.omg.dds.sub.DataReader#take()}, or one of the variants thereof.
+     * </li>
+     * </ul>
+     * <p/>
+     * The deletion of a {@link org.omg.dds.pub.DataWriter} will automatically unregister all
+     * instances. Depending on the settings of the
+     * {@link org.omg.dds.core.policy.WriterDataLifecycle}, the deletion of the DataWriter
+     * may also dispose all instances.
+     *
+     * @throws org.omg.dds.core.PreconditionNotMetException
+     *          if close is called on an
+     *          Entity with unclosed dependent object(s), not including
+     *          contained objects.
+     * @see org.omg.dds.topic.TopicDescription#close()
+     */
     public void close() {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * Indicates that references to this object may go out of scope but that
+     * the application expects to look it up again later. Therefore, the
+     * Service must consider this object to be still in use and may not
+     * close it automatically.
+     */
     public void retain() {
-        // TODO Auto-generated method stub
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
 
+    /**
+     * @return the type parameter if this object's class.
+     */
     public Class<TYPE> getType() {
-        // TODO Auto-generated method stub
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
-
-    @SuppressWarnings({"unchecked"})
-    public <OTHER> DataReader<OTHER> cast() {
-
-        return (DataReader<OTHER>)this;
-    }
-
 
     public ReadCondition<TYPE> createReadCondition() {
-        // TODO Auto-generated method stub
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public ReadCondition<TYPE> createReadCondition(
-            Collection<SampleState> sampleStates,
-            Collection<ViewState> viewStates,
-            Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * This operation creates a ReadCondition. The returned ReadCondition
+     * will be attached and belong to the DataReader.
+     *
+     * @param state the state for the Sample, Instance and View.
+     */
+    public ReadCondition<TYPE> createReadCondition(ReadState state) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public QueryCondition<TYPE> createQueryCondition(String queryExpression,
-                                                     List<String> queryParameters) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * This operation creates a QueryCondition. The returned QueryCondition
+     * will be attached and belong to the DataReader. It will trigger on any
+     * sample state, view state, or instance state.
+     *
+     * @param queryExpression The returned condition will only trigger on
+     *                        samples that pass this content-based filter expression.
+     * @param queryParameters A set of parameter values for the
+     *                        queryExpression.
+     * @see #createQueryCondition(org.omg.dds.sub.ReadState, String, java.util.List)
+     */
+    public QueryCondition<TYPE> createQueryCondition(String queryExpression, List<String> queryParameters) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public QueryCondition<TYPE> createQueryCondition(
-            Collection<SampleState> sampleStates,
-            Collection<ViewState> viewStates,
-            Collection<InstanceState> instanceStates, String queryExpression,
-            List<String> queryParameters) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * This operation creates a QueryCondition. The returned QueryCondition
+     * will be attached and belong to the DataReader.
+     *
+     * @param state           The state for the Sample, Instance and View.
+     * @param queryExpression The returned condition will only trigger on
+     *                        samples that pass this content-based filter expression.
+     * @param queryParameters A set of parameter values for the
+     *                        queryExpression.
+     * @see #createQueryCondition(String, java.util.List)
+     */
+    public QueryCondition<TYPE> createQueryCondition(ReadState state, String queryExpression, List<String> queryParameters) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * This operation closes all the entities that were created by means of
+     * the "create" operations on the DataReader. That is, it closes all
+     * contained ReadCondition and QueryCondition objects.
+     *
+     * @throws org.omg.dds.core.PreconditionNotMetException
+     *          if the any of the contained
+     *          entities is in a state where it cannot be closed.
+     */
     public void closeContainedEntities() {
-        // TODO Auto-generated method stub
-
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * @return the TopicDescription associated with the DataReader. This is
+     *         the same TopicDescription that was used to create the
+     *         DataReader.
+     */
     public TopicDescription<TYPE> getTopicDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    /**
+     * This operation allows access to the SAMPLE_REJECTED communication
+     * status.
+     *
+     * @return the input status, as a convenience to facilitate chaining.
+     * @see org.omg.dds.core.status
+     */
+    public SampleRejected getSampleRejectedStatus() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * This operation allows access to the LIVELINESS_CHANGED communication
+     * status.
+     *
+     * @return the input status, as a convenience to facilitate chaining.
+     * @see org.omg.dds.core.status
+     */
+    public LivelinessChanged getLivelinessChangedStatus() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * This operation allows access to the REQUESTED_DEADLINE_MISSED
+     * communication status.
+     *
+     * @return the input status, as a convenience to facilitate chaining.
+     * @see org.omg.dds.core.status
+     */
+    public RequestedDeadlineMissed getRequestedDeadlineMissedStatus() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * This operation allows access to the REQUESTED_INCOMPATIBLE_QOS
+     * communication status.
+     *
+     * @return the input status, as a convenience to facilitate chaining.
+     * @see org.omg.dds.core.status
+     */
+    public RequestedIncompatibleQos getRequestedIncompatibleQosStatus() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * This operation allows access to the SUBSCRIPTION_MATCHED communication
+     * status.
+     *
+     * @return the input status, as a convenience to facilitate chaining.
+     * @see org.omg.dds.core.status
+     */
+    public SubscriptionMatched getSubscriptionMatchedStatus() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * This operation allows access to the SAMPLE_LOST communication status.
+     * <p/>
+     * result.
+     *
+     * @return the input status, as a convenience to facilitate chaining.
+     * @see org.omg.dds.core.status
+     */
+    public SampleLost getSampleLostStatus() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     public void waitForHistoricalData(Duration maxWait) throws TimeoutException {
         peer.wait_for_historical_data(OSPL.convert(maxWait));
@@ -206,40 +349,70 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         waitForHistoricalData(wait);
     }
 
-
-    public Collection<InstanceHandle> getMatchedPublications(
-            Collection<InstanceHandle> publicationHandles) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * This operation retrieves the list of publications currently
+     * "associated" with the DataReader; that is, publications that have a
+     * matching {@link org.omg.dds.topic.Topic} and compatible QoS that the application has not
+     * indicated should be "ignored" by means of
+     * {@link org.omg.dds.domain.DomainParticipant#ignorePublication(org.omg.dds.core.InstanceHandle)}.
+     * <p/>
+     * The handles returned in the 'publicationHandles' list are the ones
+     * that are used by the DDS implementation to locally identify the
+     * corresponding matched DataWriter entities. These handles match the
+     * ones that appear in {@link org.omg.dds.sub.Sample#getInstanceHandle()} when reading
+     * the "DCPSPublications" built-in topic.
+     * <p/>
+     * The operation may fail if the infrastructure does not locally maintain
+     * the connectivity information.
+     *
+     * @param publicationHandles a container, into which this method
+     *                           will place its result.
+     * @return publicationHandles, as a convenience to facilitate chaining.
+     * @see #getMatchedPublicationData(org.omg.dds.topic.PublicationBuiltinTopicData, org.omg.dds.core.InstanceHandle)
+     */
+    public Collection<InstanceHandle> getMatchedPublications(Collection<InstanceHandle> publicationHandles) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public PublicationBuiltinTopicData getMatchedPublicationData(
-            PublicationBuiltinTopicData publicationData,
-            InstanceHandle publicationHandle) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * This operation retrieves information on a publication that is
+     * currently "associated" with the DataReader; that is, a publication
+     * with a matching {@link org.omg.dds.topic.Topic} and compatible QoS that the application
+     * has not indicated should be "ignored" by means of
+     * {@link org.omg.dds.domain.DomainParticipant#ignorePublication(org.omg.dds.core.InstanceHandle)}.
+     * <p/>
+     * The operation {@link #getMatchedPublications(java.util.Collection)} can be used
+     * to find the publications that are currently matched with the
+     * DataReader.
+     *
+     * @param publicationData   a container, into which this method
+     *                          will place its result.
+     * @param publicationHandle a handle to the publication, the
+     *                          data of which is to be retrieved.
+     * @return subscriptionData, as a convenience to facilitate chaining.
+     * @throws IllegalArgumentException      if the publicationHandle does
+     *                                       not correspond to a publication currently associated with the
+     *                                       DataReader.
+     * @throws UnsupportedOperationException if the infrastructure does
+     *                                       not hold the information necessary to fill in the
+     *                                       publicationData.
+     * @see #getMatchedPublications(java.util.Collection)
+     */
+    public PublicationBuiltinTopicData getMatchedPublicationData(PublicationBuiltinTopicData publicationData, InstanceHandle publicationHandle) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Sample<TYPE> createSample() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
     public Iterator<TYPE> read() {
-
-        // TODO Auto-generated method stub
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Iterator<TYPE> read(Collection<SampleState> sampleStates,
-                               Collection<ViewState> viewStates,
-                               Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-        return null;
+    public Iterator<TYPE> read(ReadState state) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 
@@ -248,14 +421,14 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
             samples.clear();
             Object data = this.dataSeqClass.newInstance();
             DDS.SampleInfoSeqHolder info =
-                    new SampleInfoSeqHolder();
+                    new DDS.SampleInfoSeqHolder();
             org.opensplice.dds.dcps.FooDataReaderImpl.read(
                     this.peer,
                     this.copyCache,
                     data,
                     info,
                     DDS.LENGTH_UNLIMITED.value,
-                    NOT_READ_SAMPLE_STATE.value,
+                    DDS.NOT_READ_SAMPLE_STATE.value,
                     DDS.ANY_VIEW_STATE.value,
                     DDS.ALIVE_INSTANCE_STATE.value
             );
@@ -270,372 +443,374 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-
-    public void read(List<Sample<TYPE>> samples, int maxSamples,
-                     Collection<SampleState> sampleStates,
-                     Collection<ViewState> viewStates,
-                     Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void read(List<Sample<TYPE>> samples, int maxSamples, ReadState state) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @SuppressWarnings({"unchecked"})
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
     public Iterator<TYPE> take() {
-        Object data;
-        try {
-            data = listClass.newInstance();
-            DDS.SampleInfoSeqHolder sampleInfoHolder = new DDS.SampleInfoSeqHolder();
-            private_take_samples(data, sampleInfoHolder, 1000);
-            TYPE[] list = (TYPE[]) listValue.get(data);
-            OSPLSample.SampleIterator<TYPE> iterator =
-                    new OSPLSample.SampleIterator<TYPE>(this, data, list,
-                            sampleInfoHolder);
-            return iterator;
-        } catch (Exception e) {
-        }
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Iterator<TYPE> take(Collection<SampleState> sampleStates,
-                               Collection<ViewState> viewStates,
-                               Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-        return null;
+    public Iterator<TYPE> take(ReadState state) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
     public void take(List<Sample<TYPE>> samples) {
-
-        // TODO Auto-generated method stub
-
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void take(List<Sample<TYPE>> samples, int maxSamples,
-                     Collection<SampleState> sampleStates,
-                     Collection<ViewState> viewStates,
-                     Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void take(List<Sample<TYPE>> samples, int maxSamples, ReadState state) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Iterator<TYPE> read(ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
+    public Iterator<TYPE> read(ReadCondition<TYPE> typeReadCondition) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void read(List<Sample<TYPE>> samples, ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void read(List<Sample<TYPE>> samples, ReadCondition<TYPE> typeReadCondition) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void read(List<Sample<TYPE>> samples, int maxSamples,
-                     ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void read(List<Sample<TYPE>> samples, int maxSamples, ReadCondition<TYPE> typeReadCondition) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Iterator<TYPE> take(ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
+    public Iterator<TYPE> take(ReadCondition<TYPE> typeReadCondition) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void take(List<Sample<TYPE>> samples, ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void take(List<Sample<TYPE>> samples, ReadCondition<TYPE> typeReadCondition) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void take(List<Sample<TYPE>> samples, int maxSamples,
-                     ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void take(List<Sample<TYPE>> samples, int maxSamples, ReadCondition<TYPE> typeReadCondition) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public boolean readNext(Sample<TYPE> sample) {
-        // TODO Auto-generated method stub
-        return false;
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return true if data was read or false if no data was available.
+     */
+    public boolean readNext(Sample<TYPE> typeSample) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public boolean takeNext(Sample<TYPE> sample) {
-        // TODO Auto-generated method stub
-        return false;
+    /**
+     * @return true if data was taken or false if no data was available.
+     */
+    public boolean takeNext(Sample<TYPE> typeSample) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
     public Iterator<TYPE> read(InstanceHandle handle) {
-        // TODO Auto-generated method stub
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Iterator<TYPE> read(InstanceHandle handle,
-                               Collection<SampleState> sampleStates,
-                               Collection<ViewState> viewStates,
-                               Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
+    public Iterator<TYPE> read(InstanceHandle handle, ReadState state) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
     public void read(List<Sample<TYPE>> samples, InstanceHandle handle) {
-        // TODO Auto-generated method stub
-
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void read(List<Sample<TYPE>> samples, InstanceHandle handle,
-                     int maxSamples, Collection<SampleState> sampleStates,
-                     Collection<ViewState> viewStates,
-                     Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void read(List<Sample<TYPE>> samples, InstanceHandle handle, int maxSamples, ReadState state) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
     public Iterator<TYPE> take(InstanceHandle handle) {
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Iterator<TYPE> take(InstanceHandle handle,
-                               Collection<SampleState> sampleStates,
-                               Collection<ViewState> viewStates,
-                               Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
+    public Iterator<TYPE> take(InstanceHandle handle, ReadState state) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
     public void take(List<Sample<TYPE>> samples, InstanceHandle handle) {
-        // TODO Auto-generated method stub
-
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void take(List<Sample<TYPE>> samples, InstanceHandle handle,
-                     int maxSamples, Collection<SampleState> sampleStates,
-                     Collection<ViewState> viewStates,
-                     Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void take(List<Sample<TYPE>> samples, InstanceHandle handle, int maxSamples, ReadState state) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
     public Iterator<TYPE> readNext(InstanceHandle previousHandle) {
-        // TODO Auto-generated method stub
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Iterator<TYPE> readNext(InstanceHandle previousHandle,
-                                   Collection<SampleState> sampleStates,
-                                   Collection<ViewState> viewStates,
-                                   Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
+    public Iterator<TYPE> readNext(InstanceHandle previousHandle, ReadState state) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void readNext(List<Sample<TYPE>> samples,
-                         InstanceHandle previousHandle) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void readNext(List<Sample<TYPE>> samples, InstanceHandle previousHandle) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void readNext(List<Sample<TYPE>> samples,
-                         InstanceHandle previousHandle, int maxSamples,
-                         Collection<SampleState> sampleStates,
-                         Collection<ViewState> viewStates,
-                         Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void readNext(List<Sample<TYPE>> samples, InstanceHandle previousHandle, int maxSamples, ReadState state) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
     public Iterator<TYPE> takeNext(InstanceHandle previousHandle) {
-        // TODO Auto-generated method stub
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Iterator<TYPE> takeNext(InstanceHandle previousHandle,
-                                   Collection<SampleState> sampleStates,
-                                   Collection<ViewState> viewStates,
-                                   Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
+    public Iterator<TYPE> takeNext(InstanceHandle previousHandle, ReadState state) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void takeNext(List<Sample<TYPE>> samples,
-                         InstanceHandle previousHandle) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void takeNext(List<Sample<TYPE>> samples, InstanceHandle previousHandle) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void takeNext(List<Sample<TYPE>> samples,
-                         InstanceHandle previousHandle, int maxSamples,
-                         Collection<SampleState> sampleStates,
-                         Collection<ViewState> viewStates,
-                         Collection<InstanceState> instanceStates) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void takeNext(List<Sample<TYPE>> samples, InstanceHandle previousHandle, int maxSamples, ReadState state) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Iterator<TYPE> readNext(InstanceHandle previousHandle,
-                                   ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
+    public Iterator<TYPE> readNext(InstanceHandle previousHandle, ReadCondition<TYPE> typeReadCondition) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void readNext(List<Sample<TYPE>> samples,
-                         InstanceHandle previousHandle, ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void readNext(List<Sample<TYPE>> samples, InstanceHandle previousHandle, ReadCondition<TYPE> typeReadCondition) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void readNext(List<Sample<TYPE>> samples,
-                         InstanceHandle previousHandle, int maxSamples,
-                         ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void readNext(List<Sample<TYPE>> samples, InstanceHandle previousHandle, int maxSamples, ReadCondition<TYPE> typeReadCondition) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public Iterator<TYPE> takeNext(InstanceHandle previousHandle,
-                                   ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * TODO: Add JavaDoc.
+     *
+     * @return a non-null unmodifiable iterator over loaned samples.
+     */
+    public Iterator<TYPE> takeNext(InstanceHandle previousHandle, ReadCondition<TYPE> typeReadCondition) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void takeNext(List<Sample<TYPE>> samples,
-                         InstanceHandle previousHandle, ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void takeNext(List<Sample<TYPE>> samples, InstanceHandle previousHandle, ReadCondition<TYPE> typeReadCondition) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    public void takeNext(List<Sample<TYPE>> samples,
-                         InstanceHandle previousHandle, int maxSamples,
-                         ReadCondition<TYPE> condition) {
-        // TODO Auto-generated method stub
-
+    /**
+     * TODO: Add JavaDoc.
+     * <p/>
+     * Copy samples into the provided collection, overwriting any samples that
+     * might already be present.
+     */
+    public void takeNext(List<Sample<TYPE>> samples, InstanceHandle previousHandle, int maxSamples, ReadCondition<TYPE> typeReadCondition) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    /**
+     * This operation can be used to retrieve the instance key that
+     * corresponds to an instance handle. The operation will only fill the
+     * fields that form the key inside the keyHolder instance.
+     *
+     * @param keyHolder a container, into which this method shall
+     *                  place its result.
+     * @param handle    a handle indicating the instance whose value
+     *                  this method should get.
+     * @return keyHolder, as a convenience to facilitate chaining.
+     * @throws IllegalArgumentException if the {@link org.omg.dds.core.InstanceHandle}
+     *                                  does not correspond to an existing data object known to the
+     *                                  DataReader. If the implementation is not able to check
+     *                                  invalid handles, then the result in this situation is
+     *                                  unspecified.
+     */
     public TYPE getKeyValue(TYPE keyHolder, InstanceHandle handle) {
-        // TODO Auto-generated method stub
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    private void private_take_samples(Object dataList,
-                                      DDS.SampleInfoSeqHolder sampleInfo,
-                                      int count) {
-        try {
-            takeParameters[0] = dataList;
-            takeParameters[1] = sampleInfo;
-            takeParameters[2] = Integer.valueOf(count);
-            take.invoke(peer, takeParameters);
-        } catch (InvocationTargetException ie) {
-        } catch (IllegalAccessException iae) {
-        }
-    }
-
-    @SuppressWarnings({"unchecked"})
-    private void private_take(List<TYPE> list, int count) {
-        try {
-            takeParameters[2] = Integer.valueOf(count);
-            take.invoke(peer, takeParameters);
-            TYPE[] slist = (TYPE[]) listValue.get(dataList);
-            count = slist.length;
-            if (count != 0) {
-                for (int j = 0; j < count; j++) {
-                    list.add(slist[j]);
-                }
-            }
-            return_loan.invoke(peer, returnLoanParameters);
-        } catch (InvocationTargetException ie) {
-
-        } catch (IllegalAccessException iae) {
-
-        }
-    }
-
-    public void returnLoan(Object dataList, DDS.SampleInfoSeqHolder infoList) {
-        try {
-            returnLoanParameters[0] = dataList;
-            returnLoanParameters[0] = infoList;
-            return_loan.invoke(peer, returnLoanParameters);
-        } catch (InvocationTargetException ie) {
-
-        } catch (IllegalAccessException iae) {
-
-        }
-    }
-
-
-    public Collection<Class<? extends Status<?>>> getStatusChanges(
-            Collection<Class<? extends Status<?>>> statuses) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
-    public SampleRejected getSampleRejectedStatus() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
-    public LivelinessChanged getLivelinessChangedStatus() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
-    public RequestedDeadlineMissed getRequestedDeadlineMissedStatus() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
-    public RequestedIncompatibleQos getRequestedIncompatibleQosStatus() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
-    public SubscriptionMatched getSubscriptionMatchedStatus() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
-    public SampleLost getSampleLostStatus() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
+    /**
+     * This operation takes as a parameter an instance and returns a handle
+     * that can be used in subsequent operations that accept an instance
+     * handle as an argument. The instance parameter is only used for the
+     * purpose of examining the fields that define the key.
+     * <p/>
+     * This operation does not register the instance in question. If the
+     * instance has not been previously registered, or if for any other
+     * reason the Service is unable to provide an instance handle, the
+     * Service will return a nil handle.
+     *
+     * @param handle    a container, into which this method shall place its
+     *                  result.
+     * @param keyHolder a sample of the instance whose handle this
+     *                  method should look up.
+     * @return handle, as a convenience to facilitate chaining.
+     */
     public InstanceHandle lookupInstance(InstanceHandle handle, TYPE keyHolder) {
-        // TODO Auto-generated method stub
-        return null;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
 
     public DataReaderListener<TYPE> getListener() {
         return this.listener;
@@ -751,6 +926,19 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         }
 
     }
+
+    public void returnLoan(Object dataList, DDS.SampleInfoSeqHolder infoList) {
+        try {
+            returnLoanParameters[0] = dataList;
+            returnLoanParameters[0] = infoList;
+            return_loan.invoke(peer, returnLoanParameters);
+        } catch (InvocationTargetException ie) {
+
+        } catch (IllegalAccessException iae) {
+
+        }
+    }
    // ------------------------------------------------------------------------------------
 
+    ///////////////////////////////////////////////////////////////////////////////////////
 }

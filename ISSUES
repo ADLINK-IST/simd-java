@@ -149,3 +149,12 @@
    an object as opposed to also require it as an argument. As the Status
    is immutable there is no risk in the client code changing it, thus no copies
    required!
+
+
+[Status Management]
+   The dds-psm-java currently passes statuses via collections. However this
+   does not make it neither efficient nor simple to represent collections
+   of related statuses, such as the Read Status, etc.
+
+   The suggestion is to add a ReadState as currently present on the dds-psm-cxx
+   to simplify the API and make it simpler to support the most common use cases.

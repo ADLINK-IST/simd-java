@@ -25,6 +25,7 @@ public class TimeTest {
         Assert.assertEquals(-1, t1.compareTo(t2));
         Assert.assertEquals(1, t2.compareTo(t1));
         Assert.assertEquals(0, t2.compareTo(t2));
+
     }
 
     @Test

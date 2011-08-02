@@ -1,3 +1,57 @@
+2011-08-02  Angelo Corsaro  <angelo@icorsaro.net>
+    * src//main/java/org/omg/dds/core/policy/LatencyBudget.java:
+    Added ctor that accepts a <long> duration and a TimeUnit.
+
+	* src/main/java/org/omg/dds/core/AbstractTime.java:
+	As the class is immutable fields needed to be final -- issue fixed.
+
+    * src/main/java/org/omg/dds/core/Time.java:
+    The invalid time implementation was not optimal as returned a new
+    object each time. Fixed the implementation to make the InvalidTime a singleton.
+
+    * src/main/java/org/omg/dds/sub/ReadState.java:
+    New class that encapsulates the Sample, Instance and View state.
+
+     * src/main/java/org/omg/dds/sub/DataReader.java:
+     Updated API to take advantage of the ReadState class
+     instead of having to use individual collections of Sample,
+     Instance and View state. As an example, the original dds-psm-java
+     method:
+
+      public void take(
+            List<Sample<TYPE>> samples,
+            int maxSamples,
+            Collection<SampleState> sampleStates,
+            Collection<ViewState> viewStates,
+            Collection<InstanceState> instanceStates);
+
+
+      Becomes:
+
+       public void take(
+            List<Sample<TYPE>> samples,
+            int maxSamples,
+            ReadState state);
+
+
+       Furthermore, since the ReadState provides default for
+       the most commonly used states, a take for new data
+       would become:
+
+       dr.take(samples, maxSamples, ReadState.NewData());
+
+     * src/main/java/org/omg/dds/sub/InstanceState.java
+     * src/main/java/org/omg/dds/sub/ViewState.java
+     * src/main/java/org/omg/dds/sub/SampleState.java
+	Added ANY state.
+	
+
+     * src/main/java/org/opensplice/psm/java/sub/OSPLDataReader.java
+     * src/main/java/org/opensplice/psm/java/sub/OSPLSample.java
+	Updated to reflects the changes on the DataReader.
+
+
+
 2011-08-01  Angelo Corsaro  <angelo@icorsaro.net>
 
 	* src/main/java/org/omg/dds/core/AbstractTime.java:

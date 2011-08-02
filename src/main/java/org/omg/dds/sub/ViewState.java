@@ -27,7 +27,8 @@ public enum ViewState {
     // -----------------------------------------------------------------------
 
     NEW(0x0001 << 0),
-    NOT_NEW(0x0001 << 1);
+    NOT_NEW(0x0001 << 1),
+    ANY(0x0011);
 
 
 
@@ -42,16 +43,6 @@ public enum ViewState {
     // -----------------------------------------------------------------------
     // Object Life Cycle
     // -----------------------------------------------------------------------
-
-    /**
-     * @param bootstrap Identifies the Service instance to which the
-     *                  object will belong.
-     */
-    /*
-    public static Set<ViewState> anyViewStateSet(Bootstrap bootstrap) {
-        return bootstrap.getSPI().anyViewStateSet();
-    }
-    */
 
 
     // -----------------------------------------------------------------------
