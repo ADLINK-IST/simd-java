@@ -3,19 +3,15 @@ package org.opensplice.psm.java.topic;
 import java.util.Collection;
 
 import DDS.*;
-import org.omg.dds.core.DDSException;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.StatusCondition;
-import org.omg.dds.core.policy.Durability;
-import org.omg.dds.core.policy.Reliability;
 import org.omg.dds.core.status.InconsistentTopic;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.topic.Topic;
 import org.omg.dds.topic.TopicQos;
-import org.opensplice.dds.dcps.TypeSupportImpl;
 import org.opensplice.psm.java.core.OSPLInstanceHandle;
-import org.opensplice.psm.java.core.policy.OSPL;
+import org.opensplice.psm.java.core.policy.QoSConverter;
 import org.opensplice.psm.java.domain.OSPLDomainParticipant;
 
 public class OSPLTopic<TYPE> implements Topic<TYPE> {
@@ -75,7 +71,8 @@ public class OSPLTopic<TYPE> implements Topic<TYPE> {
                 this.participant.getPeer().create_topic(
                         this.topicName,
                         this.typeSupport.get_type_name(),
-                        tqos, null,
+                        tqos,
+                        null,
                         DDS.STATUS_MASK_ANY_V1_2.value);
     }
 

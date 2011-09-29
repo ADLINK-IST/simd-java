@@ -89,6 +89,8 @@ public interface Subscriber extends Entity<Subscriber> {
     public <TYPE> DataReader<TYPE> createDataReader(
             TopicDescription<TYPE> topic);
 
+    public <TYPE> DataReader<TYPE> createDataReader(TopicDescription<TYPE> topic, DataReaderQos qos);
+
     /**
      * This operation creates a {@link DataReader}. The returned DataReader
      * will be attached and belong to the Subscriber.

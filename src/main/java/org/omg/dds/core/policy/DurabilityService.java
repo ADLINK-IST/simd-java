@@ -19,6 +19,7 @@
 package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
+import org.omg.dds.core.Time;
 
 /**
  * Specifies the configuration of the durability service. That is, the service
@@ -51,6 +52,7 @@ public class DurabilityService implements QosPolicy {
     final private int maxSamples;
     final private int maxInstances;
     final private int maxSamplesPerInstance;
+
 
     /** TODO create some more constructors with defaults. */
     public DurabilityService(History history, Duration cleanupDelay,

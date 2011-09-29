@@ -47,7 +47,7 @@ public class GroupData implements QosPolicy {
 
     private final byte value[];
 
-    private GroupData() {
+    public GroupData() {
         this.value = new byte[0];
     }
     public GroupData(byte v[]) {

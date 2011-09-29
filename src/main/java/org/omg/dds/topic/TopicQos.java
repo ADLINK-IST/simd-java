@@ -18,27 +18,16 @@
 
 package org.omg.dds.topic;
 
+import DDS.DataReader;
 import org.omg.dds.core.policy.*;
+import org.omg.dds.core.qos.DataQos;
 import org.omg.dds.runtime.DDSRuntime;
 import org.omg.dds.runtime.TopicPolicyProvider;
 
-public class TopicQos implements TopicPolicyProvider
+public class TopicQos extends DataQos implements TopicPolicyProvider
 {
-    private TopicData topicData;
-    private Durability durability;
-    private DurabilityService durabilityService;
-    private Deadline deadline;
-    private LatencyBudget latencyBudget;
-    private Liveliness liveliness;
-    private Reliability reliability;
-    private DestinationOrder destinationOrder;
-    private History history;
-    private ResourceLimits resourceLimits;
-    private TransportPriority transportPriority;
-    private Lifespan lifespan;
-    private Ownership ownership;
-    private DataRepresentation dataRepresentation;
-    private TypeConsistencyEnforcement typeConsistencyEnforcement;
+    protected TopicData     topicData;
+    private Lifespan        lifespan;
 
     /**
      * Creates a <code>TopicQos</code> with default policy value.
@@ -46,46 +35,31 @@ public class TopicQos implements TopicPolicyProvider
      * the same values as those provided by the DDSRuntime.
      */
     public TopicQos() {
+        super();
+        this.setDefaults();
+    }
+
+    private void setDefaults() {
         TopicPolicyProvider provider =
                 DDSRuntime.getInstance().getTopicPolicyProvider();
-        this.topicData                      = provider.getTopicData();
-        this.durability                     = provider.getDurability();
-        this.durabilityService              = provider.getDurabilityService();
-        this.deadline                       = provider.getDeadline();
-        this.latencyBudget                  = provider.getLatencyBudget();
-        this.liveliness                     = provider.getLiveliness();
-        this.reliability                    = provider.getReliability();
-        this.destinationOrder               = provider.getDestinationOrder();
-        this.history                        = provider.getHistory();
-        this.resourceLimits                 = provider.getResourceLimits();
-        this.transportPriority              = provider.getTransportPriority();
-        this.lifespan                       = provider.getLifespan();
-        this.ownership                      = provider.getOwnership();
-        this.dataRepresentation             = provider.getRepresentation();
-        this.typeConsistencyEnforcement     = provider.getTypeConsistency();
+        this.topicData = provider.getTopicData();
+        this.lifespan = provider.getLifespan();
     }
 
     public TopicQos(QosPolicy ... policies) {
-        for(QosPolicy p: policies) {
+        super(policies);
+        this.setDefaults();
+        for (QosPolicy p: policies) {
             switch (p.getPolicyId()) {
-                case Reliability.ID:
-                    this.reliability = (Reliability)p;
+                case TopicData.ID:
+                    this.topicData = (TopicData)p;
                     break;
-                case Durability.ID:
-                    this.durability = (Durability)p;
+                case Lifespan.ID:
+                    this.lifespan = (Lifespan)p;
                     break;
-                case Deadline.ID:
-                    this.deadline = (Deadline)p;
-                    break;
-                /**
-                 * TODO: Add other policies
-                 */
-
-
-                default:
-                    System.err.println("[TopicQoS.new]: Unknown QoS");
             }
         }
+
     }
     public TopicQos(TopicData topicData,
                     Durability durability,
@@ -101,22 +75,24 @@ public class TopicQos implements TopicPolicyProvider
                     Lifespan lifespan,
                     Ownership ownership,
                     DataRepresentation dataRepresentation,
-                    TypeConsistencyEnforcement typeConsistencyEnforcement) {
+                    TypeConsistencyEnforcement typeConsistencyEnforcement)
+    {
+        super(durability,
+                durabilityService,
+                deadline,
+                latencyBudget,
+                liveliness,
+                reliability,
+                destinationOrder,
+                history,
+                resourceLimits,
+                transportPriority,
+                ownership,
+                dataRepresentation,
+                typeConsistencyEnforcement);
 
-        this.topicData                      = topicData;
-        this.durability                     = durability;
-        this.durabilityService              = durabilityService;
-        this.deadline                       = deadline;
-        this.latencyBudget                  = latencyBudget;
-        this.reliability                    = reliability;
-        this.destinationOrder               = destinationOrder;
-        this.history                        = history;
-        this.resourceLimits                 = resourceLimits;
-        this.transportPriority              = transportPriority;
-        this.lifespan                       = lifespan;
-        this.ownership                      = ownership;
-        this.dataRepresentation             = dataRepresentation;
-        this.typeConsistencyEnforcement     = typeConsistencyEnforcement;
+        this.topicData = topicData;
+        this.lifespan = lifespan;
     }
 
     public TopicQos with(QosPolicy ... policies) {
@@ -136,33 +112,73 @@ public class TopicQos implements TopicPolicyProvider
         DataRepresentation          dataRepresentation          = this.dataRepresentation;
         TypeConsistencyEnforcement  typeConsistencyEnforcement  = this.typeConsistencyEnforcement;
 
-        //TODO: Complete code below!
-        for (QosPolicy p: policies) {
+        for(QosPolicy p: policies) {
             switch (p.getPolicyId()) {
+                case TopicData.ID:
+                    topicData = (TopicData)p;
+                    break;
                 case Durability.ID:
                     durability = (Durability)p;
                     break;
-                case Reliability.ID:
+                case DurabilityService.ID:
+                    durabilityService = (DurabilityService)p;
+                    break;
+                case Deadline.ID:
+                    deadline = (Deadline)p;
+                    break;
+                case LatencyBudget.ID:
+                    latencyBudget = (LatencyBudget)p;
+                    break;
+                case Liveliness.ID:
+                    liveliness = (Liveliness)p;
+                    break;
+                case  Reliability.ID:
                     reliability = (Reliability)p;
+                    break;
+                case DestinationOrder.ID:
+                    destinationOrder = (DestinationOrder)p;
+                    break;
+                case History.ID:
+                    history = (History)p;
+                    break;
+                case ResourceLimits.ID:
+                    resourceLimits = (ResourceLimits)p;
+                    break;
+                case TransportPriority.ID:
+                    transportPriority = (TransportPriority)p;
+                    break;
+                case Lifespan.ID:
+                    lifespan = (Lifespan)p;
+                    break;
+                case Ownership.ID:
+                    ownership = (Ownership)p;
+                    break;
+                case DataRepresentation.ID :
+                    dataRepresentation = (DataRepresentation)p;
+                    break;
+                case TypeConsistencyEnforcement.ID:
+                    typeConsistencyEnforcement = (TypeConsistencyEnforcement)p;
+                    break;
+
                 default:
-                    System.err.println("[TopicQoS.with]: Unknown QoS");
+                    System.err.println("[TopicQoS.new]: Unknown QoS");
             }
         }
         return new TopicQos(topicData,
-                            durability,
-                            durabilityService,
-                            deadline,
-                            latencyBudget,
-                            liveliness,
-                            reliability,
-                            destinationOrder,
-                            history,
-                            resourceLimits,
-                            transportPriority,
-                            lifespan,
-                            ownership,
-                            dataRepresentation,
-                            typeConsistencyEnforcement);
+                durability,
+                durabilityService,
+                deadline,
+                latencyBudget,
+                liveliness,
+                reliability,
+                destinationOrder,
+                history,
+                resourceLimits,
+                transportPriority,
+                lifespan,
+                ownership,
+                dataRepresentation,
+                typeConsistencyEnforcement);
     }
 
 
@@ -173,97 +189,8 @@ public class TopicQos implements TopicPolicyProvider
         return this.topicData;
     }
 
-    /**
-     * @return the durability
-     */
-    public Durability getDurability() {
-        return this.durability;
-    }
-
-    /**
-     * @return the durabilityService
-     */
-    public DurabilityService getDurabilityService() {
-        return this.durabilityService;
-    }
-
-    /**
-     * @return the deadline
-     */
-    public Deadline getDeadline() {
-        return this.deadline;
-    }
-
-    /**
-     * @return the latencyBudget
-     */
-    public LatencyBudget getLatencyBudget() {
-        return this.latencyBudget;
-    }
-
-    /**
-     * @return the liveliness
-     */
-    public Liveliness getLiveliness() {
-        return this.liveliness;
-    }
-
-    /**
-     * @return the reliability
-     */
-    public Reliability getReliability() {
-        return this.reliability;
-
-    }
-
-    /**
-     * @return the destinationOrder
-     */
-    public DestinationOrder getDestinationOrder() {
-        return  this.destinationOrder;
-    }
-
-    /**
-     * @return the history
-     */
-    public History getHistory() {
-        return this.history;
-    }
-
-    /**
-     * @return the resourceLimits
-     */
-    public ResourceLimits getResourceLimits() {
-        return  this.resourceLimits;
-    }
-
-    /**
-     * @return the transportPriority
-     */
-    public TransportPriority getTransportPriority() {
-        return this.transportPriority;
-    }
-
-
-    /**
-     * @return the lifespan
-     */
     public Lifespan getLifespan() {
         return this.lifespan;
     }
 
-    /**
-     * @return the ownership
-     */
-    public Ownership getOwnership() {
-        return this.ownership;
-    }
-
-    public DataRepresentation getRepresentation() {
-        return  this.dataRepresentation;
-    }
-
-    public TypeConsistencyEnforcement getTypeConsistency() {
-        return this.typeConsistencyEnforcement;
-    }
 }

@@ -158,3 +158,11 @@
 
    The suggestion is to add a ReadState as currently present on the dds-psm-cxx
    to simplify the API and make it simpler to support the most common use cases.
+
+
+[2011.09.22 New Issues]
+
+[Bucket Accessors] Post an issue on avoiding side-effects on the API.
+
+[DataReader] The data reader should return a List as opposed to a ListIterator
+when using a List as a argument.

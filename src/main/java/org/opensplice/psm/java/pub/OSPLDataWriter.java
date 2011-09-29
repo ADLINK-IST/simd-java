@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import DDS.TypeSupport;
 import org.omg.dds.core.*;
 import org.omg.dds.core.status.LivelinessLost;
 import org.omg.dds.core.status.OfferedDeadlineMissed;
@@ -23,6 +22,7 @@ import org.omg.dds.pub.Publisher;
 import org.omg.dds.topic.SubscriptionBuiltinTopicData;
 import org.omg.dds.topic.Topic;
 import org.omg.dds.topic.TopicDescription;
+import org.opensplice.psm.java.core.policy.QoSConverter;
 import org.opensplice.psm.java.topic.OSPLTopic;
 
 import DDS.ANY_STATUS;
@@ -30,26 +30,24 @@ import DDS.ANY_STATUS;
 public class OSPLDataWriter<TYPE> implements DataWriter<TYPE> {
     final private OSPLTopic<TYPE> topic;
     final private OSPLPublisher publisher;
-    private DDS.DataWriter peer = null;
-    private OSPLDataWriterQos qos = null;
+    private DDS.DataWriter peer;
+    private DataWriterQos qos;
     private DataWriterListener<TYPE> listener = null;
     private long copyCache = 0;
 
 
-    public OSPLDataWriter(
-            TopicDescription<TYPE> topic, Publisher publisher,
-            DataWriterQos qos) {
+    public OSPLDataWriter(TopicDescription<TYPE> topic,
+                          Publisher publisher,
+                          DataWriterQos qos)
+    {
+        assert((topic != null) && (publisher != null) && (qos != null));
 
         this.topic = (OSPLTopic<TYPE>) topic;
         this.publisher = (OSPLPublisher) publisher;
-        if (qos != null) {
-            this.qos = (OSPLDataWriterQos) qos;
-        } else {
-            this.qos = (OSPLDataWriterQos) publisher.getDefaultDataWriterQos();
-        }
+        this.qos = qos;
         createWriter();
         try {
-            TypeSupport ts = this.topic.getTypeSupport();
+            DDS.TypeSupport ts = this.topic.getTypeSupport();
             Class<?> tsClass = ts.getClass();
             Method m = tsClass.getDeclaredMethod("get_copyCache");
             Long r = (Long)m.invoke(ts);
@@ -87,10 +85,34 @@ public class OSPLDataWriter<TYPE> implements DataWriter<TYPE> {
     }
 
     private void createWriter() {
+        DDS.DataWriterQosHolder holder = new DDS.DataWriterQosHolder();
+        publisher.getPublisher().get_default_datawriter_qos(holder);
+        DDS.DataWriterQos lqos = QoSConverter.convert(qos, holder.value);
+
+/*
+        // OK
+        holder.value.history = lqos.history;
+        holder.value.durability = lqos.durability;
+        holder.value.ownership = lqos.ownership;
+        holder.value.ownership_strength = lqos.ownership_strength;
+        holder.value.resource_limits = lqos.resource_limits;
+        holder.value.transport_priority = lqos.transport_priority;
+        holder.value.destination_order = lqos.destination_order;
+        holder.value.latency_budget = lqos.latency_budget;
+        holder.value.reliability = lqos.reliability;
+        holder.value.user_data = lqos.user_data;
+        holder.value.liveliness = lqos.liveliness;
+        // NOK
+       holder.value.deadline = lqos.deadline;
+       holder.value.writer_data_lifecycle = lqos.writer_data_lifecycle;
+
+        // lqos.deadline = holder.value.deadline;
+        // lqos.writer_data_lifecycle = holder.value.writer_data_lifecycle;
+  */
         peer =
                 publisher.getPublisher().create_datawriter(
                         topic.getPeer(),
-                        qos.getQos(),
+                        lqos,
                         null,
                         ANY_STATUS.value);
 
@@ -224,12 +246,11 @@ public class OSPLDataWriter<TYPE> implements DataWriter<TYPE> {
 
 
     public void write(TYPE sample) throws TimeoutException {
-        org.opensplice.dds.dcps.FooDataWriterImpl.write
+        int rc = org.opensplice.dds.dcps.FooDataWriterImpl.write
                 (this.peer,
                         this.copyCache,
                         sample,
                         DDS.HANDLE_NIL.value);
-
     }
 
 

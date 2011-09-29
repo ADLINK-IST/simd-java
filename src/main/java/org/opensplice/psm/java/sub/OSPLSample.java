@@ -7,7 +7,7 @@ import org.omg.dds.sub.Sample;
 import org.omg.dds.sub.SampleState;
 import org.omg.dds.sub.ViewState;
 import org.opensplice.psm.java.core.OSPLInstanceHandle;
-import org.opensplice.psm.java.core.policy.OSPL;
+import org.opensplice.psm.java.core.policy.PolicyConverter;
 
 import DDS.NEW_VIEW_STATE;
 import DDS.READ_SAMPLE_STATE;
@@ -72,7 +72,7 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
 
     
     public Time getSourceTimestamp() {
-        return OSPL.convert(sampleInfo.source_timestamp);
+        return PolicyConverter.convert(sampleInfo.source_timestamp);
     }
 
     

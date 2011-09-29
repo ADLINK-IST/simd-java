@@ -23,12 +23,10 @@ import org.omg.dds.core.status.*;
 import org.omg.dds.core.status.SampleRejected;
 
 
-public class DataReaderAdapter<TYPE> implements DataReaderListener<TYPE>
+public abstract class SimpleDataReaderListener<TYPE> implements DataReaderListener<TYPE>
 {
-    public void onDataAvailable(DataAvailableEvent<TYPE> e)
-    {
-        // empty
-    }
+    public abstract void onDataAvailable(DataAvailableEvent<TYPE> e);
+
 
     public void onLivelinessChanged(LivelinessChangedEvent<TYPE> e)
     {

@@ -46,7 +46,7 @@ public class TopicData implements QosPolicy {
     private static final TopicData EMPTY_TOPIC_DATA = new TopicData();
     private final byte value[];
 
-    private TopicData() {
+    public TopicData() {
         this.value = new byte[0];
     }
 

@@ -37,7 +37,7 @@ public class Ownership implements QosPolicy {
 	private static final long serialVersionUID = -1580048650309198230L;
 	
 	// -- Constant Members
-    public final static int ID = 9;
+    public final static int ID = 6;
     private final static String NAME = "Ownership";
     private static final Ownership SHARED = new Ownership(Kind.SHARED);
     private static final Ownership EXCLUSIVE = new Ownership(Kind.EXCLUSIVE);

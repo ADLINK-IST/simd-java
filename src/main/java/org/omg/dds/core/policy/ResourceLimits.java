@@ -75,6 +75,7 @@ public class ResourceLimits implements QosPolicy {
     private final int maxSamples4Instance;
 
     private final static ResourceLimits UNLIMITED = new ResourceLimits(-1, -1, -1);
+
     /**
      * Creates a Resource Limits QoS policy.
      *
@@ -82,11 +83,13 @@ public class ResourceLimits implements QosPolicy {
      * @param mi Max Instances
      * @param ms4i Max Samples for Instance
      */
+
     public ResourceLimits(int ms, int mi, int ms4i) {
         this.maxSamples = ms;
         this.maxInstances = mi;
         this.maxSamples4Instance = ms4i;
     }
+
     /**
      * @return the maxSamples
      */
@@ -133,8 +136,4 @@ public class ResourceLimits implements QosPolicy {
         }
         return r;
     }
-
-
-
-
 }

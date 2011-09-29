@@ -25,7 +25,8 @@ public class TypeConsistencyEnforcement implements QosPolicy {
 	private static final long serialVersionUID = -1669488097073217406L;
 	
 	// -- Constant Members
-    public final static int ID = 18;
+    // TODO: the ID should be defined in the spec.
+    public final static int ID = 30;
     private final static String NAME = "TypeConsistencyEnforcement";
     private static final TypeConsistencyEnforcement EXACT_TYPE =
             new TypeConsistencyEnforcement(Kind.EXACT_TYPE_TYPE_CONSISTENCY);

@@ -28,7 +28,7 @@ import org.omg.dds.topic.TopicListener;
 import org.omg.dds.topic.TopicQos;
 import org.omg.dds.type.TypeSupport;
 import org.opensplice.psm.java.core.OSPLInstanceHandle;
-import org.opensplice.psm.java.core.policy.OSPL;
+import org.opensplice.psm.java.core.policy.PolicyConverter;
 import org.opensplice.psm.java.pub.OSPLPublisher;
 import org.opensplice.psm.java.sub.OSPLSubscriber;
 import org.opensplice.psm.java.topic.OSPLTopic;
@@ -61,11 +61,13 @@ public class OSPLDomainParticipant implements DomainParticipant {
      *      org.omg.dds.pub.PublisherListener, java.util.Collection)
      */
     public Publisher createPublisher() {
+        // TODO: This code should be rewritten so to fetch the QoS from the
+        // QosProvider.
         DDS.PublisherQosHolder holder = new DDS.PublisherQosHolder();
         peer.get_default_publisher_qos(holder);
         DDS.Publisher publisher = peer.create_publisher(
                 holder.value, null, 0);
-        return new OSPLPublisher(publisher, this);
+        return new OSPLPublisher(publisher, new PublisherQos(), this);
     }
 
     /**
@@ -170,6 +172,9 @@ public class OSPLDomainParticipant implements DomainParticipant {
         return new OSPLTopic<TYPE>(this, topicName, type);
     }
 
+    public <TYPE> Topic<TYPE> createTopic(String topicName, Class<TYPE> type, TopicQos qos) {
+        return new OSPLTopic<TYPE>(this, topicName, type, qos);
+    }
     /**
      * This operation creates a Topic with the desired QoS policies and attaches
      * to it the specified TopicListener.
@@ -194,8 +199,8 @@ public class OSPLDomainParticipant implements DomainParticipant {
      *            null collection signifies all status changes.
      */
     public <TYPE> Topic<TYPE> createTopic(String topicName, Class<TYPE> type,
-            TopicQos qos, TopicListener<TYPE> listener,
-            Collection<Class<? extends Status<?>>> statuses) {
+                                    TopicQos qos, TopicListener<TYPE> listener,
+                                    Collection<Class<? extends Status<?>>> statuses) {
         throw new RuntimeException("Not implemented");
     }
 
@@ -802,7 +807,7 @@ public class OSPLDomainParticipant implements DomainParticipant {
     public Time getCurrentTime(Time currentTime) {
         Time_tHolder holder = new Time_tHolder();
         peer.get_current_time(holder);
-        return OSPL.convert(holder.value);
+        return PolicyConverter.convert(holder.value);
     }
 
     public void setListener(DomainParticipantListener listener) {

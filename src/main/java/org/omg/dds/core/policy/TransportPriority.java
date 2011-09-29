@@ -47,7 +47,7 @@ public class TransportPriority implements QosPolicy, Comparable<TransportPriorit
 
 	private static final long serialVersionUID = 4255377165975956688L;
 	
-	public static final int ID = 5;
+	public static final int ID = 20;
     private static final String NAME = "TransportPriority";
     final private int value;
 

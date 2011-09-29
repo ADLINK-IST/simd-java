@@ -181,6 +181,11 @@ public interface DomainParticipant extends Entity<DomainParticipant> {
             String topicName,
             Class<TYPE> type);
 
+    public <TYPE> Topic<TYPE> createTopic(
+            String topicName,
+            Class<TYPE> type,
+            TopicQos qos);
+
     /**
      * This operation creates a Topic with the desired QoS policies and
      * attaches to it the specified TopicListener.

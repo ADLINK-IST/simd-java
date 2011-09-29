@@ -20,6 +20,8 @@ package org.omg.dds.core.policy;
 
 import org.omg.dds.core.Duration;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * This policy indicates the level of reliability requested by a
  * {@link org.omg.dds.sub.DataReader} or offered by a
@@ -71,11 +73,12 @@ public class Reliability implements QosPolicy, Comparable<Reliability>{
 	// -- Constant Members
     public final static int ID = 11;
     public final static String NAME = "Reliability";
-    private static final Reliability RELIABLE = new Reliability(Kind.RELIABLE);
-    private static final Reliability BEST_EFFORT = new Reliability(Kind.BEST_EFFORT);
+    private static final Reliability RELIABLE = new Reliability(Kind.RELIABLE, Duration.infinite());
+    private static final Reliability BEST_EFFORT = new Reliability(Kind.BEST_EFFORT, new Duration(100, TimeUnit.MILLISECONDS));
     // - Attributes
     private Kind kind;
     private Duration blockingTime;
+
 
     public enum Kind {
         /**
@@ -104,7 +107,6 @@ public class Reliability implements QosPolicy, Comparable<Reliability>{
     // -- Ctors
     private Reliability(Kind kind) {
         this.kind = kind;
-        this.blockingTime = Duration.infinite();
     }
 
     private Reliability(Kind kind, Duration blockingTime) {

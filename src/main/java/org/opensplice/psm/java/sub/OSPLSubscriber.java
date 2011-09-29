@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.StatusCondition;
 import org.omg.dds.core.status.Status;
+import org.omg.dds.runtime.DDSRuntime;
 import org.omg.dds.sub.DataReader;
 import org.omg.dds.sub.DataReaderListener;
 import org.omg.dds.sub.DataReaderQos;
@@ -30,6 +31,7 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
     private SubscriberListener thelistener = null;
     private OSPLDomainParticipant participant = null;
     private SubscriberQos theQos = null;
+    private DataReaderQos drQos = DDSRuntime.getInstance().getQosProvider().getDataReaderQos();
 
     public OSPLSubscriber(DDS.Subscriber impl) {
         peer = impl;
@@ -68,10 +70,16 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
 
     
     public <TYPE> DataReader<TYPE> createDataReader(TopicDescription<TYPE> topic) {
-        DataReader<TYPE> reader = new OSPLDataReader<TYPE>(topic, this);
+        DataReaderQos qos = DDSRuntime.getInstance().getQosProvider().getDataReaderQos();
+        DataReader<TYPE> reader = new OSPLDataReader<TYPE>(topic, this, qos);
         return reader;
     }
 
+    public <TYPE> DataReader<TYPE>
+    createDataReader(TopicDescription<TYPE> topic, DataReaderQos qos) {
+        DataReader<TYPE> reader = new OSPLDataReader<TYPE>(topic, this, qos);
+        return reader;
+    }
     
     public <TYPE> DataReader<TYPE> createDataReader(
             TopicDescription<TYPE> topic, DataReaderQos qos,
@@ -242,14 +250,12 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
 
     
     public DataReaderQos getDefaultDataReaderQos() {
-        DDS.DataReaderQosHolder holder = new DDS.DataReaderQosHolder();
-        peer.get_default_datareader_qos(holder);
-        return new OSPLDataReaderQos(holder.value);
+        return this.drQos;
     }
 
     
     public void setDefaultDataReaderQos(DataReaderQos qos) {
-        peer.set_default_datareader_qos(((OSPLDataReaderQos)qos).getQos());
+        this.drQos = qos;
     }
 
     

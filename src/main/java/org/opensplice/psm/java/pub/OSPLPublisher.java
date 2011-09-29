@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import DDS.*;
-import org.omg.dds.core.DDSException;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.StatusCondition;
@@ -16,6 +15,7 @@ import org.omg.dds.pub.DataWriterQos;
 import org.omg.dds.pub.Publisher;
 import org.omg.dds.pub.PublisherListener;
 import org.omg.dds.pub.PublisherQos;
+import org.omg.dds.runtime.DDSRuntime;
 import org.omg.dds.topic.Topic;
 import org.omg.dds.topic.TopicQos;
 import org.omg.dds.type.builtin.BytesDataWriter;
@@ -25,6 +25,7 @@ import org.omg.dds.type.builtin.KeyedString;
 import org.omg.dds.type.builtin.KeyedStringDataWriter;
 import org.omg.dds.type.builtin.StringDataWriter;
 import org.opensplice.psm.java.core.OSPLInstanceHandle;
+import org.opensplice.psm.java.core.policy.QoSConverter;
 import org.opensplice.psm.java.domain.OSPLDomainParticipant;
 
 public class OSPLPublisher implements Publisher {
@@ -32,6 +33,7 @@ public class OSPLPublisher implements Publisher {
     private DDS.Publisher publisher;
     private OSPLDomainParticipant participant;
     private PublisherListener listener = null;
+    private PublisherQos qos;
 
     private class MyPublisherListener implements DDS.PublisherListener {
         private PublisherListener listener;
@@ -71,7 +73,7 @@ public class OSPLPublisher implements Publisher {
 
     }
 
-    public OSPLPublisher(DDS.Publisher thepublisher,
+    public OSPLPublisher(DDS.Publisher thepublisher, PublisherQos qos,
             OSPLDomainParticipant theparticipant) {
         publisher = thepublisher;
         participant = theparticipant;
@@ -96,9 +98,7 @@ public class OSPLPublisher implements Publisher {
     }
 
     public PublisherQos getQos() {
-        PublisherQosHolder holder = new PublisherQosHolder();
-        publisher.get_qos(holder);
-        return new OSPLPublisherQos(holder.value);
+        return this.qos;
     }
 
 
@@ -128,8 +128,15 @@ public class OSPLPublisher implements Publisher {
 
 
     public <TYPE> DataWriter<TYPE> createDataWriter(Topic<TYPE> topic) {
+        DataWriterQos qos = DDSRuntime.getInstance().getQosProvider().getDataWriterQos();
         DataWriter<TYPE> writer =
-                new OSPLDataWriter<TYPE>(topic, this, null);
+                new OSPLDataWriter<TYPE>(topic, this, qos);
+        return writer;
+    }
+
+    public <TYPE> DataWriter<TYPE> createDataWriter(Topic<TYPE> topic, DataWriterQos qos) {
+        DataWriter<TYPE> writer =
+                new OSPLDataWriter<TYPE>(topic, this, qos);
         return writer;
     }
 
@@ -259,27 +266,16 @@ public class OSPLPublisher implements Publisher {
 
 
     public DataWriterQos getDefaultDataWriterQos() {
-        // TODO Auto-generated method stub
+        // This method should actually return the pre-built ojbect constructed
+        // using the Policy Providers
         DDS.DataWriterQosHolder holder = new DDS.DataWriterQosHolder();
         publisher.get_default_datawriter_qos(holder);
-        return new OSPLDataWriterQos(holder.value);
+        return QoSConverter.convert(holder.value);
+
     }
 
 
     public void setDefaultDataWriterQos(DataWriterQos qos) {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    public void setDefaultDataWriterQos(String qosLibraryName,
-            String qosProfileName) {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    public void copyFromTopicQos(DataWriterQos dst, TopicQos src) {
         // TODO Auto-generated method stub
 
     }

@@ -36,7 +36,7 @@ import org.omg.dds.pub.DataWriterQos;
 import org.omg.dds.pub.Publisher;
 import org.omg.dds.runtime.Bootstrap;
 import org.omg.dds.sub.DataReader;
-import org.omg.dds.sub.DataReaderAdapter;
+import org.omg.dds.sub.SimpleDataReaderListener;
 import org.omg.dds.sub.DataReaderListener;
 import org.omg.dds.sub.DataReaderQos;
 import org.omg.dds.sub.InstanceState;
@@ -98,7 +98,8 @@ public class JavaShapesMainWindow extends JFrame implements ActionListener {
         dp = Bootstrap.runtime().getParticipantFactory().createParticipant();
         sub = dp.createSubscriber();
         pub = dp.createPublisher();
-        rdrqos = sub.getDefaultDataReaderQos().with(
+        DataReaderQos drQos = sub.getDefaultDataReaderQos();
+        rdrqos = drQos.with(
                 DestinationOrder.SourceTimestamp(),
                 new LatencyBudget(new Duration(0, 300000)));
         // new Duration(300, TimeUnit.MICROSECONDS)));
@@ -477,7 +478,7 @@ public class JavaShapesMainWindow extends JFrame implements ActionListener {
 
     }
 
-    private class MyListener extends DataReaderAdapter<ShapeType> {
+    private class MyListener extends SimpleDataReaderListener<ShapeType> {
         private final String shape;
 
         public MyListener(String theShape) {

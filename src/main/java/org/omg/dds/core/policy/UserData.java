@@ -55,7 +55,7 @@ public class UserData implements QosPolicy {
     private static final UserData EMPTY_USER_DATA = new UserData();
     private final byte value[];
 
-    private UserData() {
+    public UserData() {
         this.value = new byte[0];
     }
 

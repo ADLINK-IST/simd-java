@@ -75,7 +75,7 @@ import java.util.concurrent.TimeUnit;
  * @see Reliability
  */
 public class TimeBasedFilter implements QosPolicy, Comparable<TimeBasedFilter> {
-    private static final int ID = 9;
+    public static final int ID = 9;
     private static final String NAME = "TimeBasedFilter";
 
     private final Duration minSeparation;

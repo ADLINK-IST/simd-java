@@ -11,8 +11,8 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>, S
     protected static final int SEC_MAX = 0x7fffffff;
     protected static final int NSEC_MAX = (int)Math.pow(10, 9);
 
-    protected final int sec;
-    protected final long nanoSec;
+    protected  int sec;
+    protected  long nanoSec;
 
 
     public AbstractTime(long d, TimeUnit unit) {
@@ -134,6 +134,10 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>, S
 
     public long getNanoSec() {
         return nanoSec;
+    }
+
+    public String toString() {
+        return this.sec + "sec" + this.nanoSec + "nsec";
     }
 
 }

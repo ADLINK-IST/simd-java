@@ -75,7 +75,7 @@ import java.util.concurrent.TimeUnit;
  * @see ResourceLimits
  */
 public class ReaderDataLifecycle implements QosPolicy {
-    private static final int ID = 17;
+    public static final int ID = 17;
     private static final String NAME = "ReaderDataLifecycle";
 
     final Duration dwPurgeDelay;

@@ -65,6 +65,7 @@ package org.omg.dds.core.policy;
  */
 public class WriterDataLifecycle implements QosPolicy {
 
+
 	private static final long serialVersionUID = 7452968616794253527L;
 	
 	public static final int ID = 17;
@@ -74,6 +75,7 @@ public class WriterDataLifecycle implements QosPolicy {
     private static WriterDataLifecycle NOT_AUT_DISPOSE_UNREGISTERED_INSTANCES = new WriterDataLifecycle(
             false);
 
+    //TODO: Add durations for controlling disposal
     private final boolean autDisposeUnregisteredInstances;
 
     /**

@@ -51,7 +51,7 @@ public class LatencyBudget implements QosPolicy {
 
 	private static final long serialVersionUID = 2966959985048968650L;
 	
-	public static final int ID = 6;
+	public static final int ID = 5;
     private static final String NAME = "LatencyBudget";
     final private Duration duration;
 

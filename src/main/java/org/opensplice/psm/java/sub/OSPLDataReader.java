@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
 import org.omg.dds.core.DDSException;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.InstanceHandle;
@@ -20,6 +21,7 @@ import org.omg.dds.core.status.SampleLost;
 import org.omg.dds.core.status.SampleRejected;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.core.status.SubscriptionMatched;
+import org.omg.dds.runtime.DDSRuntime;
 import org.omg.dds.sub.*;
 import org.omg.dds.sub.QueryCondition;
 import org.omg.dds.sub.ReadCondition;
@@ -28,7 +30,8 @@ import org.omg.dds.sub.Subscriber;
 import org.omg.dds.topic.PublicationBuiltinTopicData;
 import org.omg.dds.topic.TopicDescription;
 import org.opensplice.psm.java.core.OSPLInstanceHandle;
-import org.opensplice.psm.java.core.policy.OSPL;
+import org.opensplice.psm.java.core.policy.PolicyConverter;
+import org.opensplice.psm.java.core.policy.QoSConverter;
 import org.opensplice.psm.java.topic.OSPLTopic;
 
 public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
@@ -37,6 +40,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
     final private OSPLSubscriber subscriber;
     private DataReaderListener<TYPE> listener = null;
     private DDS.DataReader peer = null;
+    private DataReaderQos qos;
 
     // Remove fields below
     private Method take = null;
@@ -60,9 +64,10 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
 
 
-    public OSPLDataReader(TopicDescription<TYPE> topic, Subscriber subscriber) {
+    public OSPLDataReader(TopicDescription<TYPE> topic, Subscriber subscriber, DataReaderQos qos) {
         this.topic = (OSPLTopic<TYPE>) topic;
         this.subscriber = (OSPLSubscriber) subscriber;
+        this.qos = qos;
         this.peer = createReader();
         try {
             DDS.TypeSupport ts = this.topic.getTypeSupport();
@@ -70,7 +75,6 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
             Method m = tsClass.getDeclaredMethod("get_copyCache");
             Long r = (Long)m.invoke(ts);
             this.copyCache = r.longValue();
-            System.out.println("Copy Cache = "+ this.copyCache);
             String typeName = this.topic.getType().getName();
             this.dataSeqClass = Class.forName(typeName + "SeqHolder");
             this.valueField = dataSeqClass.getField("value");
@@ -81,31 +85,31 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     private DDS.DataReader createReader() {
         DDS.DataReader dr = null;
-        DDS.DataReaderQosHolder holder = new DDS.DataReaderQosHolder();
-        subscriber.getPeer().get_default_datareader_qos(holder);
-        DDS.DataReaderQos drQos = holder.value;
+        DDS.DataReaderQosHolder toQosH= new DDS.DataReaderQosHolder();
+        subscriber.getPeer().get_default_datareader_qos(toQosH);
+        DDS.DataReaderQos toQos = QoSConverter.convert(this.qos, toQosH.value);
 
         dr =
                 this.subscriber.getPeer().create_datareader(
                         this.topic.getPeer(),
-                        drQos, null,
+                        toQos, null,
                         DDS.ANY_STATUS.value);
 
         assert (dr != null);
         return dr;
     }
 
-//    
-//    public void setListener(DataReaderListener<TYPE> thelistener) {
-//        listener = thelistener;
-//        if (thelistener == null) {
-//            peer.set_listener(null, 0);
-//        } else {
-//            MyDataReaderListener mylistener = new MyDataReaderListener(this,
-//                    thelistener);
-//            peer.set_listener(mylistener, DDS.ANY_STATUS.value);
-//        }
-//    }
+
+    public void setListener(DataReaderListener<TYPE> thelistener) {
+        listener = thelistener;
+        if (thelistener == null) {
+            peer.set_listener(null, 0);
+        } else {
+            MyDataReaderListener mylistener = new MyDataReaderListener(this,
+                    thelistener);
+            peer.set_listener(mylistener, DDS.ANY_STATUS.value);
+        }
+    }
 
 
     public void enable() {
@@ -340,7 +344,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
     }
 
     public void waitForHistoricalData(Duration maxWait) throws TimeoutException {
-        peer.wait_for_historical_data(OSPL.convert(maxWait));
+        peer.wait_for_historical_data(PolicyConverter.convert(maxWait));
     }
 
 
@@ -418,6 +422,7 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
 
     public void read(List<Sample<TYPE>> samples) {
+        //TODO: Should throw the appropriate exception when the ret-code is not 0.
         try {
             samples.clear();
             Object data = this.dataSeqClass.newInstance();
@@ -433,7 +438,6 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
                     DDS.NOT_READ_SAMPLE_STATE.value,
                     DDS.ANY_VIEW_STATE.value,
                     DDS.ALIVE_INSTANCE_STATE.value);
-            System.out.println(">> " + rv);
             TYPE vals[] = (TYPE[])this.valueField.get(data);
             for (int i = 0; i < vals.length; ++i) {
                 Sample<TYPE> s = new OSPLSample<TYPE>(vals[i], info.value[i]);
@@ -818,9 +822,9 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return this.listener;
     }
 
-    public void setListener(DataReaderListener<TYPE> typeDataReaderListener) {
-        this.listener = listener;
-    }
+    //public void setListener(DataReaderListener<TYPE> typeDataReaderListener) {
+//        this.listener = listener;
+  //  }
 
      // ------------------------------------------------------------------------------------
     // Helper Listener

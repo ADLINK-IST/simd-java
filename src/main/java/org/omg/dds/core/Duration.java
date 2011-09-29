@@ -54,7 +54,8 @@ public class Duration extends AbstractTime
     // violating the invariants of the class Time.
     private static final class InfiniteDuration extends Duration {
         InfiniteDuration() {
-            super(AbstractTime.SEC_MAX, 0xffffffff);
+            this.sec = AbstractTime.SEC_MAX;
+            this.nanoSec =  0x7FFFFFFF;
         }
     }
 

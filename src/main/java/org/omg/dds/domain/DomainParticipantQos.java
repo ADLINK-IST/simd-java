@@ -27,6 +27,7 @@ public class DomainParticipantQos {
     private UserData userData;
     private EntityFactory entityFactory;
 
+
     public DomainParticipantQos(UserData userData, EntityFactory entityFactory) {
         this.userData = userData;
         this.entityFactory = entityFactory;

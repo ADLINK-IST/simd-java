@@ -89,6 +89,9 @@ public interface Publisher extends Entity<Publisher> {
     public <TYPE> DataWriter<TYPE> createDataWriter(
             Topic<TYPE> topic);
 
+    public <TYPE> DataWriter<TYPE> createDataWriter(
+            Topic<TYPE> topic, DataWriterQos qos);
+
     /**
      * This operation creates a DataWriter. The returned DataWriter will be
      * attached and belongs to the Publisher.
@@ -471,12 +474,6 @@ public interface Publisher extends Entity<Publisher> {
      */
     public void setDefaultDataWriterQos(DataWriterQos qos);
 
-    /**
-     * @see     #setDefaultDataWriterQos(DataWriterQos)
-     */
-    public void setDefaultDataWriterQos(
-            String qosLibraryName,
-            String qosProfileName);
 
     /**
      * This operation copies the policies in the {@link Topic} QoS to the
@@ -498,7 +495,6 @@ public interface Publisher extends Entity<Publisher> {
      * @param dst   the QoS whose policies are to be overwritten.
      * @param src   the QoS from which the policies are to be taken.
      */
-    public void copyFromTopicQos(DataWriterQos dst, TopicQos src);
 
     public PublisherListener getListener();
 

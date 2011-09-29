@@ -2,16 +2,18 @@ package org.opensplice.psm.java.core.policy;
 
 import java.util.concurrent.TimeUnit;
 
+import org.omg.dds.core.DDSException;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.Time;
 import org.omg.dds.core.policy.*;
 import org.omg.dds.core.policy.Presentation.AccessScopeKind;
+import org.opensplice.psm.java.core.TypeConverter;
 
-public class OSPL {
+public class PolicyConverter {
     /**
      * A utility class should not have a public constructor.
      */
-    private OSPL() { }
+    private PolicyConverter() { }
 
     public static Duration convert(DDS.Duration_t ddsduration) {
         if (DDS.DURATION_INFINITE.value.equals(ddsduration)) {
@@ -84,13 +86,6 @@ public class OSPL {
                         Ownership.Exclusive() : Ownership.Shared();
     }
 
-    public static WriterDataLifecycle convert(
-            DDS.WriterDataLifecycleQosPolicy writerDataLifecycle) {
-        return writerDataLifecycle.autodispose_unregistered_instances ? WriterDataLifecycle
-                .AutDisposeUnregisterdInstances()
-                :
-                WriterDataLifecycle.NotAutDisposeUnregisterdInstance();
-    }
     
     public static Presentation convert(DDS.PresentationQosPolicy ddspresentation) {
     	AccessScopeKind kind;
@@ -131,11 +126,11 @@ public class OSPL {
 
     public static DDS.DurabilityQosPolicy convert(Durability durability) {
         DDS.DurabilityQosPolicy ddsdurability = new DDS.DurabilityQosPolicy();
-        if (Durability.Kind.PERSISTENT.equals(durability)) {
+        if (Durability.Kind.PERSISTENT == durability.getKind()) {
             ddsdurability.kind = DDS.DurabilityQosPolicyKind.PERSISTENT_DURABILITY_QOS;
-        } else if (Durability.Kind.TRANSIENT.equals(durability)) {
+        } else if (Durability.Kind.TRANSIENT == durability.getKind()) {
             ddsdurability.kind = DDS.DurabilityQosPolicyKind.TRANSIENT_DURABILITY_QOS;
-        } else if (Durability.Kind.TRANSIENT_LOCAL.equals(durability)) {
+        } else if (Durability.Kind.TRANSIENT_LOCAL == durability.getKind()) {
             ddsdurability.kind = DDS.DurabilityQosPolicyKind.TRANSIENT_LOCAL_DURABILITY_QOS;
         } else {
             ddsdurability.kind = DDS.DurabilityQosPolicyKind.VOLATILE_DURABILITY_QOS;
@@ -145,12 +140,14 @@ public class OSPL {
 
     public static DDS.ReliabilityQosPolicy convert(Reliability reliability) {
         DDS.ReliabilityQosPolicy ddsreliability = new DDS.ReliabilityQosPolicy();
-        if (Reliability.Kind.RELIABLE.equals(reliability)) {
+        if (Reliability.Kind.RELIABLE == reliability.getKind()) {
             ddsreliability.kind = DDS.ReliabilityQosPolicyKind.RELIABLE_RELIABILITY_QOS;
-            ddsreliability.max_blocking_time = convert(reliability
-                    .getMaxBlockingTime());
+            ddsreliability.max_blocking_time = convert(reliability.getMaxBlockingTime());
+            ddsreliability.synchronous = false;
         } else {
             ddsreliability.kind = DDS.ReliabilityQosPolicyKind.BEST_EFFORT_RELIABILITY_QOS;
+            ddsreliability.max_blocking_time = convert(reliability.getMaxBlockingTime());
+            ddsreliability.synchronous = false;
         }
         return ddsreliability;
     }
@@ -188,7 +185,7 @@ public class OSPL {
         } else if (liveliness.getKind().equals(Liveliness.Kind.MANUAL_BY_TOPIC)) {
             ddsliveliness.kind = DDS.LivelinessQosPolicyKind.MANUAL_BY_TOPIC_LIVELINESS_QOS;
         }
-        ddsliveliness.lease_duration = OSPL.convert(liveliness
+        ddsliveliness.lease_duration = PolicyConverter.convert(liveliness
                 .getLeaseDuration());
         return ddsliveliness;
     }
@@ -245,4 +242,81 @@ public class OSPL {
         return new GroupData(gd.value);
     }
 
+    // -- Deadline QoS Policy --
+
+    public static DDS.DeadlineQosPolicy convert(Deadline d) {
+
+        DDS.DeadlineQosPolicy dl = (d == null)
+                ? null
+                : new DDS.DeadlineQosPolicy(TypeConverter.convert(d.getPeriod()));
+        return dl;
+    }
+
+    public static  Deadline convert(DDS.DeadlineQosPolicy d) {
+        return new Deadline(TypeConverter.convert(d.period));
+    }
+
+    // -- Latency Budget QoS Policy --
+
+    public static DDS.LatencyBudgetQosPolicy convert(LatencyBudget lb) {
+        return new DDS.LatencyBudgetQosPolicy(TypeConverter.convert(lb.getDuration()));
+    }
+
+    public static  LatencyBudget convert(DDS.LatencyBudgetQosPolicy lb) {
+        return new LatencyBudget (TypeConverter.convert(lb.duration));
+    }
+
+    // -- TransportPriority Qos Policy --
+
+    public static DDS.TransportPriorityQosPolicy convert(TransportPriority tp) {
+        return new DDS.TransportPriorityQosPolicy(tp.getValue());
+    }
+
+    public static  TransportPriority convert(DDS.TransportPriorityQosPolicy tp) {
+        return new TransportPriority(tp.value);
+    }
+
+    // -- Lifespan Qos Policy --
+    public static DDS.LifespanQosPolicy convert(Lifespan l) {
+        return new DDS.LifespanQosPolicy(TypeConverter.convert(l.getDuration()));
+    }
+
+    public static Lifespan convert( DDS.LifespanQosPolicy l) {
+        return new Lifespan(TypeConverter.convert(l.duration));
+    }
+
+    // -- User Data Qos Policy --
+    public static DDS.UserDataQosPolicy convert(UserData ud) {
+        DDS.UserDataQosPolicy rv = (ud == null)
+                ? null
+                : new DDS.UserDataQosPolicy(ud.getValue());
+        return rv;
+    }
+    public static UserData convert(DDS.UserDataQosPolicy ud) {
+        return new UserData (ud.value);
+    }
+
+    // -- Ownership Strength Qos Policy --
+    public static DDS.OwnershipStrengthQosPolicy convert(OwnershipStrength os) {
+        DDS.OwnershipStrengthQosPolicy rv = (os == null)
+                ? null
+                : new DDS.OwnershipStrengthQosPolicy(os.getValue());
+        return rv;
+    }
+
+    public static OwnershipStrength convert(DDS.OwnershipStrengthQosPolicy os) {
+        return new OwnershipStrength (os.value);
+    }
+
+    //TODO: Fix the purge delay conversion
+    public static DDS.WriterDataLifecycleQosPolicy convert(WriterDataLifecycle wdl) {
+        DDS.Duration_t d = TypeConverter.convert(Duration.infinite());
+        return new DDS.WriterDataLifecycleQosPolicy(wdl.isAutDisposeUnregisteredInstances(), d, d);
+    }
+    public static WriterDataLifecycle convert(DDS.WriterDataLifecycleQosPolicy wdl) {
+        return
+                wdl.autodispose_unregistered_instances
+                        ? WriterDataLifecycle.AutDisposeUnregisterdInstances()
+                        : WriterDataLifecycle.NotAutDisposeUnregisterdInstance();
+    }
 }

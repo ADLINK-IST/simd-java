@@ -7,7 +7,12 @@ import org.opensplice.psm.java.OSPLRuntime;
  *  is to bind the API with a specific DDS vendor implementation.
  */
 public class Bootstrap {
-    public static DDSRuntime runtime() {
-        return new OSPLRuntime();
+    private static DDSRuntime theRuntime = null;
+
+    public static synchronized DDSRuntime runtime() {
+        if (theRuntime == null) {
+            theRuntime = new OSPLRuntime();
+        }
+        return theRuntime;
     }
 }
