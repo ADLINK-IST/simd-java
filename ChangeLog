@@ -1,10 +1,14 @@
+2011-09-30  Angelo Corsaro  <angelo@icorsaro.net>
+   * src/main/java/org/opensplice/webcast: Added examples from
+     the Webcast hosted on the 29 Sept. 2011.
+
 2011-09-29  Angelo Corsaro  <angelo@icorsaro.net>
 
     * Implemented DataReaderQos + DataWriter Qos
     * Fixed support for DataReader Listeners
 
 2011-08-02  Angelo Corsaro  <angelo@icorsaro.net>
-    * src//main/java/org/omg/dds/core/policy/LatencyBudget.java:
+    * src/main/java/org/omg/dds/core/policy/LatencyBudget.java:
     Added ctor that accepts a <long> duration and a TimeUnit.
 
 	* src/main/java/org/omg/dds/core/AbstractTime.java:

@@ -34,6 +34,7 @@ public class OSPLPublisher implements Publisher {
     private OSPLDomainParticipant participant;
     private PublisherListener listener = null;
     private PublisherQos qos;
+    private DataWriterQos dwQos = DDSRuntime.getInstance().getQosProvider().getDataWriterQos();
 
     private class MyPublisherListener implements DDS.PublisherListener {
         private PublisherListener listener;
@@ -268,15 +269,13 @@ public class OSPLPublisher implements Publisher {
     public DataWriterQos getDefaultDataWriterQos() {
         // This method should actually return the pre-built ojbect constructed
         // using the Policy Providers
-        DDS.DataWriterQosHolder holder = new DDS.DataWriterQosHolder();
-        publisher.get_default_datawriter_qos(holder);
-        return QoSConverter.convert(holder.value);
+        return dwQos;
 
     }
 
 
     public void setDefaultDataWriterQos(DataWriterQos qos) {
-        // TODO Auto-generated method stub
+        this.dwQos = qos;
 
     }
 

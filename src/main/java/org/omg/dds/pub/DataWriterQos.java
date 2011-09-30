@@ -93,7 +93,7 @@ public class DataWriterQos extends DataQos {
                 resourceLimits,
                 transportPriority,
                 ownership,
-                dataRepresentation,
+               // dataRepresentation,
                 typeConsistencyEnforcement);
         this.ownershipStrength = ownershipStrength;
         this.userData = userData;

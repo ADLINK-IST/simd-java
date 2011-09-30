@@ -420,6 +420,33 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public void history(List<Sample<TYPE>> samples) {
+        //TODO: Should throw the appropriate exception when the ret-code is not 0.
+        try {
+            samples.clear();
+            Object data = this.dataSeqClass.newInstance();
+            DDS.SampleInfoSeqHolder info =
+                    new DDS.SampleInfoSeqHolder();
+            int rv =
+                org.opensplice.dds.dcps.FooDataReaderImpl.read(
+                    this.peer,
+                    this.copyCache,
+                    data,
+                    info,
+                    DDS.LENGTH_UNLIMITED.value,
+                    DDS.ANY_SAMPLE_STATE.value,
+                    DDS.ANY_VIEW_STATE.value,
+                    DDS.ALIVE_INSTANCE_STATE.value);
+            TYPE vals[] = (TYPE[])this.valueField.get(data);
+            for (int i = 0; i < vals.length; ++i) {
+                Sample<TYPE> s = new OSPLSample<TYPE>(vals[i], info.value[i]);
+                samples.add(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public void read(List<Sample<TYPE>> samples) {
         //TODO: Should throw the appropriate exception when the ret-code is not 0.
@@ -449,6 +476,34 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
+    public void take(List<Sample<TYPE>> samples) {
+            //TODO: Should throw the appropriate exception when the ret-code is not 0.
+            try {
+                samples.clear();
+                Object data = this.dataSeqClass.newInstance();
+                DDS.SampleInfoSeqHolder info =
+                        new DDS.SampleInfoSeqHolder();
+                int rv =
+                    org.opensplice.dds.dcps.FooDataReaderImpl.take(
+                        this.peer,
+                        this.copyCache,
+                        data,
+                        info,
+                        DDS.LENGTH_UNLIMITED.value,
+                        DDS.NOT_READ_SAMPLE_STATE.value,
+                        DDS.ANY_VIEW_STATE.value,
+                        DDS.ALIVE_INSTANCE_STATE.value);
+                TYPE vals[] = (TYPE[])this.valueField.get(data);
+                for (int i = 0; i < vals.length; ++i) {
+                    Sample<TYPE> s = new OSPLSample<TYPE>(vals[i], info.value[i]);
+                    samples.add(s);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
     /**
      * TODO: Add JavaDoc.
      * <p/>
@@ -472,15 +527,6 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    /**
-     * TODO: Add JavaDoc.
-     * <p/>
-     * Copy samples into the provided collection, overwriting any samples that
-     * might already be present.
-     */
-    public void take(List<Sample<TYPE>> samples) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     /**
      * TODO: Add JavaDoc.

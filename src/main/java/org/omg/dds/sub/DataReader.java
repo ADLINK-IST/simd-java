@@ -330,6 +330,8 @@ public interface DataReader<TYPE> extends Entity<DataReader<TYPE>> {
 
     public Sample.Iterator<TYPE> read(ReadState state);
 
+    public void history(List<Sample<TYPE>> samples);
+
     /**
      * TODO: Add JavaDoc.
      * 
