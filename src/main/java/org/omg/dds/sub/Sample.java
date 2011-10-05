@@ -397,6 +397,13 @@ public interface Sample<TYPE> {
     public int getAbsoluteGenerationRank();
 
 
+    /**
+     * This method allows to detect wether a sample has valid data or not.
+     *
+     * @return true if the sample has valid data. Otherwise only the meta-data
+     * is meaningful.
+     */
+    public boolean isDataValid();
 
     // -----------------------------------------------------------------------
     // Types

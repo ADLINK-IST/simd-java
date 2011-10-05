@@ -114,7 +114,9 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
         return new OSPLSample<TYPE>(value, sampleInfo);
     }
 
-
+    public boolean isDataValid() {
+        return sampleInfo.valid_data;
+    }
 
     public static final class SampleIterator<TYPE> implements Iterator<TYPE> {
 

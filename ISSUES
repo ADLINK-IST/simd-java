@@ -159,6 +159,9 @@
    The suggestion is to add a ReadState as currently present on the dds-psm-cxx
    to simplify the API and make it simpler to support the most common use cases.
 
+===============================================================================
+===============================================================================
+===============================================================================
 
 [2011.09.22 New Issues]
 
@@ -166,3 +169,26 @@
 
 [DataReader] The data reader should return a List as opposed to a ListIterator
 when using a List as a argument.
+
+[Listener]
+
+Problem:
+ The name of the classes DataReaderAdapter/DataWriterAdapter are misleading since what
+ they are really providing are listeners with some default behaviour.
+
+Resolution:
+ Rename the classes DataReaderAdapter/DataWriterAdapter to
+ SimpleDataReaderListener and SimpleDataWriterListener.
+
+ For the SimpleDataReaderListener one could implement trivially all
+  the method but the one that notifies the availability of data,
+  e.g. <onDataAvailable>
+
+
+
+[Sample]
+Problem:
+  The class does not provide an accessor method to verify wether the sample is valid or not.
+
+Resolution:
+  Add an < isValid () : Boolean >method;
