@@ -1,8 +1,5 @@
 package org.omg.dds.sub;
 
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.Any;
-import sun.jvm.hotspot.oops.Instance;
-
 /**
  * This class encapsulates the specific state considered by a read
  * with respect to the Samples, Instances and Views state.

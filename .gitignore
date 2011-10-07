@@ -17,9 +17,13 @@
 # Maven target
 target
 
-# Generated Files
-src/main/gen
-src/main/gen/*
+# Libs
+./lib
+./idlib/lib
+
+# SBT Stuff
+./project/target
+./idlib/project/target
 
 # Emacs Temp Files
 *~

@@ -1,8 +1,12 @@
 pushd $PWD &>/dev/null
-mkdir ./lib
+
+mkdir ./lib &>/dev/null
 cp ${OSPL_HOME}/jar/dcpssaj.jar ./lib/
-mkdir src/main/gen
-cd src/main/gen
+
+mkdir ./idlib/lib &>/dev/null
+cp ${OSPL_HOME}/jar/dcpssaj.jar ./idlib/lib/
+
+cd ./idlib/src/main/java/
 
 idlpp -S -l java ../idl/ping.idl
 idlpp -S -l java ../idl/ishape.idl

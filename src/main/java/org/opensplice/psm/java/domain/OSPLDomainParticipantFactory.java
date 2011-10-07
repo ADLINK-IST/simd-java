@@ -47,7 +47,7 @@ public class OSPLDomainParticipantFactory extends
         // TODO: Fix the following by passing the right string
         DDS.DomainParticipant participant = DDS.DomainParticipantFactory
                 .get_instance()
-                .create_participant("", dqos.value, null,
+                .create_participant(domainId, dqos.value, null,
                         DDS.STATUS_MASK_NONE.value);
         return new OSPLDomainParticipant(participant);
     }

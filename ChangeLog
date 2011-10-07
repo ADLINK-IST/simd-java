@@ -1,3 +1,11 @@
+2011-10-07  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* Moved the IDL files to another project that takes care of
+	building a jar.
+
+	* Added SBT build files to build simd-java as this will make it
+	easier to use scala at least for writing tests.
+
 2011-09-30  Angelo Corsaro  <angelo@icorsaro.net>
    * src/main/java/org/opensplice/webcast: Added examples from
      the Webcast hosted on the 29 Sept. 2011.

@@ -1,0 +1,2 @@
+name := "simd-java-idlib"
+
