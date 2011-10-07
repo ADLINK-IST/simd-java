@@ -1,4 +1,6 @@
 pushd $PWD &>/dev/null
+mkdir ./lib
+cp ${OSPL_HOME}/jar/dcpssaj.jar ./lib/
 mkdir src/main/gen
 cd src/main/gen
 
