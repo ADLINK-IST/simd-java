@@ -1,3 +1,6 @@
+2011-10-12 Angelo Corsaro <angelo@icorsaro.net>
+   * src/main/java/org/omg/dds/sub/ReadState.java: Removed spurious imports.
+
 2011-09-30  Angelo Corsaro  <angelo@icorsaro.net>
    * src/main/java/org/opensplice/webcast: Added examples from
      the Webcast hosted on the 29 Sept. 2011.
