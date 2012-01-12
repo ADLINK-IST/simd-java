@@ -85,8 +85,8 @@ public class OSPLSubscriber implements org.omg.dds.sub.Subscriber {
             TopicDescription<TYPE> topic, DataReaderQos qos,
             DataReaderListener<TYPE> listener,
             Collection<Class<? extends Status<?>>> statuses) {
-        DataReader<TYPE> reader = createDataReader(topic);
-        //reader.setListener(listener);
+        DataReader<TYPE> reader = createDataReader(topic, qos);
+        reader.setListener(listener);
         return reader;
     }
 

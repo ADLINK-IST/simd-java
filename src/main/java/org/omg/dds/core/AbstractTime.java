@@ -17,8 +17,8 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>, S
 
     public AbstractTime(long d, TimeUnit unit) {
         assert (d >= 0 );
-        long sec = unit.convert(d, TimeUnit.SECONDS);
-        long nsec = unit.convert(d, TimeUnit.NANOSECONDS) - (sec * NSEC_MAX);
+        long sec = TimeUnit.SECONDS.convert(d, unit);
+        long nsec = TimeUnit.NANOSECONDS.convert(d, unit) - (sec * NSEC_MAX);
 
         // If sec is negative that means we've gone out of
         // the allowable max time.
@@ -31,7 +31,8 @@ public abstract class AbstractTime implements Value, Comparable<AbstractTime>, S
     }
 
     public AbstractTime(int sec, long nanoSec) {
-        assert (nanoSec >= 0 && sec >= 0);
+        assert (nanoSec >= 0 && sec >= 0 ||
+        		((sec == AbstractTime.SEC_MAX) && (nanoSec == 0xffffffff)));
 
         this.nanoSec = (nanoSec < NSEC_MAX) ?  nanoSec : (nanoSec % NSEC_MAX);
         this.sec = sec + (int)(this.nanoSec/NSEC_MAX);

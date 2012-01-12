@@ -1,14 +1,12 @@
 package org.opensplice.psm.java.sub;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.omg.dds.core.DDSException;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.StatusCondition;
@@ -21,7 +19,6 @@ import org.omg.dds.core.status.SampleLost;
 import org.omg.dds.core.status.SampleRejected;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.core.status.SubscriptionMatched;
-import org.omg.dds.runtime.DDSRuntime;
 import org.omg.dds.sub.*;
 import org.omg.dds.sub.QueryCondition;
 import org.omg.dds.sub.ReadCondition;
@@ -41,22 +38,6 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
     private DataReaderListener<TYPE> listener = null;
     private DDS.DataReader peer = null;
     private DataReaderQos qos;
-
-    // Remove fields below
-    private Method take = null;
-    private Method read = null;
-    private Method return_loan = null;
-
-    private Field listValue = null;
-    private Field sampleValue = null;
-    private Object[] takeParameters = null;
-    private Object[] readParameters = null;
-    private Object[] returnLoanParameters = null;
-    private DDS.SampleInfoSeqHolder infoList;
-    private Object dataList;
-    private Class<?> listClass;
-    // endRemove
-
 
     private Class<?> dataSeqClass;
     private Field    valueField;
@@ -520,7 +501,29 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
      * @return a non-null unmodifiable iterator over loaned samples.
      */
     public Iterator<TYPE> take() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+            try {
+                Object data = this.dataSeqClass.newInstance();
+                DDS.SampleInfoSeqHolder info =
+                        new DDS.SampleInfoSeqHolder();
+                int rv =
+                    org.opensplice.dds.dcps.FooDataReaderImpl.take(
+                        this.peer,
+                        this.copyCache,
+                        data,
+                        info,
+                        DDS.LENGTH_UNLIMITED.value,
+                        DDS.NOT_READ_SAMPLE_STATE.value,
+                        DDS.ANY_VIEW_STATE.value,
+                        DDS.ALIVE_INSTANCE_STATE.value);
+                
+                TYPE vals[] = (TYPE[])this.valueField.get(data);
+                OSPLSample.SampleIterator<TYPE> iterator =
+                        new OSPLSample.SampleIterator<TYPE>(this, vals, info);
+                return iterator;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        return null;    	
     }
 
     public Iterator<TYPE> take(ReadState state) {
@@ -867,6 +870,8 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
     public DataReaderListener<TYPE> getListener() {
         return this.listener;
     }
+    
+    
 
     //public void setListener(DataReaderListener<TYPE> typeDataReaderListener) {
 //        this.listener = listener;
@@ -979,17 +984,6 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
 
     }
 
-    public void returnLoan(Object dataList, DDS.SampleInfoSeqHolder infoList) {
-        try {
-            returnLoanParameters[0] = dataList;
-            returnLoanParameters[0] = infoList;
-            return_loan.invoke(peer, returnLoanParameters);
-        } catch (InvocationTargetException ie) {
-
-        } catch (IllegalAccessException iae) {
-
-        }
-    }
    // ------------------------------------------------------------------------------------
 
     ///////////////////////////////////////////////////////////////////////////////////////

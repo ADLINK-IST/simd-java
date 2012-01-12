@@ -18,8 +18,6 @@
 
 package org.omg.dds.core.policy;
 
-import sun.awt.image.RasterListener;
-
 import javax.print.DocFlavor;
 
 /**
