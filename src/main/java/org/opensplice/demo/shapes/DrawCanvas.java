@@ -101,7 +101,6 @@ public class DrawCanvas extends Canvas implements Observer {
 
     @Override
     public void paint(Graphics g) {
-        System.out.println("Painting...");
         checkOffscreenImage();
         Dimension d = getSize();
         Graphics2D g2 = (Graphics2D) mImage.getGraphics();

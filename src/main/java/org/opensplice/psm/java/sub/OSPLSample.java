@@ -123,15 +123,12 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
         final private OSPLDataReader<TYPE> reader;
         private int index = 0;
         final private DDS.SampleInfoSeqHolder sampleInfoList;
-        final private Object sampleDataList;
-        final private TYPE[] list;
+        private TYPE[] list;
 
         public SampleIterator(OSPLDataReader<TYPE> theReader,
-                Object dataList,
                 TYPE[] thelist, DDS.SampleInfoSeqHolder theSampleInfoList) {
             reader = theReader;
             list = thelist;
-            sampleDataList = dataList;
             sampleInfoList = theSampleInfoList;
         }
 
@@ -173,8 +170,8 @@ public class OSPLSample<TYPE> implements Sample<TYPE> {
 
 
         public void returnLoan() {
-
-            reader.returnLoan(sampleDataList, sampleInfoList);
+        	sampleInfoList.value = null;
+        	list = null;
         }
 
         

@@ -48,7 +48,9 @@ import org.opensplice.demo.ShapeType;
 
 public class JavaShapesMainWindow extends JFrame implements ActionListener {
 
-    private DrawCanvas canvas = null;
+    /** The default serialVersionUID */
+	private static final long serialVersionUID = 1L;
+	private DrawCanvas canvas = null;
     private JPanel mainPanel = null;
     private JPanel leftPanel = null;
     private JPanel rightPanel = null;
@@ -131,7 +133,7 @@ public class JavaShapesMainWindow extends JFrame implements ActionListener {
 
         }
         if (dp != null) {
-            dp.close();
+            //dp.close();
         }
         System.exit(0);
     }
@@ -404,7 +406,7 @@ public class JavaShapesMainWindow extends JFrame implements ActionListener {
         writers.add(dw);
         dw.enable();
         WriterThread thrd = new WriterThread(dw, publishSpeed, publishSize,
-                publishColor);
+                publishColor, publishShape);
         threads.add(thrd);
         thrd.start();
     }
@@ -413,6 +415,7 @@ public class JavaShapesMainWindow extends JFrame implements ActionListener {
 
         private final DataWriter<ShapeType> dw;
         private final int delay;
+        private String theShape;
         private ShapeType shape;
         private Random random;
         private int dx;
@@ -420,8 +423,9 @@ public class JavaShapesMainWindow extends JFrame implements ActionListener {
         private int max;
 
         public WriterThread(DataWriter<ShapeType> writer, int speed,
-                int size, String color) {
+                int size, String color, String strShape) {
             dw = writer;
+            theShape = strShape;
             delay = 1000 / speed;
             shape = new ShapeType();
             shape.color = color;
@@ -438,9 +442,8 @@ public class JavaShapesMainWindow extends JFrame implements ActionListener {
         public void run() {
             while (!isInterrupted()) {
                 try {
-                    System.out.println("Writing shape!!!");
                     dw.write(shape);
-                    ShapeData.getInstance().putShape("Circle",
+                    ShapeData.getInstance().putShape(theShape,
                                 shape.color, shape);
 
                     shape.x += dx;
@@ -505,6 +508,7 @@ public class JavaShapesMainWindow extends JFrame implements ActionListener {
                 }
             }
             it.returnLoan();
+            it = null;
         }
     }
 
