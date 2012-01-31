@@ -1,5 +1,10 @@
 2012-01-31  Angelo  <angelo@icorsaro.net>
 
+	* .gitignore: Ignore .log files
+	* Added authors, thanks and licensing files
+
+2012-01-31  Angelo  <angelo@icorsaro.net>
+
 	* Added support for OpenSplice DDS v5.x and v6.x
 
 2011-10-07  Angelo Corsaro  <angelo@icorsaro.net>

@@ -1,6 +1,9 @@
 # .class files
 *.class
 
+# Log files
+*.log
+
 # jars
 *.jar
 

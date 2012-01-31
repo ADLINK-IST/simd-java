@@ -1,0 +1,76 @@
+0. DEPENDENCIES
+
+In order to use simd-java you need the following software packages:
+
+   - OpenSplice DDS (http://www.opensplice.org)
+
+   - Simple Build Tool (https://github.com/harrah/xsbt/wiki/Getting-Started-Setup) 
+
+   - Scala (http://www.scala-lang.org)
+
+Notice that the dependency on SBT brings the dependency on Scala as well.
+This could be a bit annoying from those users that don't use already Scala,
+and we might add good support for maven soon.
+
+However, since you'll have to install scala to compile simd-java, you
+might also want to give a try at Escalier, the Scala API for 
+DDS (https://github.com/kydos/escalier).
+
+
+
+
+1. CONFIGURING
+
+In order to configure simd-java, assuming you have installed the
+software packages listed in the previous section, you need to simply
+do the following:
+
+$ ./configure
+
+
+2. COMPILING
+
+To compile simd-java you need to run the following command:
+
+$ sbt compile
+
+then if you want to create the jar packages for the library you
+run the command:
+
+$ sbt package
+
+
+3. RUNNING EXAMPLES
+
+To run the examples you simply have to type:
+
+$ sbt
+Then you'll see the SBT prompt:
+
+[info] Loading project definition from /some-path/simd-java/project
+[info] Set current project to simd-java (in build file:/some-path/simd-java/)
+> 
+
+At this point type:
+
+> run
+
+You will see the list of applications:
+
+Multiple main classes detected, select one to run:
+
+ [1] org.opensplice.webcast.randomshapes.ShapesReader
+ [2] org.opensplice.demo.ping.PingSubscriber
+ [3] org.opensplice.demo.ping.PingPublisher
+ [4] org.opensplice.webcast.randomshapes.ShapesWriter
+ [5] org.opensplice.demo.shapes.Javashapes
+
+Enter number: 
+
+
+At this point you simply enter the number of the application you
+want to run. Clearly if you want to see some Pub/Sub in action
+you'll have to start multiple applications, thus you'll have to
+repeat the exercise described above at least another time.
+
+Enjoy!
