@@ -8,6 +8,8 @@
 #   . IntelliJ Idea
 *.iml
 .idea
+.idea_modules
+
 #   . Eclipse files
 .project
 .settings
@@ -24,6 +26,7 @@ target
 # SBT Stuff
 ./project/target
 ./idlib/project/target
+./project/project.target.config-classes
 
 # Emacs Temp Files
 *~

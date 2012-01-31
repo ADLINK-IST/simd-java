@@ -418,7 +418,8 @@ public class OSPLDataReader<TYPE> implements DataReader<TYPE> {
                     DDS.ANY_SAMPLE_STATE.value,
                     DDS.ANY_VIEW_STATE.value,
                     DDS.ALIVE_INSTANCE_STATE.value);
-            TYPE vals[] = (TYPE[])this.valueField.get(data);
+             TYPE vals[] = (TYPE[])this.valueField.get(data);
+
             for (int i = 0; i < vals.length; ++i) {
                 Sample<TYPE> s = new OSPLSample<TYPE>(vals[i], info.value[i]);
                 samples.add(s);
