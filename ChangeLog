@@ -1,3 +1,8 @@
+2012-02-10  Angelo  <angelo@icorsaro.net>
+
+	* configure.bat: Added configure for Windows platform, thanks to
+	Michael Esemplare for contributing this.
+
 2012-01-31  Angelo  <angelo@icorsaro.net>
 
 	* .gitignore: Ignore .log files
